@@ -12,6 +12,6 @@ under **Debian** operating system.
 
 ## Why YunoHost?
 
-YunoHost is a great system that helps run own server without professional IT knowledge. That;s why it is a great option for a lot of users that want to have own, private server with services, tools and applications. WebAdmin is a great option to manage server, but it is not that comfortable on mobile devices like it is on PCs. 
+YunoHost is a great system that helps run own server without professional IT knowledge. That's why it is a great option for a lot of users that want to have own, private server with services, tools and applications. WebAdmin is a great option to manage server, but it is not that comfortable on mobile devices like it is on PCs. 
 
 ## Why Docker?
