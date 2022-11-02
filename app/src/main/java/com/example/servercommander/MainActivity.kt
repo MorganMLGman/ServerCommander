@@ -1,6 +1,7 @@
 package com.example.servercommander
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.AsyncTask
 import android.os.Bundle
@@ -17,6 +18,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.navigation.fragment.findNavController
 import com.example.servercommander.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -70,18 +72,38 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {  // 3 dots menu
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+
+        if (item.itemId == R.id.clearConnectionSettings)
+        {
+            val sharedPref = getSharedPreferences(
+                getString(R.string.app_name), Context.MODE_PRIVATE
+            )
+
+            with(sharedPref.edit())
+            {
+                remove("serverUrl")
+                remove("username")
+                remove("pubkey")
+                apply()
+
+
+            }
+            Toast.makeText(this, "Settings cleared.", Toast.LENGTH_SHORT).show()
+            return findNavController(R.id.nav_host_fragment_content_main).navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+        }
+
         return when (item.itemId) {
-            R.id.action_settings -> true
+            R.id.clearConnectionSettings -> true
             else -> super.onOptionsItemSelected(item)
         }
     }

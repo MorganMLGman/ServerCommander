@@ -55,4 +55,5 @@
     <string name="docker">Docker</string>
     <string name="generate">GENERATE</string>
     <string name="applogo">appLogo</string>
+    <string name="clear_settings">Clear settings</string>
 </resources>
