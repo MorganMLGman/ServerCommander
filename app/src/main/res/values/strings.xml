@@ -45,8 +45,14 @@
     </string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="loginButtonLabel">Connect</string>
+    <string name="loginButtonLabel">SAVE CONNECTION</string>
     <string name="ServerUrlLabel">ServerUrl</string>
     <string name="UsernameLabel">Username</string>
     <string name="PasswordLabel">Password</string>
+    <string name="yunohost">YunoHost</string>
+    <string name="select_system_type">Select system type</string>
+    <string name="public_key">Public Key</string>
+    <string name="docker">Docker</string>
+    <string name="generate">GENERATE</string>
+    <string name="applogo">appLogo</string>
 </resources>

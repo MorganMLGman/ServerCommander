@@ -23,6 +23,19 @@ class LoginFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val sharedPref = activity?.getSharedPreferences(
+            getString(R.string.app_name), Context.MODE_PRIVATE
+        )
+
+        if (sharedPref != null) {
+            if (sharedPref.contains("serverUrl") and
+                sharedPref.contains("username") and
+                sharedPref.contains("pubkey")
+            ) {
+                findNavController().navigate(R.id.action_loginFragment_to_FirstFragment)
+            }
+        }
     }
 
     override fun onCreateView(
@@ -37,28 +50,17 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val sharedPref = activity?.getSharedPreferences(
-            getString(R.string.app_name), Context.MODE_PRIVATE
-        )
-
         val serverUrl = binding.serverUrl
         val username = binding.username
         val pubkey = binding.pubkey
 
 
-        if (sharedPref != null) {
-            if (sharedPref.contains("serverUrl") and
-                sharedPref.contains("username") and
-                sharedPref.contains("pubkey")
-            ) {
-                serverUrl.setText(sharedPref.getString("serverUrl", ""))
-                username.setText(sharedPref.getString("username", ""))
-                pubkey.setText(sharedPref.getString("pubkey", ""))
-            }
+        val sharedPref = activity?.getSharedPreferences(
+            getString(R.string.app_name), Context.MODE_PRIVATE
+        )
 
-
-            binding.loginButton.setOnClickListener {
-
+        binding.loginButton.setOnClickListener {
+            if (sharedPref != null) {
                 with(sharedPref.edit()) {
                     putString("serverUrl", serverUrl.text.toString())
                     putString("username", username.text.toString())
@@ -66,10 +68,14 @@ class LoginFragment : Fragment() {
                     apply()
                 }
 
-                Toast.makeText(context, "Connection saved", Toast.LENGTH_SHORT).show()
-
+                Toast.makeText(context, "Connection details saved.", Toast.LENGTH_SHORT).show()
                 findNavController().navigate(R.id.action_loginFragment_to_FirstFragment)
             }
+            else
+            {
+                Toast.makeText(context, "Internal app error!\nCannot save connection details.", Toast.LENGTH_SHORT).show()
+            }
         }
+
     }
 }
