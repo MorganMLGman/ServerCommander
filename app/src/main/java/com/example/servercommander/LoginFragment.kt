@@ -55,6 +55,8 @@ class LoginFragment : Fragment() {
         val serverUrl = binding.serverUrl
         val username = binding.username
         val pubkey = binding.pubkey
+        val radioYunohost = binding.radioYH
+        val radioDocker = binding.radioDocker
 
 
         val sharedPref = activity?.getSharedPreferences(
@@ -80,6 +82,12 @@ class LoginFragment : Fragment() {
             {
                 wrongData = true
                 pubkey.error = getString(R.string.pubkeyError)
+            }
+
+            if (username.toString()!="admin" && radioYunohost.isChecked==true){ //Toast.makeText(context, "YunoHost needs admin user",Toast.LENGTH_SHORT).show()
+                username.error = "YunoHost needs 'admin' user"
+                wrongData = true
+
             }
 
             if (wrongData)
