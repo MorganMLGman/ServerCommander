@@ -84,10 +84,10 @@ class LoginFragment : Fragment() {
                 pubkey.error = getString(R.string.pubkeyError)
             }
 
-            if (username.toString()!="admin" && radioYunohost.isChecked==true){ //Toast.makeText(context, "YunoHost needs admin user",Toast.LENGTH_SHORT).show()
+            if (username.toString()!="admin" && radioYunohost.isChecked)
+            {
                 username.error = "YunoHost needs 'admin' user"
                 wrongData = true
-
             }
 
             if (wrongData)
