@@ -64,17 +64,29 @@ class LoginFragment : Fragment() {
         binding.loginButton.setOnClickListener {
             var wrongData: Boolean = false
 
-            if (!URLUtil.isValidUrl(serverUrl.text.toString()))
+            if (!serverUrl.text.toString().matches(Regex("[A-Za-z0-9.]*")))
             {
                 wrongData = true
-                serverUrl.error = "Must be a valid URL";
+                serverUrl.error = getString(R.string.serverUrlError)
+            }
+
+            if (!username.text.toString().matches(Regex("[A-Za-z0-9]*")))
+            {
+                wrongData = true
+                username.error = getString(R.string.usernameError)
+            }
+
+            if (pubkey.text.toString().isEmpty())
+            {
+                wrongData = true
+                pubkey.error = getString(R.string.pubkeyError)
             }
 
             if (wrongData)
             {
                 Toast.makeText(
                     context,
-                    "Please correct all the errors.",
+                    getString(R.string.correctErrorToast),
                     Toast.LENGTH_SHORT
                 ).show()
             }
@@ -88,7 +100,7 @@ class LoginFragment : Fragment() {
                         apply()
                     }
 
-                    Toast.makeText(context, "Connection details saved.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, getString(R.string.connectionSaved), Toast.LENGTH_SHORT).show()
                     findNavController().navigate(R.id.action_loginFragment_to_FirstFragment)
                 }
                 else {
