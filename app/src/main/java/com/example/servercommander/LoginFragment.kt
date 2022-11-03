@@ -1,11 +1,13 @@
 package com.example.servercommander
 
 import android.content.Context
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.URLUtil
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.example.servercommander.databinding.FragmentLoginBinding
@@ -60,20 +62,42 @@ class LoginFragment : Fragment() {
         )
 
         binding.loginButton.setOnClickListener {
-            if (sharedPref != null) {
-                with(sharedPref.edit()) {
-                    putString("serverUrl", serverUrl.text.toString())
-                    putString("username", username.text.toString())
-                    putString("pubkey", pubkey.text.toString())
-                    apply()
-                }
+            var wrongData: Boolean = false
 
-                Toast.makeText(context, "Connection details saved.", Toast.LENGTH_SHORT).show()
-                findNavController().navigate(R.id.action_loginFragment_to_FirstFragment)
+            if (!URLUtil.isValidUrl(serverUrl.text.toString()))
+            {
+                wrongData = true
+                serverUrl.error = "Must be a valid URL";
+            }
+
+            if (wrongData)
+            {
+                Toast.makeText(
+                    context,
+                    "Please correct all the errors.",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
             else
             {
-                Toast.makeText(context, "Internal app error!\nCannot save connection details.", Toast.LENGTH_SHORT).show()
+                if (sharedPref != null) {
+                    with(sharedPref.edit()) {
+                        putString("serverUrl", serverUrl.text.toString())
+                        putString("username", username.text.toString())
+                        putString("pubkey", pubkey.text.toString())
+                        apply()
+                    }
+
+                    Toast.makeText(context, "Connection details saved.", Toast.LENGTH_SHORT).show()
+                    findNavController().navigate(R.id.action_loginFragment_to_FirstFragment)
+                }
+                else {
+                    Toast.makeText(
+                        context,
+                        "Internal app error!\nCannot save connection details.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
         }
 
