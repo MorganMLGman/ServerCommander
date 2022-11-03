@@ -61,4 +61,5 @@
     <string name="pubkeyError">Pubkey cannot be empty</string>
     <string name="correctErrorToast">Please correct all the errors.</string>
     <string name="connectionSaved">Connection details saved.</string>
+    <string name="yhAdminUserError">YunoHost needs \'admin\' user</string>
 </resources>

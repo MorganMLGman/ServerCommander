@@ -86,7 +86,7 @@ class LoginFragment : Fragment() {
 
             if (username.toString()!="admin" && radioYunohost.isChecked)
             {
-                username.error = "YunoHost needs 'admin' user"
+                username.error = getString(R.string.yhAdminUserError)
                 wrongData = true
             }
 
