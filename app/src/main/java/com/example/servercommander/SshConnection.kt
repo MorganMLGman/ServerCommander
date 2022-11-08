@@ -3,6 +3,7 @@ package com.example.servercommander
 import android.os.AsyncTask
 import com.jcraft.jsch.ChannelExec
 import com.jcraft.jsch.JSch
+import com.jcraft.jsch.KeyPair
 import java.io.ByteArrayOutputStream
 import java.util.*
 
@@ -47,6 +48,18 @@ class SshConnection {
 
             return outputStream.toString()
         }
+    }
+
+    fun generateKeyPair () {
+        val privateKeyFile: String = "id_rsa"
+        val publicKeyFile: String = "id_rsa.pub"
+        val jsch = JSch()
+
+        val keyPair = KeyPair.genKeyPair(jsch, KeyPair.RSA)
+
+        keyPair.writePrivateKey(privateKeyFile)
+        keyPair.writePublicKey(publicKeyFile, "Public RSA key")
+        keyPair.dispose()
     }
     
 }

@@ -3,14 +3,22 @@ package com.example.servercommander
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.URLUtil
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.example.servercommander.databinding.FragmentLoginBinding
+import java.io.File
+import java.io.FileOutputStream
+import java.io.OutputStream
+import java.io.PrintWriter
+import java.time.Instant
+import java.time.format.DateTimeFormatter
 
 /**
  * A simple [Fragment] subclass.
@@ -22,6 +30,8 @@ class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
 
     private val binding get() = _binding!!
+
+    private val sshConnection:SshConnection = SshConnection();
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +67,7 @@ class LoginFragment : Fragment() {
         val pubkey = binding.pubkey
         val radioYunohost = binding.radioYH
         val radioDocker = binding.radioDocker
+        val generateButton = binding.generatePubKey
 
 
         val sharedPref = activity?.getSharedPreferences(
@@ -119,6 +130,21 @@ class LoginFragment : Fragment() {
                     ).show()
                 }
             }
+        }
+
+        binding.generatePubKey.setOnClickListener {
+//            sshConnection.generateKeyPair()
+//            TODO: Write proper implementation this is just for testing
+
+            val file = File(context?.getExternalFilesDir(null), "testFile.txt")
+            println(file.absolutePath)
+
+            val outStream = PrintWriter(FileOutputStream(file, true))
+
+            outStream.println("DUPA: "+DateTimeFormatter.ISO_INSTANT.format(Instant.now()))
+
+            outStream.close()
+
         }
 
     }

@@ -58,56 +58,12 @@ class FirstFragment : Fragment() {
 
         binding.buttonFirst.setOnClickListener {
 
-            SshTask().execute()
+
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    class SshTask : AsyncTask<Void, Void, String>() {
-        override fun doInBackground(vararg p0: Void?): String {
-            val output = executeRemoteCommand("", "")
-            print(output)
-            return output
-        }
-
-        val path: String = Environment.DIRECTORY_DOWNLOADS + File.pathSeparator + "ssh_priv_key.txt"
-
-        private fun executeRemoteCommand(username: String,
-                                         hostname: String,
-                                         port: Int = 22): String {
-
-            val jsch = JSch()
-
-            val session = jsch.getSession(username, hostname, port)
-
-            session.setPassword("!");
-            // Avoid asking for key confirmation.
-            val properties = Properties()
-            properties["StrictHostKeyChecking"] = "no"
-            session.setConfig(properties)
-
-            session.connect()
-
-            // Create SSH Channel.
-            val sshChannel = session.openChannel("exec") as ChannelExec
-            val outputStream = ByteArrayOutputStream()
-            sshChannel.outputStream = outputStream
-
-            // Execute command.
-            sshChannel.setCommand("ls -lha")
-            sshChannel.connect()
-
-            // Sleep needed in order to wait long enough to get result back.
-            Thread.sleep(1_000)
-            sshChannel.disconnect()
-
-            session.disconnect()
-
-            return outputStream.toString()
-        }
     }
 }
