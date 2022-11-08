@@ -1,10 +1,12 @@
 package com.example.servercommander
 
+import android.content.Context
 import android.os.AsyncTask
 import com.jcraft.jsch.ChannelExec
 import com.jcraft.jsch.JSch
 import com.jcraft.jsch.KeyPair
 import java.io.ByteArrayOutputStream
+import java.io.File
 import java.util.*
 
 class SshConnection {
@@ -50,15 +52,19 @@ class SshConnection {
         }
     }
 
-    fun generateKeyPair () {
+    fun generateKeyPair (context: Context) {
         val privateKeyFile: String = "id_rsa"
         val publicKeyFile: String = "id_rsa.pub"
+
         val jsch = JSch()
 
         val keyPair = KeyPair.genKeyPair(jsch, KeyPair.RSA)
 
-        keyPair.writePrivateKey(privateKeyFile)
-        keyPair.writePublicKey(publicKeyFile, "Public RSA key")
+        val idRsa = File(context?.getExternalFilesDir(null), "id_rsa.txt").absolutePath
+        val idRsaPub = File(context?.getExternalFilesDir(null), "id_rsa_pub.txt").absolutePath
+
+        keyPair.writePrivateKey(idRsa)
+        keyPair.writePublicKey(idRsaPub, "morgan@Android")
         keyPair.dispose()
     }
     

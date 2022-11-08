@@ -18,6 +18,8 @@ import java.io.FileOutputStream
 import java.io.OutputStream
 import java.io.PrintWriter
 import java.time.Instant
+import java.time.ZoneId
+import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
 /**
@@ -133,17 +135,17 @@ class LoginFragment : Fragment() {
         }
 
         binding.generatePubKey.setOnClickListener {
-//            sshConnection.generateKeyPair()
+            context?.let { it1 -> sshConnection.generateKeyPair(it1) }
 //            TODO: Write proper implementation this is just for testing
 
-            val file = File(context?.getExternalFilesDir(null), "testFile.txt")
-            println(file.absolutePath)
-
-            val outStream = PrintWriter(FileOutputStream(file, true))
-
-            outStream.println("DUPA: "+DateTimeFormatter.ISO_INSTANT.format(Instant.now()))
-
-            outStream.close()
+//            val file = File(context?.getExternalFilesDir(null), "testFile.txt")
+//            println(file.absolutePath)
+//
+//            val outStream = PrintWriter(FileOutputStream(file, true))
+//
+//            outStream.println("DUPA: "+DateTimeFormatter.ISO_INSTANT.format(Instant.now()))
+//
+//            outStream.close()
 
         }
 
