@@ -97,7 +97,7 @@ class LoginFragment : Fragment() {
                 pubkey.error = getString(R.string.pubkeyError)
             }
 
-            if (username.toString()!="admin" && radioYunohost.isChecked)
+            if (username.text.toString()!="admin" && radioYunohost.isChecked)
             {
                 username.error = getString(R.string.yhAdminUserError)
                 wrongData = true
