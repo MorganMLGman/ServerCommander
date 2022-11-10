@@ -43,8 +43,6 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="loginButtonLabel">SAVE CONNECTION</string>
     <string name="ServerUrlLabel">ServerUrl</string>
     <string name="UsernameLabel">Username</string>
@@ -62,4 +60,7 @@
     <string name="correctErrorToast">Please correct all the errors.</string>
     <string name="connectionSaved">Connection details saved.</string>
     <string name="yhAdminUserError">YunoHost needs \'admin\' user</string>
+    <string name="externalStorageWriteError">Application is not able to write data to external storage</string>
+    <string name="newRsaKeysGenerated">New RSA keys have been generated</string>
+    <string name="newRsaKeysNotGenerated">New keys have not been generated</string>
 </resources>

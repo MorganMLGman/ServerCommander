@@ -1,7 +1,11 @@
 package com.example.servercommander
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.os.AsyncTask
+import android.os.Environment
+import android.widget.Toast
 import com.jcraft.jsch.ChannelExec
 import com.jcraft.jsch.JSch
 import com.jcraft.jsch.KeyPair
@@ -58,14 +62,51 @@ class SshConnection {
 
         val jsch = JSch()
 
-        val keyPair = KeyPair.genKeyPair(jsch, KeyPair.RSA)
+        if(Environment.MEDIA_MOUNTED == Environment.getExternalStorageState())
+        {
+            val keyPair = KeyPair.genKeyPair(jsch, KeyPair.RSA)
 
-        val idRsa = File(context?.getExternalFilesDir(null), "id_rsa.txt").absolutePath
-        val idRsaPub = File(context?.getExternalFilesDir(null), "id_rsa_pub.txt").absolutePath
+            val idRsa = File(context.getExternalFilesDir(null), "id_rsa.txt")
+            val idRsaPub = File(context.getExternalFilesDir(null), "id_rsa_pub.txt")
 
-        keyPair.writePrivateKey(idRsa)
-        keyPair.writePublicKey(idRsaPub, "morgan@Android")
-        keyPair.dispose()
+            if(idRsa.exists() or idRsaPub.exists()) {
+                println("DUAOANSODIA")
+                val builder: AlertDialog.Builder? = context?.let {
+                    val builder = AlertDialog.Builder(it)
+                    builder.apply {
+                        setPositiveButton("Overwrite"
+                        ) { dialog, id ->
+                            keyPair.writePrivateKey(idRsa.absolutePath)
+                            keyPair.writePublicKey(idRsaPub.absolutePath, "morgan@Android")
+                            keyPair.dispose()
+
+                            Toast.makeText(
+                                context,
+                                context.getString(R.string.newRsaKeysGenerated),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                        setNegativeButton("Cancel"
+                        ) { dialog, id ->
+                            Toast.makeText(context, context.getString(R.string.newRsaKeysNotGenerated), Toast.LENGTH_SHORT).show()
+                        }
+                        setTitle("CAUTION")
+                        setMessage("You are about to overwrite previously generated keys! Are you sure you want to do this?")
+                    }
+                }
+                builder?.create()?.show()
+            } else {
+
+                keyPair.writePrivateKey(idRsa.absolutePath)
+                keyPair.writePublicKey(idRsaPub.absolutePath, "morgan@Android")
+                keyPair.dispose()
+
+                Toast.makeText(context, context.getString(R.string.newRsaKeysGenerated), Toast.LENGTH_SHORT).show()
+            }
+
+        } else {
+            Toast.makeText(context, context.getString(R.string.externalStorageWriteError), Toast.LENGTH_SHORT).show()
+        }
     }
     
 }
