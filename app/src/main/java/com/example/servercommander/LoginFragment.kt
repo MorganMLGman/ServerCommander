@@ -13,11 +13,6 @@ import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.example.servercommander.databinding.FragmentLoginBinding
 
-/**
- * A simple [Fragment] subclass.
- * Use the [LoginFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class LoginFragment : Fragment() {
 
     private var _binding: FragmentLoginBinding? = null
