@@ -38,7 +38,7 @@ class LoginFragment : Fragment() {
                 sharedPref.contains("username") and
                 sharedPref.contains("pubkey")
             ) {
-                findNavController().navigate(R.id.action_loginFragment_to_FirstFragment)
+//                findNavController().navigate(R.id.action_loginFragment_to_FirstFragment)
             }
         }
     }
@@ -88,7 +88,7 @@ class LoginFragment : Fragment() {
                     }
 
                     Toast.makeText(context, getString(R.string.connectionSaved), Toast.LENGTH_SHORT).show()
-                    findNavController().navigate(R.id.action_loginFragment_to_FirstFragment)
+//                    findNavController().navigate(R.id.action_loginFragment_to_FirstFragment)
                 }
                 else {
                     Toast.makeText(
