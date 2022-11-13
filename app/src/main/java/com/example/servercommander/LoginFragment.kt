@@ -1,26 +1,14 @@
 package com.example.servercommander
 
 import android.content.Context
-import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.URLUtil
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.example.servercommander.databinding.FragmentLoginBinding
-import java.io.File
-import java.io.FileOutputStream
-import java.io.OutputStream
-import java.io.PrintWriter
-import java.time.Instant
-import java.time.ZoneId
-import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
 
 /**
  * A simple [Fragment] subclass.
@@ -77,33 +65,8 @@ class LoginFragment : Fragment() {
         )
 
         binding.loginButton.setOnClickListener {
-            var wrongData: Boolean = false
 
-            if (!serverUrl.text.toString().matches(Regex("[A-Za-z0-9.]*")))
-            {
-                wrongData = true
-                serverUrl.error = getString(R.string.serverUrlError)
-            }
-
-            if (!username.text.toString().matches(Regex("[A-Za-z0-9]*")))
-            {
-                wrongData = true
-                username.error = getString(R.string.usernameError)
-            }
-
-            if (pubkey.text.toString().isEmpty())
-            {
-                wrongData = true
-                pubkey.error = getString(R.string.pubkeyError)
-            }
-
-            if (username.text.toString()!="admin" && radioYunohost.isChecked)
-            {
-                username.error = getString(R.string.yhAdminUserError)
-                wrongData = true
-            }
-
-            if (wrongData)
+            if (!validateInput())
             {
                 Toast.makeText(
                     context,
@@ -135,19 +98,55 @@ class LoginFragment : Fragment() {
         }
 
         binding.generatePubKey.setOnClickListener {
-            context?.let { it1 -> sshConnection.generateKeyPair(it1) }
-//            TODO: Write proper implementation this is just for testing
 
-//            val file = File(context?.getExternalFilesDir(null), "testFile.txt")
-//            println(file.absolutePath)
-//
-//            val outStream = PrintWriter(FileOutputStream(file, true))
-//
-//            outStream.println("DUPA: "+DateTimeFormatter.ISO_INSTANT.format(Instant.now()))
-//
-//            outStream.close()
+            if(validateInput(pubKeyRequired = false, radioRequired = false))
+            {
+                context?.let { it1 -> sshConnection.generateKeyPair(it1) }
+            }
 
         }
+    }
 
+    private fun validateInput(pubKeyRequired: Boolean = true, radioRequired: Boolean = true): Boolean{
+        var wrongData = false
+
+        val serverUrl = binding.serverUrl
+        val username = binding.username
+        val pubkey = binding.pubkey
+        val radioYunohost = binding.radioYH
+        val radioDocker = binding.radioDocker
+
+        if (!serverUrl.text.toString().matches(Regex("[A-Za-z0-9.]*"))
+            or serverUrl.text.toString().isEmpty())
+        {
+            wrongData = true
+            serverUrl.error = getString(R.string.serverUrlError)
+        }
+
+        if (!username.text.toString().matches(Regex("[A-Za-z0-9]*"))
+            or username.text.toString().isEmpty())
+        {
+            wrongData = true
+            username.error = getString(R.string.usernameError)
+        }
+
+        if (pubKeyRequired and pubkey.text.toString().isEmpty())
+        {
+            wrongData = true
+            pubkey.error = getString(R.string.pubkeyError)
+        }
+
+        if (radioRequired and username.text.toString().contentEquals("admin") and radioYunohost.isChecked)
+        {
+            username.error = getString(R.string.yhAdminUserError)
+            wrongData = true
+        }
+
+        if (radioRequired and radioDocker.isChecked)
+        {
+            wrongData = true
+        }
+
+        return !wrongData
     }
 }

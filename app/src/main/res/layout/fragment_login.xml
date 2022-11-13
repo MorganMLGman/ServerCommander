@@ -45,14 +45,14 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="32dp"
         android:autofillHints=""
         android:ems="10"
         android:hint="@string/public_key"
-        android:inputType="textPassword"
+        android:inputType="text"
         android:minHeight="48dp"
         android:textColorHint="#8D6E63"
-        app:layout_constraintEnd_toStartOf="@+id/generatePubKey"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/username" />
 
@@ -60,7 +60,7 @@
         android:id="@+id/loginButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="32dp"
         android:text="@string/loginButtonLabel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -71,13 +71,13 @@
         android:id="@+id/systemTypeLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="32dp"
         android:text="@string/select_system_type"
         android:textSize="18sp"
         android:textStyle="normal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pubkey" />
+        app:layout_constraintTop_toBottomOf="@+id/generatePubKey" />
 
     <RadioGroup
         android:id="@+id/systemType"
@@ -114,11 +114,11 @@
         android:id="@+id/generatePubKey"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
+        android:layout_marginTop="32dp"
         android:text="@string/generate"
-        app:layout_constraintBottom_toBottomOf="@+id/pubkey"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/pubkey" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pubkey" />
 
     <ImageView
         android:id="@+id/imageView"

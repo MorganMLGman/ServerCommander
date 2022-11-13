@@ -2,8 +2,6 @@ package com.example.servercommander
 
 import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
-import android.os.AsyncTask
 import android.os.Environment
 import android.widget.Toast
 import com.jcraft.jsch.ChannelExec
@@ -13,54 +11,60 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.util.*
 
-class SshConnection {
+sealed class Result<out R> {
+    data class Success<out T>(val data: T) : Result<T>()
+    data class Error(val exception: Exception) : Result<Nothing>()
+}
 
-    class SshTask : AsyncTask<Void, Void, String>() {
-        override fun doInBackground(vararg p0: Void?): String {
-            val output = executeRemoteCommand("demo", "test.rebex.net")
-            print(output)
-            return output
-        }
+class SshConnection() {
 
-        private fun executeRemoteCommand(username: String,
-                                         hostname: String,
-                                         port: Int = 22): String {
+    private var serverAddress: String = ""
+    private var serverPort: Int = 22
+    private var username: String = ""
+    private var privKey: File? = null
+    private var pubKey: File? = null
+    private val jsch = JSch()
 
-            val jsch = JSch()
-//            jsch.addIdentity()
-            val session = jsch.getSession(username, hostname, port)
 
-            // Avoid asking for key confirmation.
-            val properties = Properties()
-            properties["StrictHostKeyChecking"] = "no"
-            session.setConfig(properties)
 
-            session.connect()
+    constructor(serverAddress: String, serverPort: Int, username: String, keyPath: String): this() {
+        this.serverAddress = serverAddress
+        this.serverPort = serverPort
+        this.username = username
 
-            // Create SSH Channel.
-            val sshChannel = session.openChannel("exec") as ChannelExec
-            val outputStream = ByteArrayOutputStream()
-            sshChannel.outputStream = outputStream
+        val privKeyPath = "$keyPath/id_rsa"
 
-            // Execute command.
-            sshChannel.setCommand("ls")
-            sshChannel.connect()
+        pubKey = File("$keyPath/id_rsa.pub")
+    }
 
-            // Sleep needed in order to wait long enough to get result back.
-            Thread.sleep(1_000)
-            sshChannel.disconnect()
+    fun executeRemoteCommand(command: String): String {
+        val session = jsch.getSession(username, serverAddress, serverPort)
+        val properties = Properties()
+        properties["StrictHostKeyChecking"] = "no"
+        session.setConfig(properties)
 
-            session.disconnect()
+        session.connect()
 
-            return outputStream.toString()
-        }
+        val sshChannel = session.openChannel("exec") as ChannelExec
+        val outputStream = ByteArrayOutputStream()
+        sshChannel.outputStream = outputStream
+
+        // Execute command.
+        sshChannel.setCommand("ls")
+        sshChannel.connect()
+
+        // Sleep needed in order to wait long enough to get result back.
+        Thread.sleep(1_000)
+        sshChannel.disconnect()
+
+        session.disconnect()
+
+        return outputStream.toString()
     }
 
     fun generateKeyPair (context: Context) {
         val privateKeyFile: String = "id_rsa"
         val publicKeyFile: String = "id_rsa.pub"
-
-        val jsch = JSch()
 
         if(Environment.MEDIA_MOUNTED == Environment.getExternalStorageState())
         {
@@ -70,14 +74,13 @@ class SshConnection {
             val idRsaPub = File(context.getExternalFilesDir(null), "id_rsa_pub.txt")
 
             if(idRsa.exists() or idRsaPub.exists()) {
-                println("DUAOANSODIA")
                 val builder: AlertDialog.Builder? = context?.let {
                     val builder = AlertDialog.Builder(it)
                     builder.apply {
-                        setPositiveButton("Overwrite"
+                        setPositiveButton(context.getString(R.string.overwriteButtonLabel)
                         ) { dialog, id ->
                             keyPair.writePrivateKey(idRsa.absolutePath)
-                            keyPair.writePublicKey(idRsaPub.absolutePath, "morgan@Android")
+                            keyPair.writePublicKey(idRsaPub.absolutePath, context.getString(R.string.pubkeyComment))
                             keyPair.dispose()
 
                             Toast.makeText(
@@ -86,19 +89,19 @@ class SshConnection {
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
-                        setNegativeButton("Cancel"
+                        setNegativeButton(context.getString(R.string.cancelButtonLabel)
                         ) { dialog, id ->
                             Toast.makeText(context, context.getString(R.string.newRsaKeysNotGenerated), Toast.LENGTH_SHORT).show()
                         }
-                        setTitle("CAUTION")
-                        setMessage("You are about to overwrite previously generated keys! Are you sure you want to do this?")
+                        setTitle(context.getString(R.string.cautionLabel))
+                        setMessage(context.getString(R.string.overwriteMessage))
                     }
                 }
                 builder?.create()?.show()
             } else {
 
                 keyPair.writePrivateKey(idRsa.absolutePath)
-                keyPair.writePublicKey(idRsaPub.absolutePath, "morgan@Android")
+                keyPair.writePublicKey(idRsaPub.absolutePath, context.getString(R.string.pubkeyComment))
                 keyPair.dispose()
 
                 Toast.makeText(context, context.getString(R.string.newRsaKeysGenerated), Toast.LENGTH_SHORT).show()

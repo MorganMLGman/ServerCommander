@@ -49,9 +49,9 @@
     <string name="PasswordLabel">Password</string>
     <string name="yunohost">YunoHost</string>
     <string name="select_system_type">Select system type</string>
-    <string name="public_key">Public Key</string>
+    <string name="public_key">Public Key Location</string>
     <string name="docker">Docker</string>
-    <string name="generate">GENERATE</string>
+    <string name="generate">GENERATE RSA KEY PAIR</string>
     <string name="applogo">appLogo</string>
     <string name="clear_settings">Clear settings</string>
     <string name="serverUrlError">Must be a valid server address</string>
@@ -63,4 +63,9 @@
     <string name="externalStorageWriteError">Application is not able to write data to external storage</string>
     <string name="newRsaKeysGenerated">New RSA keys have been generated</string>
     <string name="newRsaKeysNotGenerated">New keys have not been generated</string>
+    <string name="overwriteButtonLabel">Overwrite</string>
+    <string name="cancelButtonLabel">Cancel</string>
+    <string name="cautionLabel">CAUTION</string>
+    <string name="overwriteMessage">You are about to overwrite previously generated keys! Are you sure you want to do this?</string>
+    <string name="pubkeyComment">user@ServerCommander</string>
 </resources>
