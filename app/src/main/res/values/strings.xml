@@ -53,7 +53,7 @@
     <string name="docker">Docker</string>
     <string name="generate">GENERATE RSA KEY PAIR</string>
     <string name="applogo">appLogo</string>
-    <string name="clear_settings">Clear settings</string>
+    <string name="clear_settings">CLEAR APP SETTINGS</string>
     <string name="serverUrlError">Must be a valid server address</string>
     <string name="usernameError">Username can contains only letters and numbers</string>
     <string name="pubkeyError">Pubkey cannot be empty</string>
