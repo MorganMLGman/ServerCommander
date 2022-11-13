@@ -21,48 +21,52 @@ class SshConnection() {
     private var serverAddress: String = ""
     private var serverPort: Int = 22
     private var username: String = ""
-    private var privKey: File? = null
-    private var pubKey: File? = null
+    private var keyPath: String = ""
     private val jsch = JSch()
-
-
 
     constructor(serverAddress: String, serverPort: Int, username: String, keyPath: String): this() {
         this.serverAddress = serverAddress
         this.serverPort = serverPort
         this.username = username
-
-        val privKeyPath = "$keyPath/id_rsa"
-
-        pubKey = File("$keyPath/id_rsa.pub")
+        this.keyPath = keyPath
     }
 
-    fun executeRemoteCommand(command: String): String {
-        val session = jsch.getSession(username, serverAddress, serverPort)
-        val properties = Properties()
-        properties["StrictHostKeyChecking"] = "no"
-        session.setConfig(properties)
+    fun executeRemoteCommandOneCall(command: String): String {
+        if (serverAddress.isNotEmpty() and username.isNotEmpty() and keyPath.isNotEmpty() and command.isNotEmpty())
+        {
+            if(File("$keyPath/id_rsa").exists() and File("$keyPath/id_rsa.pub").exists())
+            {
+                val session = jsch.getSession(username, serverAddress, serverPort)
+                val properties = Properties()
+                properties["StrictHostKeyChecking"] = "no"
+                session.setConfig(properties)
 
-        session.connect()
+                session.connect()
 
-        val sshChannel = session.openChannel("exec") as ChannelExec
-        val outputStream = ByteArrayOutputStream()
-        sshChannel.outputStream = outputStream
+                val sshChannel = session.openChannel("exec") as ChannelExec
+                val outputStream = ByteArrayOutputStream()
+                sshChannel.outputStream = outputStream
 
-        // Execute command.
-        sshChannel.setCommand("ls")
-        sshChannel.connect()
+                // Execute command.
+                sshChannel.setCommand(command)
+                sshChannel.connect()
 
-        // Sleep needed in order to wait long enough to get result back.
-        Thread.sleep(1_000)
-        sshChannel.disconnect()
+                // Sleep needed in order to wait long enough to get result back.
+                Thread.sleep(1_000)
+                sshChannel.disconnect()
 
-        session.disconnect()
+                session.disconnect()
 
-        return outputStream.toString()
+                return outputStream.toString()
+
+            }
+            return ""
+        }
+        return ""
     }
 
-    fun generateKeyPair (context: Context) {
+    fun generateKeyPair (context: Context): Boolean {
+        var ret = false
         val privateKeyFile: String = "id_rsa"
         val publicKeyFile: String = "id_rsa.pub"
 
@@ -88,6 +92,8 @@ class SshConnection() {
                                 context.getString(R.string.newRsaKeysGenerated),
                                 Toast.LENGTH_SHORT
                             ).show()
+
+                            ret = true
                         }
                         setNegativeButton(context.getString(R.string.cancelButtonLabel)
                         ) { dialog, id ->
@@ -105,11 +111,14 @@ class SshConnection() {
                 keyPair.dispose()
 
                 Toast.makeText(context, context.getString(R.string.newRsaKeysGenerated), Toast.LENGTH_SHORT).show()
+                ret = true
             }
 
         } else {
             Toast.makeText(context, context.getString(R.string.externalStorageWriteError), Toast.LENGTH_SHORT).show()
         }
+
+        return ret
     }
     
 }
