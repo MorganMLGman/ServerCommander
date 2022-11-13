@@ -117,4 +117,9 @@ class LoginActivity : AppCompatActivity() {
 
         return !wrongData
     }
+
+    override fun onBackPressed() {
+//        super.onBackPressed()
+
+    }
 }

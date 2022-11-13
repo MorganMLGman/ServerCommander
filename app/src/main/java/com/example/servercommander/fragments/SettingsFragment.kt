@@ -6,9 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import com.example.servercommander.R
-import com.example.servercommander.databinding.FragmentLoginBinding
 import com.example.servercommander.databinding.FragmentSettingsBinding
 
 class SettingsFragment : Fragment() {
