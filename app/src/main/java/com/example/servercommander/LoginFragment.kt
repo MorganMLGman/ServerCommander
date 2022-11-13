@@ -1,6 +1,9 @@
 package com.example.servercommander
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
+import android.content.Context.CLIPBOARD_SERVICE
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -104,6 +107,13 @@ class LoginFragment : Fragment() {
                 context?.let { it1 -> sshConnection.generateKeyPair(it1) }
             }
 
+            val pubKeyPath = requireActivity().getExternalFilesDir(null)?.absolutePath
+
+            pubkey.setText(pubKeyPath)
+
+            val clipboard = requireActivity().getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+            val clip = ClipData.newPlainText("pubKeyPath", pubKeyPath)
+            clipboard.setPrimaryClip(clip)
         }
     }
 
