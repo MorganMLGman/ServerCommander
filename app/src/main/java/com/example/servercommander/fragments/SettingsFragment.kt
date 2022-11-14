@@ -14,7 +14,6 @@ import com.example.servercommander.databinding.FragmentSettingsBinding
 class SettingsFragment : Fragment() {
 
     private var _binding: FragmentSettingsBinding? = null
-
     private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -31,6 +31,12 @@
             android:text="SYSTEM" />
 
         <com.google.android.material.tabs.TabItem
+            android:id="@+id/terminalTab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TERMINAL" />
+
+        <com.google.android.material.tabs.TabItem
             android:id="@+id/settingsTab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

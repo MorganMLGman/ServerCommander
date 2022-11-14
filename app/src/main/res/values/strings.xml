@@ -87,4 +87,6 @@
     <string name="server_url">serverUrl</string>
     <string name="pubkey">pubkey</string>
     <string name="not_available">Not available</string>
+    <string name="send">SEND</string>
+    <string name="command">Command</string>
 </resources>
