@@ -14,6 +14,9 @@ import android.widget.RadioButton
 import android.widget.Toast
 
 class LoginActivity : AppCompatActivity() {
+
+    private var backPressed: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -119,7 +122,13 @@ class LoginActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-//        super.onBackPressed()
-
+        if (!backPressed){
+            backPressed = true
+            Toast.makeText(this, "Press one more time to exit", Toast.LENGTH_SHORT).show()
+        }
+        else
+        {
+            finishAffinity()
+        }
     }
 }
