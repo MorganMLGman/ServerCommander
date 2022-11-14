@@ -81,4 +81,10 @@
     <string name="login_failed">"Login failed"</string>
     <string name="update">UPDATE</string>
     <string name="server_address_label">Server Address</string>
+    <string name="username_updated">Username updated</string>
+    <string name="username">username</string>
+    <string name="server_addres_updated">Server address updated</string>
+    <string name="server_url">serverUrl</string>
+    <string name="pubkey">pubkey</string>
+    <string name="not_available">Not available</string>
 </resources>

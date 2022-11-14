@@ -62,9 +62,9 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        if ( !sharedPref.contains("serverUrl") or
-             !sharedPref.contains("username") or
-             !sharedPref.contains("pubkey")
+        if ( !sharedPref.contains(getString(R.string.server_url)) or
+             !sharedPref.contains(getString(R.string.username)) or
+             !sharedPref.contains(getString(R.string.pubkey))
         ) {
             val intent = Intent( this, LoginActivity::class.java).apply{}
 

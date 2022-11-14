@@ -58,9 +58,9 @@ class LoginActivity : AppCompatActivity() {
                 else
                 {
                     with(sharedPref.edit()) {
-                        putString("serverUrl", serverUrl.text.toString())
-                        putString("username", username.text.toString())
-                        putString("pubkey", pubkey.text.toString())
+                        putString(getString(R.string.server_url), serverUrl.text.toString())
+                        putString(getString(R.string.username), username.text.toString())
+                        putString(getString(R.string.pubkey), pubkey.text.toString())
                         apply()
                     }
 
