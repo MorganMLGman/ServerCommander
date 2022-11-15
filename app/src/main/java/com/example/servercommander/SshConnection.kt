@@ -7,6 +7,11 @@ import android.widget.Toast
 import com.jcraft.jsch.ChannelExec
 import com.jcraft.jsch.JSch
 import com.jcraft.jsch.KeyPair
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.util.*
@@ -36,29 +41,31 @@ class SshConnection() {
         {
             if(File("$keyPath/id_rsa").exists() and File("$keyPath/id_rsa.pub").exists())
             {
+                jsch.addIdentity("$keyPath/id_rsa", "$keyPath/id_rsa.pub", null)
                 val session = jsch.getSession(username, serverAddress, serverPort)
                 val properties = Properties()
                 properties["StrictHostKeyChecking"] = "no"
                 session.setConfig(properties)
-
                 session.connect()
 
                 val sshChannel = session.openChannel("exec") as ChannelExec
                 val outputStream = ByteArrayOutputStream()
                 sshChannel.outputStream = outputStream
-
-                // Execute command.
                 sshChannel.setCommand(command)
-                sshChannel.connect()
 
-                // Sleep needed in order to wait long enough to get result back.
-                Thread.sleep(1_000)
+                sshChannel.connect()
+                while(!sshChannel.isClosed)
+                {
+                    Thread.sleep(100)
+                }
+
+                val exitCode = sshChannel.exitStatus
+
                 sshChannel.disconnect()
 
                 session.disconnect()
 
                 return outputStream.toString()
-
             }
             return ""
         }
@@ -74,11 +81,11 @@ class SshConnection() {
         {
             val keyPair = KeyPair.genKeyPair(jsch, KeyPair.RSA)
 
-            val idRsa = File(context.getExternalFilesDir(null), "id_rsa.txt")
-            val idRsaPub = File(context.getExternalFilesDir(null), "id_rsa_pub.txt")
+            val idRsa = File(context.getExternalFilesDir(null), "id_rsa")
+            val idRsaPub = File(context.getExternalFilesDir(null), "id_rsa.pub")
 
             if(idRsa.exists() or idRsaPub.exists()) {
-                val builder: AlertDialog.Builder? = context?.let {
+                val builder: AlertDialog.Builder? = context.let {
                     val builder = AlertDialog.Builder(it)
                     builder.apply {
                         setPositiveButton(context.getString(R.string.overwriteButtonLabel)

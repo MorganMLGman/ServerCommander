@@ -115,7 +115,7 @@ class LoginActivity : AppCompatActivity() {
 
         if (radioRequired and radioDocker.isChecked)
         {
-            wrongData = true
+    //            wrongData = true
         }
 
         return !wrongData
