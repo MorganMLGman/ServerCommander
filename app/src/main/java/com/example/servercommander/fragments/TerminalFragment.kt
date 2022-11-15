@@ -67,7 +67,7 @@ class TerminalFragment : Fragment() {
 
                     val output = defer.await()
 
-                    terminalText.text = output
+                    terminalText.setText(terminalText.text.toString()  + output)
                 }
             }
             else

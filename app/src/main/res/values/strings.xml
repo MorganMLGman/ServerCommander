@@ -89,4 +89,5 @@
     <string name="not_available">Not available</string>
     <string name="send">SEND</string>
     <string name="command">Command</string>
+    <string name="terminalOutputLabel">terminalOutputLabel</string>
 </resources>
