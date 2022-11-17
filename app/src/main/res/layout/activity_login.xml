@@ -70,7 +70,7 @@
         android:id="@+id/systemTypeLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="48dp"
         android:text="@string/select_system_type"
         android:textSize="18sp"
         android:textStyle="normal"
@@ -111,12 +111,12 @@
 
     <Button
         android:id="@+id/generatePubKey"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
         android:text="@string/generate"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pubkey" />
 
     <ImageView
@@ -131,5 +131,16 @@
         app:srcCompat="@android:drawable/sym_def_app_icon"
         tools:ignore="ImageContrastCheck"
         tools:src="@tools:sample/avatars" />
+
+    <Button
+        android:id="@+id/readPubkeyButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/read_pubkey"
+        app:layout_constraintEnd_toStartOf="@+id/generatePubKey"
+        app:layout_constraintStart_toStartOf="@+id/pubkey"
+        app:layout_constraintTop_toBottomOf="@+id/pubkey" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

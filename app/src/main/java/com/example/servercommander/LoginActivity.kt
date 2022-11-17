@@ -31,6 +31,7 @@ class LoginActivity : AppCompatActivity() {
         val radioYunohost = findViewById<RadioButton>(R.id.radioYH)
         val radioDocker = findViewById<RadioButton>(R.id.radioDocker)
         val generateButton = findViewById<Button>(R.id.generatePubKey)
+        val readButton = findViewById<Button>(R.id.readPubkeyButton)
         val loginButton = findViewById<Button>(R.id.loginButton)
 
         generateButton.setOnClickListener {
@@ -43,6 +44,24 @@ class LoginActivity : AppCompatActivity() {
             val clipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
             val clip = ClipData.newPlainText("pubKeyPath", pubKeyPath)
             clipboard.setPrimaryClip(clip)
+        }
+
+        readButton.setOnClickListener {
+            val pubKeyPath = getExternalFilesDir(null)?.absolutePath
+
+            if (pubKeyPath != null) {
+                if(pubKeyPath.isNotEmpty()) {
+                    pubkey.setText(pubKeyPath)
+                }
+                else
+                {
+                    Toast.makeText(this, getString(R.string.no_pubkey_found), Toast.LENGTH_SHORT).show()
+                }
+            }
+            else
+            {
+                Toast.makeText(this, getString(R.string.pubkey_read_error), Toast.LENGTH_SHORT).show()
+            }
         }
 
         loginButton.setOnClickListener{
