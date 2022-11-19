@@ -48,7 +48,15 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val refreshWidget = binding.refreshWidget
+        val tempText = binding.dashTemperatureTextView
+        val cpuUsage = binding.dashCpuTextView
+        val ramUsage = binding.dashRamTextView
+
         val linuxKernelVersion = binding.dashboardItem1.linuxKernelVersion
+        val hostname = binding.dashboardItem1.hostname
+        val uptime = binding.dashboardItem2.upTimeValue
+        val localIpAddress = binding.dashboardItem3.localIpAddresValue
+        val publicIpAddress = binding.dashboardItem4.publicAddressValue
 
         refreshWidget.setOnClickListener {
             if(sharedPref.contains(getString(R.string.server_url)) and
@@ -71,7 +79,18 @@ class HomeFragment : Fragment() {
 
                     val jsonObject = JSONTokener(output).nextValue() as JSONObject
 
+                    tempText.text = jsonObject.getString("cpu_temp")
+                    cpuUsage.text = jsonObject.getString("cpu_usage")
+                    ramUsage.text = jsonObject.getString("ram_usage")
+
                     linuxKernelVersion.text = jsonObject.getString("kernel")
+                    hostname.text = jsonObject.getString("hostname")
+
+                    uptime.text = jsonObject.getString("uptime")
+                    localIpAddress.text = jsonObject.getString("local_ip")
+                    publicIpAddress.text = jsonObject.getString("public_ip")
+
+
                 }
             }
             else
