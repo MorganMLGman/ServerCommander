@@ -21,7 +21,6 @@ class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private lateinit var linuxKernelVersion: TextView
 
     private lateinit var sharedPref: SharedPreferences
     private lateinit var sshConnection: SshConnection
@@ -41,8 +40,6 @@ class HomeFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
-        linuxKernelVersion = binding.dashboardItem1.linuxKernelVersion
-
         return binding.root
     }
 
@@ -50,7 +47,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val refreshWidget = binding.refreshWidget
-        val linuxKernelVersion =
+        val linuxKernelVersion = binding.dashboardItem1.linuxKernelVersion
 
         refreshWidget.setOnClickListener {
             if(sharedPref.contains(getString(R.string.server_url)) and
