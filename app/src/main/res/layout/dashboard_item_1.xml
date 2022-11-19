@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    
     
     <com.google.android.material.card.MaterialCardView
         android:layout_width="@dimen/_50sdp"
@@ -18,10 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="@dimen/_8sdp"
-            android:src="@drawable/download"
-            android:tint="@color/white">
-
-        </androidx.appcompat.widget.AppCompatImageView>
+            android:src="@drawable/penguin"
+            android:tint="@color/white"/>
 
 
     </com.google.android.material.card.MaterialCardView>
@@ -30,8 +28,39 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_16sdp"
-        android:layout_marginLeft="@dimen/_16sdp">
+        android:layout_marginLeft="@dimen/_16sdp"
+        app:cardBackgroundColor="@color/card_background"
+        app:cardCornerRadius="@dimen/_14sdp"
+        app:cardElevation="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/_40sdp"
+            android:paddingLeft="@dimen/_40sdp"
+            android:paddingTop="@dimen/_16sdp"
+            android:paddingEnd="@dimen/_16sdp"
+            android:paddingRight="@dimen/_16sdp"
+            android:paddingBottom="@dimen/_16sdp"
+        tools:ignore="MissingConstraints">
+
+            <TextView
+                android:id="@+id/linuxKernelVersion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Linux Kernel 5.10.5"
+                android:textColor="@color/primary"
+                android:textSize="@dimen/_14ssp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+            </TextView>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 
 
