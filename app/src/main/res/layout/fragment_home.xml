@@ -29,15 +29,15 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
     <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/refreshWidget"
         android:layout_width="@dimen/_26sdp"
         android:layout_height="@dimen/_26sdp"
         android:layout_marginEnd="@dimen/_16sdp"
-        android:layout_marginRight="@dimen/_16sdp"
         android:src="@drawable/refresh"
+        android:tint="@color/white"
         app:layout_constraintBottom_toBottomOf="@id/textTitle"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/textTitle"
-        android:tint="@color/white"/>
+        app:layout_constraintTop_toTopOf="@id/textTitle" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardHeader"
@@ -201,7 +201,9 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <include layout="@layout/dashboard_item_1" />
+            <include
+                android:id="@+id/dashboard_item_1"
+                layout="@layout/dashboard_item_1" />
 
 
         </LinearLayout>

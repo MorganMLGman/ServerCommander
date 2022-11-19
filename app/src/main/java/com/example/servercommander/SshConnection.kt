@@ -61,8 +61,6 @@ class SshConnection(private val serverAddress: String,
 
                 session.disconnect()
 
-//                outputStream.toByteArray()[1].
-
                 return outputStream.toString()
             }
             return ""
