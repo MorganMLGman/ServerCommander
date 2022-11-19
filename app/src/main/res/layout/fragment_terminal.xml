@@ -51,6 +51,7 @@
         android:inputType="textMultiLine"
         android:textColor="@color/primary_text"
         android:textSize="14sp"
+        android:fontFamily="monospace"
         app:layout_constraintBottom_toTopOf="@+id/commandText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
