@@ -35,7 +35,7 @@ class LoginActivity : AppCompatActivity() {
         val loginButton = findViewById<Button>(R.id.loginButton)
 
         generateButton.setOnClickListener {
-            val sshConnection = SshConnection().generateKeyPair(this)
+            SshConnection.generateKeyPair(this)
 
             val pubKeyPath = getExternalFilesDir(null)?.absolutePath
 
