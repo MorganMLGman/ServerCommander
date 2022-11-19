@@ -3,12 +3,11 @@ package com.example.servercommander.fragments
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import com.example.servercommander.R
 import com.example.servercommander.SshConnection
 import com.example.servercommander.databinding.FragmentHomeBinding
@@ -16,6 +15,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import org.json.JSONObject
+import org.json.JSONTokener
 
 class HomeFragment : Fragment() {
 
@@ -63,12 +64,14 @@ class HomeFragment : Fragment() {
                 val coroutineScope = MainScope()
                 coroutineScope.launch {
                     val defer = async(Dispatchers.IO) {
-                        sshConnection.executeRemoteCommandOneCall("uname -r")
+                        sshConnection.executeRemoteCommandOneCall("python3 ~/copilot/main.py --dash")
                     }
 
                     val output = defer.await()
 
-                    linuxKernelVersion.text = output
+                    val jsonObject = JSONTokener(output).nextValue() as JSONObject
+
+                    linuxKernelVersion.text = jsonObject.getString("kernel")
                 }
             }
             else
