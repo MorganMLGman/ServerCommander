@@ -79,6 +79,11 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+    <string name="appName">ServerCommander</string>
+    <string name="quick_overview">Quick Overview</string>
+    <string name="temp">Temp</string>
+    <string name="overiewTemp">43 C</string>
+    <string name="dashboard">Dashboard</string>
     <string name="update">UPDATE</string>
     <string name="server_address_label">Server Address</string>
     <string name="username_updated">Username updated</string>
