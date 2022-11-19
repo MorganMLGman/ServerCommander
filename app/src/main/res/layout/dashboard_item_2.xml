@@ -75,7 +75,7 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-    <com.google.android.material.card.MaterialCardView
+    <androidx.cardview.widget.CardView
         android:layout_width="@dimen/_50sdp"
         android:layout_height="@dimen/_50sdp"
         app:cardBackgroundColor="@color/dashboard_item_2"
@@ -92,7 +92,7 @@
             android:tint="@color/white"/>
 
 
-    </com.google.android.material.card.MaterialCardView>
+    </androidx.cardview.widget.CardView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
