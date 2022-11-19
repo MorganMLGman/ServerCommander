@@ -35,7 +35,7 @@
                 android:id="@+id/publicAddressValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="8.8.8.8"
+                android:text="@string/nothingString"
                 android:textColor="@color/primary"
                 android:textStyle="bold"
                 android:textSize="@dimen/_12ssp"

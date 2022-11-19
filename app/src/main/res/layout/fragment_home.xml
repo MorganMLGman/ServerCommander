@@ -104,7 +104,7 @@
                     android:id="@+id/dashTemperatureTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/overiewTemp"
+                    android:text="@string/nothingString"
                     android:textColor="@color/primary_text"
                     android:textSize="@dimen/_16ssp"/>
 
@@ -139,7 +139,7 @@
                     android:id="@+id/dashCpuTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="34%"
+                    android:text="@string/nothingString"
                     android:textColor="@color/primary_text"
                     android:textSize="@dimen/_16ssp"/>
 
@@ -174,7 +174,7 @@
                     android:id="@+id/dashRamTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="2,5 GiB"
+                    android:text="@string/nothingString"
                     android:textColor="@color/primary_text"
                     android:textSize="@dimen/_16ssp"/>
 
@@ -213,6 +213,9 @@
             <include
                 android:id="@+id/dashboard_item_4"
                 layout="@layout/dashboard_item_4" />
+            <include
+                android:id="@+id/dashboard_item_5"
+                layout="@layout/dashboard_item_5" />
 
 
         </LinearLayout>

@@ -57,6 +57,7 @@ class HomeFragment : Fragment() {
         val uptime = binding.dashboardItem2.upTimeValue
         val localIpAddress = binding.dashboardItem3.localIpAddresValue
         val publicIpAddress = binding.dashboardItem4.publicAddressValue
+        val diskUsage = binding.dashboardItem5.diskUsageValue
 
         refreshWidget.setOnClickListener {
             if(sharedPref.contains(getString(R.string.server_url)) and
@@ -89,6 +90,7 @@ class HomeFragment : Fragment() {
                     uptime.text = jsonObject.getString("uptime")
                     localIpAddress.text = jsonObject.getString("local_ip")
                     publicIpAddress.text = jsonObject.getString("public_ip")
+                    diskUsage.text = jsonObject.getString("stress_app")
 
 
                 }
