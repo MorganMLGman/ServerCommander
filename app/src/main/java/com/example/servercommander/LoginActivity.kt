@@ -126,11 +126,11 @@ class LoginActivity : AppCompatActivity() {
             pubkey.error = getString(R.string.pubkeyError)
         }
 
-        if (radioRequired and !(username.text.toString().contentEquals("admin")) and radioYunohost.isChecked)
-        {
-            username.error = getString(R.string.yhAdminUserError)
-            wrongData = true
-        }
+//        if (radioRequired and !(username.text.toString().contentEquals("admin")) and radioYunohost.isChecked)
+//        {
+//            username.error = getString(R.string.yhAdminUserError)
+//            wrongData = true
+//        }
 
         if (radioRequired and radioDocker.isChecked)
         {

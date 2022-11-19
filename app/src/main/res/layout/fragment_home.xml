@@ -204,6 +204,15 @@
             <include
                 android:id="@+id/dashboard_item_1"
                 layout="@layout/dashboard_item_1" />
+            <include
+                android:id="@+id/dashboard_item_2"
+                layout="@layout/dashboard_item_2" />
+            <include
+                android:id="@+id/dashboard_item_3"
+                layout="@layout/dashboard_item_3" />
+            <include
+                android:id="@+id/dashboard_item_4"
+                layout="@layout/dashboard_item_4" />
 
 
         </LinearLayout>
