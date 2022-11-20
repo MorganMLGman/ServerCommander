@@ -59,6 +59,7 @@ class HomeFragment : Fragment() {
         val publicIpAddress = binding.publicIpInfo.publicAddressValue
         val diskUsage = binding.diskInfo.diskUsageValue
         val diskName = binding.diskInfo.diskNameText
+        val heaviestApp = binding.HeaviestProcessInfo.heaviestProcessValue
 
         refreshWidget.setOnClickListener {
             if(sharedPref.contains(getString(R.string.server_url)) and
@@ -93,6 +94,7 @@ class HomeFragment : Fragment() {
                     publicIpAddress.text = jsonObject.getString("public_ip")
                     diskUsage.text = jsonObject.getString("disk_usage")
                     diskName.text = jsonObject.getString("disk_name")
+                    heaviestApp.text = jsonObject.getString("stress_app")
 
                 }
             }

@@ -216,6 +216,9 @@
             <include
                 android:id="@+id/diskInfo"
                 layout="@layout/dashboard_item_disk_info" />
+            <include
+                android:id="@+id/HeaviestProcessInfo"
+                layout="@layout/dashboard_item_heaviest_app_info" />
 
 
         </LinearLayout>
