@@ -1,5 +1,6 @@
 package com.example.servercommander.fragments
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -135,43 +136,44 @@ class HomeFragment : Fragment() {
                     sharedPref.getString(getString(R.string.pubkey), "").toString()
                 )
 
-                if ( !sharedPref.getBoolean(getString(R.string.connectionTested), false) ){
+                connectionTest.animate().apply {
+                    duration = 500
+                    rotationBy(360f)
+                }.withEndAction{
+                    // Nothing yet
+                }.start()
 
-                    connectionTest.animate().apply {
-                        duration = 250
-                        rotationBy(360f)
-                    }.withEndAction{
-                        // Nothing yet
-                    }.start()
-
-                    val coroutineScope = MainScope()
-                    coroutineScope.launch {
-                        val defer = async(Dispatchers.IO) {
-                            sshConnection.checkRequirements()
-                        }
-
-                        val (output, comment) = defer.await()
-
-                        if (output){
-                            with(sharedPref.edit()){
-                                putBoolean(getString(R.string.connectionTested), true)
-                                apply()
-                            }
-
-                            context?.getColor(R.color.brightGreen)
-                                ?.let { it1 -> connectionTest.setColorFilter(it1, android.graphics.PorterDuff.Mode.SRC_IN) }
-                            connectionTest.setImageResource(R.drawable.server_network)
-
-                        }
-                        else
-                        {
-                            // TODO: Display popup with info
-                        }
+                val coroutineScope = MainScope()
+                coroutineScope.launch {
+                    val defer = async(Dispatchers.IO) {
+                        sshConnection.checkRequirements()
                     }
-                }
-                else
-                {
-                    Toast.makeText(context, "Connection already tested. No need to do this again.", Toast.LENGTH_LONG).show()
+
+                    val (output, comment) = defer.await()
+
+                    if (output){
+                        with(sharedPref.edit()){
+                            putBoolean(getString(R.string.connectionTested), true)
+                            apply()
+                        }
+
+                        context?.getColor(R.color.brightGreen)
+                            ?.let { it1 -> connectionTest.setColorFilter(it1, android.graphics.PorterDuff.Mode.SRC_IN) }
+                        connectionTest.setImageResource(R.drawable.server_network)
+
+                    }
+                    else
+                    {
+                        val builder: AlertDialog.Builder? = context.let {
+                            val builder = AlertDialog.Builder(it)
+                            builder.apply {
+                                setCancelable(true)
+                                setTitle("Something went wrong :(")
+                                setMessage(comment.trim())
+                            }
+                        }
+                        builder?.create()?.show()
+                    }
                 }
             }
             else

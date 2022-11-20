@@ -78,12 +78,12 @@ class SshConnection(private val serverAddress: String,
             catch ( e: JSchException )
             {
                 requirementsOK = false
-                returnComment += "\nConnection cannot be established. Have you added pubkey to your server?"
+                returnComment += "\nConnection cannot be established. Have you added pubkey to your server?\n"
             }
 
             if (answer != this.username){
                 requirementsOK = false
-                returnComment += "\nProvided username is not identical to server username."
+                returnComment += "\nProvided username is not identical to server username.\n"
             }
             answer = ""
         }
@@ -95,7 +95,7 @@ class SshConnection(private val serverAddress: String,
             if (!answer.contains("Python 3."))
             {
                 requirementsOK = false
-                returnComment += "\nRequired version on Python3 is not available on server. Please run sudo apt install python3"
+                returnComment += "\nRequired version on Python3 is not available on server. Please run sudo apt install python3\n"
             }
             answer = ""
         }
@@ -107,10 +107,51 @@ class SshConnection(private val serverAddress: String,
             if (!answer.contains("Status: install ok"))
             {
                 requirementsOK = false
-                returnComment += "\npython3-pip in not available on server. Please run sudo apt install python3-pip"
+                returnComment += "\npython3-pip is not available on server. Please run sudo apt install python3-pip\n"
             }
 
             answer = ""
+        }
+
+//        Check if git is installed
+        run {
+            answer = executeRemoteCommandOneCall("whereis git").trim()
+
+            if (!answer.contains("git: /"))
+            {
+                requirementsOK = false
+                returnComment += "\ngit is not available on server. Please run sudo apt install git\n"
+            }
+
+            answer = ""
+        }
+
+//        If everything OK check if copilot exists else try to git clone
+        run {
+            if(requirementsOK){
+                answer = executeRemoteCommandOneCall("ls /home/morgan | grep copilot").trim()
+
+                if (answer == "copilot") // Copilot exists, perform git pull and can finish
+                {
+                    executeRemoteCommandOneCall("cd /home/${this.username}/copilot && git pull")
+                    executeRemoteCommandOneCall("pip3 install -r /home/${this.username}/copilot/requirements.txt")
+                }
+                else // No copilot, try to git clone
+                {
+                    executeRemoteCommandOneCall("git clone https://github.com/MorganMLGman/copilot.git /home/${this.username}/copilot")
+                    answer = executeRemoteCommandOneCall("ls /home/morgan | grep copilot").trim()
+
+                    if (answer == "copilot") // Copilot now exists, install requirements
+                    {
+                        executeRemoteCommandOneCall("pip3 install -r /home/${this.username}/copilot/requirements.txt")
+                    }
+                    else
+                    {
+                        requirementsOK = false
+                        returnComment += "\ngit clone not successful. Please run git clone https://github.com/MorganMLGman/copilot.git /home/${this.username}/copilot\n"
+                    }
+                }
+            }
         }
 
         return Pair(requirementsOK, returnComment)
