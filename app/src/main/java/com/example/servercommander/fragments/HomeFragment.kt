@@ -78,6 +78,13 @@ class HomeFragment : Fragment() {
                         sshConnection.executeRemoteCommandOneCall("python3 ~/copilot/main.py --dash")
                     }
 
+                    refreshWidget.animate().apply {
+                        duration = 1000
+                        rotationBy(360f)
+                    }.withEndAction{
+                        Toast.makeText(context, "Refreshed manually", Toast.LENGTH_SHORT).show()
+                    }.start()
+
                     val output = defer.await()
 
                     val jsonObject = JSONTokener(output).nextValue() as JSONObject
