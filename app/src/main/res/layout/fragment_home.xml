@@ -202,20 +202,20 @@
             android:orientation="vertical">
 
             <include
-                android:id="@+id/dashboard_item_1"
-                layout="@layout/dashboard_item_1" />
+                android:id="@+id/kernelInfo"
+                layout="@layout/kernel_info" />
             <include
-                android:id="@+id/dashboard_item_2"
-                layout="@layout/dashboard_item_2" />
+                android:id="@+id/uptimeInfo"
+                layout="@layout/uptime_info" />
             <include
-                android:id="@+id/dashboard_item_3"
-                layout="@layout/dashboard_item_3" />
+                android:id="@+id/localIpInfo"
+                layout="@layout/localip_info" />
             <include
-                android:id="@+id/dashboard_item_4"
-                layout="@layout/dashboard_item_4" />
+                android:id="@+id/publicIpInfo"
+                layout="@layout/publicip_info" />
             <include
-                android:id="@+id/dashboard_item_5"
-                layout="@layout/dashboard_item_5" />
+                android:id="@+id/diskInfo"
+                layout="@layout/disk_info" />
 
 
         </LinearLayout>

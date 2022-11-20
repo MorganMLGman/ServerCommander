@@ -52,12 +52,12 @@ class HomeFragment : Fragment() {
         val cpuUsage = binding.dashCpuTextView
         val ramUsage = binding.dashRamTextView
 
-        val linuxKernelVersion = binding.dashboardItem1.linuxKernelVersion
-        val hostname = binding.dashboardItem1.hostname
-        val uptime = binding.dashboardItem2.upTimeValue
-        val localIpAddress = binding.dashboardItem3.localIpAddresValue
-        val publicIpAddress = binding.dashboardItem4.publicAddressValue
-        val diskUsage = binding.dashboardItem5.diskUsageValue
+        val linuxKernelVersion = binding.kernelInfo.linuxKernelVersion
+        val hostname = binding.kernelInfo.hostname
+        val uptime = binding.uptimeInfo.upTimeValue
+        val localIpAddress = binding.localIpInfo.localIpAddresValue
+        val publicIpAddress = binding.publicIpInfo.publicAddressValue
+        val diskUsage = binding.diskInfo.diskUsageValue
 
         refreshWidget.setOnClickListener {
             if(sharedPref.contains(getString(R.string.server_url)) and
@@ -91,7 +91,6 @@ class HomeFragment : Fragment() {
                     localIpAddress.text = jsonObject.getString("local_ip")
                     publicIpAddress.text = jsonObject.getString("public_ip")
                     diskUsage.text = jsonObject.getString("stress_app")
-
 
                 }
             }
