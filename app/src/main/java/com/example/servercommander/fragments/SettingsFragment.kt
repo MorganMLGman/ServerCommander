@@ -2,12 +2,11 @@ package com.example.servercommander.fragments
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.example.servercommander.MainActivity
+import androidx.fragment.app.Fragment
 import com.example.servercommander.R
 import com.example.servercommander.databinding.FragmentSettingsBinding
 
@@ -51,6 +50,7 @@ class SettingsFragment : Fragment() {
                 remove(getString(R.string.server_url))
                 remove(getString(R.string.username))
                 remove(getString(R.string.pubkey))
+                putBoolean(getString(R.string.connectionTested), false)
                 apply()
 
                 requireActivity().finish()
@@ -63,6 +63,7 @@ class SettingsFragment : Fragment() {
             {
                 with(sharedPref.edit()){
                     putString(getString(R.string.server_url), serverUrlUpdateText.text.toString())
+                    putBoolean(getString(R.string.connectionTested), false)
                     apply()
                 }
                 Toast.makeText(context, getString(R.string.server_addres_updated), Toast.LENGTH_SHORT).show()
@@ -78,6 +79,7 @@ class SettingsFragment : Fragment() {
             {
                 with(sharedPref.edit()){
                     putString(getString(R.string.username), usernameUpdateText.text.toString())
+                    putBoolean(getString(R.string.connectionTested), false)
                     apply()
                 }
                 Toast.makeText(context, getString(R.string.username_updated), Toast.LENGTH_SHORT).show()

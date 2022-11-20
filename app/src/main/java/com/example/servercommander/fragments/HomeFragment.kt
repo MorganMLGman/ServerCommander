@@ -150,7 +150,7 @@ class HomeFragment : Fragment() {
                             sshConnection.checkRequirements()
                         }
 
-                        val output = defer.await()
+                        val (output, comment) = defer.await()
 
                         if (output){
                             with(sharedPref.edit()){
@@ -178,6 +178,25 @@ class HomeFragment : Fragment() {
             {
                 Toast.makeText(context, "Connection to server is not possible with given settings", Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val connectionTest = binding.connectionTest
+
+        if (sharedPref.getBoolean(getString(R.string.connectionTested), false))
+        {
+            context?.getColor(R.color.brightGreen)
+                ?.let { it1 -> connectionTest.setColorFilter(it1, android.graphics.PorterDuff.Mode.SRC_IN) }
+            connectionTest.setImageResource(R.drawable.server_network)
+        }
+        else
+        {
+            context?.getColor(R.color.brightRed)
+                ?.let { it1 -> connectionTest.setColorFilter(it1, android.graphics.PorterDuff.Mode.SRC_IN) }
+            connectionTest.setImageResource(R.drawable.server_network_off)
         }
     }
 }

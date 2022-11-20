@@ -64,8 +64,9 @@ class SshConnection(private val serverAddress: String,
         return ""
     }
 
-    fun checkRequirements(): Boolean
+    fun checkRequirements(): Pair<Boolean, String>
     {
+        var returnComment = ""
         var requirementsOK: Boolean = true
         var answer: String = ""
 
@@ -77,12 +78,12 @@ class SshConnection(private val serverAddress: String,
             catch ( e: JSchException )
             {
                 requirementsOK = false
+                returnComment += "\nConnection cannot be established. Have you added pubkey to your server?"
             }
 
             if (answer != this.username){
-                println(answer)
-                println(this.username)
                 requirementsOK = false
+                returnComment += "\nProvided username is not identical to server username."
             }
             answer = ""
         }
@@ -90,9 +91,29 @@ class SshConnection(private val serverAddress: String,
 //        Check python version
         run {
             answer = executeRemoteCommandOneCall("python3 --version").trim()
+
+            if (!answer.contains("Python 3."))
+            {
+                requirementsOK = false
+                returnComment += "\nRequired version on Python3 is not available on server. Please run sudo apt install python3"
+            }
+            answer = ""
         }
 
-        return requirementsOK
+//        Check if python3-pip is installed
+        run {
+            answer = executeRemoteCommandOneCall("dpkg -s python3-pip").trim()
+
+            if (!answer.contains("Status: install ok"))
+            {
+                requirementsOK = false
+                returnComment += "\npython3-pip in not available on server. Please run sudo apt install python3-pip"
+            }
+
+            answer = ""
+        }
+
+        return Pair(requirementsOK, returnComment)
     }
 
     companion object
