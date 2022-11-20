@@ -27,6 +27,8 @@ class HomeFragment : Fragment() {
     private lateinit var sharedPref: SharedPreferences
     private lateinit var sshConnection: SshConnection
 
+    private var safeToClickConnect = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -123,73 +125,81 @@ class HomeFragment : Fragment() {
             }
         }
 
+
         connectionTest.setOnClickListener {
-            if(sharedPref.contains(getString(R.string.server_url)) and
-                sharedPref.contains(getString(R.string.username)) and
-                sharedPref.contains(getString(R.string.pubkey)) and
-                sharedPref.contains(getString(R.string.connectionTested))) {
-
-                sshConnection = SshConnection(
-                    sharedPref.getString(getString(R.string.server_url), "").toString(),
-                    22,
-                    sharedPref.getString(getString(R.string.username), "").toString(),
-                    sharedPref.getString(getString(R.string.pubkey), "").toString()
-                )
-
-                var rotation: Boolean = true
-
-                val coroutineScope = MainScope()
-                coroutineScope.launch {
-                    val defer = async(Dispatchers.IO) {
-                        sshConnection.checkRequirements()
-                    }
-
-                    val (output, comment) = defer.await()
-
-                    rotation = false
-
-                    if (output){
-                        with(sharedPref.edit()){
-                            putBoolean(getString(R.string.connectionTested), true)
-                            apply()
-                        }
-
-                        context?.getColor(R.color.brightGreen)
-                            ?.let { it1 -> connectionTest.setColorFilter(it1, android.graphics.PorterDuff.Mode.SRC_IN) }
-                        connectionTest.setImageResource(R.drawable.server_network)
-
-                    }
-                    else
-                    {
-                        val builder: AlertDialog.Builder? = context.let {
-                            val builder = AlertDialog.Builder(it)
-                            builder.apply {
-                                setCancelable(true)
-                                setTitle("Something went wrong :(")
-                                setMessage(comment.trim())
-                            }
-                        }
-                        builder?.create()?.show()
-                    }
-                }
-
-                fun rotate(){
-                    connectionTest.animate().apply {
-                        duration = 500
-                        rotationBy(360f)
-                    }.withEndAction{
-                        if (rotation)
-                        {
-                            rotate()
-                        }
-                    }.start()
-                }
-                rotate()
-
-            }
-            else
+            println(safeToClickConnect)
+            if(safeToClickConnect)
             {
-                Toast.makeText(context, "Connection to server is not possible with given settings", Toast.LENGTH_SHORT).show()
+                safeToClickConnect = false
+
+                if(sharedPref.contains(getString(R.string.server_url)) and
+                    sharedPref.contains(getString(R.string.username)) and
+                    sharedPref.contains(getString(R.string.pubkey)) and
+                    sharedPref.contains(getString(R.string.connectionTested))) {
+
+                    sshConnection = SshConnection(
+                        sharedPref.getString(getString(R.string.server_url), "").toString(),
+                        22,
+                        sharedPref.getString(getString(R.string.username), "").toString(),
+                        sharedPref.getString(getString(R.string.pubkey), "").toString()
+                    )
+
+                    var rotation: Boolean = true
+
+                    val coroutineScope = MainScope()
+                    coroutineScope.launch {
+                        val defer = async(Dispatchers.IO) {
+                            sshConnection.checkRequirements()
+                        }
+
+                        val (output, comment) = defer.await()
+
+                        rotation = false
+
+                        if (output){
+                            with(sharedPref.edit()){
+                                putBoolean(getString(R.string.connectionTested), true)
+                                apply()
+                            }
+
+                            context?.getColor(R.color.brightGreen)
+                                ?.let { it1 -> connectionTest.setColorFilter(it1, android.graphics.PorterDuff.Mode.SRC_IN) }
+                            connectionTest.setImageResource(R.drawable.server_network)
+
+                        }
+                        else
+                        {
+                            val builder: AlertDialog.Builder? = context.let {
+                                val builder = AlertDialog.Builder(it)
+                                builder.apply {
+                                    setCancelable(true)
+                                    setTitle("Something went wrong :(")
+                                    setMessage(comment.trim())
+                                }
+                            }
+                            builder?.create()?.show()
+                        }
+                    }
+
+                    fun rotate(){
+                        connectionTest.animate().apply {
+                            duration = 500
+                            rotationBy(360f)
+                        }.withEndAction{
+                            if (rotation)
+                            {
+                                rotate()
+                            }
+                        }.start()
+                    }
+                    rotate()
+
+                }
+                else
+                {
+                    Toast.makeText(context, "Connection to server is not possible with given settings", Toast.LENGTH_SHORT).show()
+                }
+                safeToClickConnect = true
             }
         }
     }
