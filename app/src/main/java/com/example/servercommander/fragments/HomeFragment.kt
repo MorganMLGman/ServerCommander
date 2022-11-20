@@ -136,12 +136,7 @@ class HomeFragment : Fragment() {
                     sharedPref.getString(getString(R.string.pubkey), "").toString()
                 )
 
-                connectionTest.animate().apply {
-                    duration = 500
-                    rotationBy(360f)
-                }.withEndAction{
-                    // Nothing yet
-                }.start()
+                var rotation: Boolean = true
 
                 val coroutineScope = MainScope()
                 coroutineScope.launch {
@@ -150,6 +145,8 @@ class HomeFragment : Fragment() {
                     }
 
                     val (output, comment) = defer.await()
+
+                    rotation = false
 
                     if (output){
                         with(sharedPref.edit()){
@@ -175,6 +172,20 @@ class HomeFragment : Fragment() {
                         builder?.create()?.show()
                     }
                 }
+
+                fun rotate(){
+                    connectionTest.animate().apply {
+                        duration = 500
+                        rotationBy(360f)
+                    }.withEndAction{
+                        if (rotation)
+                        {
+                            rotate()
+                        }
+                    }.start()
+                }
+                rotate()
+
             }
             else
             {
