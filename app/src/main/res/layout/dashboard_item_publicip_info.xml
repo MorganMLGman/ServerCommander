@@ -32,7 +32,7 @@
             android:paddingBottom="@dimen/_16sdp">
 
             <TextView
-                android:id="@+id/localIpAddresValue"
+                android:id="@+id/publicAddressValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/nothingString"
@@ -49,20 +49,20 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/_8sdp"
             android:layout_marginRight="@dimen/_8sdp"
-            android:text="Local IP address"
+            android:text="Public IP"
             android:textColor="@color/primary_text"
             android:textSize="@dimen/_14ssp"
-            app:layout_constraintEnd_toEndOf="@id/localIpAddresValue"
+            app:layout_constraintEnd_toEndOf="@id/publicAddressValue"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
 
         <TextView
-            android:id="@+id/localNetworkInfo"
+            android:id="@+id/publicNetworkInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/secondary_text"
-            android:text="In Your local network"
+            android:text="In internet"
             android:textSize="@dimen/_10ssp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -78,7 +78,7 @@
     <androidx.cardview.widget.CardView
         android:layout_width="@dimen/_50sdp"
         android:layout_height="@dimen/_50sdp"
-        app:cardBackgroundColor="@color/dashboard_item_3"
+        app:cardBackgroundColor="@color/dashboard_item_4"
         app:cardCornerRadius="@dimen/_14sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -88,7 +88,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="@dimen/_8sdp"
-            android:src="@drawable/router_network"
+            android:src="@drawable/router_wireless"
             android:tint="@color/white"/>
 
 

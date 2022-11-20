@@ -203,19 +203,19 @@
 
             <include
                 android:id="@+id/kernelInfo"
-                layout="@layout/kernel_info" />
+                layout="@layout/dashboard_item_kernel_info" />
             <include
                 android:id="@+id/uptimeInfo"
-                layout="@layout/uptime_info" />
+                layout="@layout/dashboard_item_uptime_info" />
             <include
                 android:id="@+id/localIpInfo"
-                layout="@layout/localip_info" />
+                layout="@layout/dashboard_item_localip_info" />
             <include
                 android:id="@+id/publicIpInfo"
-                layout="@layout/publicip_info" />
+                layout="@layout/dashboard_item_publicip_info" />
             <include
                 android:id="@+id/diskInfo"
-                layout="@layout/disk_info" />
+                layout="@layout/dashboard_item_disk_info" />
 
 
         </LinearLayout>
