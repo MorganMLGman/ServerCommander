@@ -54,7 +54,7 @@
 
 
         <TextView
-            android:id="@+id/diskUsageInfo"
+            android:id="@+id/diskNameText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/secondary_text"
