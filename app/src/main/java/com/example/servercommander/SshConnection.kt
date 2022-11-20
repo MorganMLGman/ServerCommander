@@ -139,7 +139,7 @@ class SshConnection(private val serverAddress: String,
                 else // No copilot, try to git clone
                 {
                     executeRemoteCommandOneCall("git clone https://github.com/MorganMLGman/copilot.git /home/${this.username}/copilot")
-                    answer = executeRemoteCommandOneCall("ls /home/morgan | grep copilot").trim()
+                    answer = executeRemoteCommandOneCall("ls /home/${this.username} | grep copilot").trim()
 
                     if (answer == "copilot") // Copilot now exists, install requirements
                     {
