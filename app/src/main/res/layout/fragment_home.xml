@@ -10,7 +10,7 @@
     <View
         android:id="@+id/viewHeaderBackground"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_125sdp"
+        android:layout_height="@dimen/_100sdp"
         android:background="@color/primary"
         app:layout_constraintTop_toTopOf="parent"/>
 
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_16sdp"
         android:layout_marginLeft="@dimen/_16sdp"
-        android:layout_marginTop="@dimen/_16sdp"
+        android:layout_marginTop="@dimen/_10sdp"
         android:text="@string/dashboard"
         android:textColor="@color/white"
         android:textSize="@dimen/_20ssp"
@@ -53,7 +53,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="@dimen/_14sdp">
+            android:padding="@dimen/_8sdp">
 
             <TextView
                 android:id="@+id/textViews"
