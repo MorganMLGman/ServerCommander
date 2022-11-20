@@ -40,6 +40,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/textTitle" />
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/connectionTest"
+        android:layout_width="@dimen/_26sdp"
+        android:layout_height="@dimen/_26sdp"
+        android:layout_marginEnd="32dp"
+        android:src="@drawable/server_network_off"
+
+        android:tint="@color/brightRed"
+        app:layout_constraintBottom_toBottomOf="@id/textTitle"
+        app:layout_constraintEnd_toStartOf="@+id/refreshWidget"
+        app:layout_constraintTop_toTopOf="@id/textTitle"
+        app:layout_constraintVertical_bias="0.0" />
+
     <androidx.cardview.widget.CardView
         android:id="@+id/cardHeader"
         android:layout_width="match_parent"

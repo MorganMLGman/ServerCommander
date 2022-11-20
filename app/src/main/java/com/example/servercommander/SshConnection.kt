@@ -6,12 +6,8 @@ import android.os.Environment
 import android.widget.Toast
 import com.jcraft.jsch.ChannelExec
 import com.jcraft.jsch.JSch
+import com.jcraft.jsch.JSchException
 import com.jcraft.jsch.KeyPair
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
-import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.util.*
@@ -66,6 +62,37 @@ class SshConnection(private val serverAddress: String,
             return ""
         }
         return ""
+    }
+
+    fun checkRequirements(): Boolean
+    {
+        var requirementsOK: Boolean = true
+        var answer: String = ""
+
+//        Check if ssh connection is OK and specified user matches system user
+        run {
+            try {
+                answer = executeRemoteCommandOneCall("whoami").trim()
+            }
+            catch ( e: JSchException )
+            {
+                requirementsOK = false
+            }
+
+            if (answer != this.username){
+                println(answer)
+                println(this.username)
+                requirementsOK = false
+            }
+            answer = ""
+        }
+
+//        Check python version
+        run {
+            answer = executeRemoteCommandOneCall("python3 --version").trim()
+        }
+
+        return requirementsOK
     }
 
     companion object

@@ -41,6 +41,11 @@ class MainActivity : AppCompatActivity() {
             getString(R.string.app_name), Context.MODE_PRIVATE
         )
 
+        with( sharedPref.edit()){
+            putBoolean(getString(R.string.connectionTested), false)
+            apply()
+        }
+
         tabLayout = findViewById(R.id.tabLayout)
         viewPager2 = findViewById(R.id.viewPager)
         myViewPagerAdapter = MyViewPagerAdapter(this)
