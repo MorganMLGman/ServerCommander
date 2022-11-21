@@ -127,10 +127,10 @@ class HomeFragment : Fragment() {
 
 
         connectionTest.setOnClickListener {
-            println(safeToClickConnect)
-            if(safeToClickConnect)
+            println(connectionTest.isClickable)
+            if(connectionTest.isClickable)
             {
-                safeToClickConnect = false
+                connectionTest.isClickable = false
 
                 if(sharedPref.contains(getString(R.string.server_url)) and
                     sharedPref.contains(getString(R.string.username)) and
@@ -190,16 +190,19 @@ class HomeFragment : Fragment() {
                             {
                                 rotate()
                             }
+                            else
+                            {
+                                connectionTest.isClickable = true
+                            }
                         }.start()
+
                     }
                     rotate()
-
                 }
                 else
                 {
                     Toast.makeText(context, "Connection to server is not possible with given settings", Toast.LENGTH_SHORT).show()
                 }
-                safeToClickConnect = true
             }
         }
     }
