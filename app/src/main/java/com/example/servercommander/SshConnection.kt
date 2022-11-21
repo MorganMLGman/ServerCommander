@@ -38,6 +38,7 @@ class SshConnection(private val serverAddress: String,
                 val properties = Properties()
                 properties["StrictHostKeyChecking"] = "no"
                 session.setConfig(properties)
+                session.timeout = 30000
                 session.connect()
 
                 val sshChannel = session.openChannel("exec") as ChannelExec
@@ -77,6 +78,7 @@ class SshConnection(private val serverAddress: String,
             }
             catch ( e: JSchException )
             {
+                println(e.message.toString())
                 requirementsOK = false
                 returnComment += "\nConnection cannot be established. Have you added pubkey to your server?\n"
             }
@@ -85,6 +87,12 @@ class SshConnection(private val serverAddress: String,
                 requirementsOK = false
                 returnComment += "\nProvided username is not identical to server username.\n"
             }
+
+            if(!requirementsOK)
+            {
+                return Pair(requirementsOK, returnComment)
+            }
+
             answer = ""
         }
 
