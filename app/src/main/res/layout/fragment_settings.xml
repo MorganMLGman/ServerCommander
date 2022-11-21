@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".fragments.SettingsFragment" >
 
+
     <EditText
         android:id="@+id/usernameUpdateText"
         android:layout_width="0dp"
@@ -32,6 +33,7 @@
         android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
         android:text="@string/update"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/serverUrlUpdateButton"
         tools:ignore="DuplicateSpeakableTextCheck" />
@@ -60,7 +62,7 @@
         android:autofillHints=""
         android:ems="10"
         android:hint="@string/server_address_label"
-        android:inputType="text"
+        android:inputType="none|textNoSuggestions|text"
         android:minHeight="48dp"
         android:textColorHint="#8D6E63"
         app:layout_constraintEnd_toStartOf="@+id/serverUrlUpdateButton"
@@ -74,7 +76,55 @@
         android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
         android:text="@string/update"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/clearSettingsButton" />
+
+    <TextView
+        android:id="@+id/autoRefreshIntervalLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="@string/refresh_interval_label"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/usernameUpdateText" />
+
+    <com.google.android.material.slider.Slider
+        android:id="@+id/refreshIntervalValue"
+        style="@style/Widget.AppCompat.SeekBar.Discrete"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:contentDescription="@string/refresh_interval_slider"
+        android:stepSize="5"
+        android:value="20"
+        android:valueFrom="10"
+        android:valueTo="60"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/autoRefreshIntervalLabel" />
+
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/refreshSwitch"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/refreshIntervalValue" />
+
+    <TextView
+        android:id="@+id/refreshEnableText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:text="@string/auto_refresh"
+        android:textSize="20sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/refreshSwitch"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

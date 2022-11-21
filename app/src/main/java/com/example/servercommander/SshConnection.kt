@@ -29,36 +29,43 @@ class SshConnection(private val serverAddress: String,
         {
             if(File("$keyPath/id_rsa").exists() and File("$keyPath/id_rsa.pub").exists())
             {
-                if(jsch.identityNames.isEmpty())
-                {
-                    jsch.addIdentity("$keyPath/id_rsa", "$keyPath/id_rsa.pub", null)
+                try {
+                    if(jsch.identityNames.isEmpty())
+                    {
+                        jsch.addIdentity("$keyPath/id_rsa", "$keyPath/id_rsa.pub", null)
+                    }
+
+                    val session = jsch.getSession(username, serverAddress, serverPort)
+                    val properties = Properties()
+                    properties["StrictHostKeyChecking"] = "no"
+                    session.setConfig(properties)
+                    session.timeout = 30000
+                    session.connect()
+
+                    val sshChannel = session.openChannel("exec") as ChannelExec
+                    val outputStream = ByteArrayOutputStream()
+                    sshChannel.outputStream = outputStream
+                    sshChannel.setCommand(command)
+
+                    sshChannel.connect()
+                    while(!sshChannel.isClosed)
+                    {
+                        Thread.sleep(100)
+                    }
+
+                    val exitCode = sshChannel.exitStatus
+
+                    sshChannel.disconnect()
+
+                    session.disconnect()
+
+                    return outputStream.toString()
                 }
-
-                val session = jsch.getSession(username, serverAddress, serverPort)
-                val properties = Properties()
-                properties["StrictHostKeyChecking"] = "no"
-                session.setConfig(properties)
-                session.timeout = 30000
-                session.connect()
-
-                val sshChannel = session.openChannel("exec") as ChannelExec
-                val outputStream = ByteArrayOutputStream()
-                sshChannel.outputStream = outputStream
-                sshChannel.setCommand(command)
-
-                sshChannel.connect()
-                while(!sshChannel.isClosed)
+                catch ( e: JSchException )
                 {
-                    Thread.sleep(100)
+                    println(e.message.toString())
+                    return ""
                 }
-
-                val exitCode = sshChannel.exitStatus
-
-                sshChannel.disconnect()
-
-                session.disconnect()
-
-                return outputStream.toString()
             }
             return ""
         }
@@ -73,17 +80,14 @@ class SshConnection(private val serverAddress: String,
 
 //        Check if ssh connection is OK and specified user matches system user
         run {
-            try {
-                answer = executeRemoteCommandOneCall("whoami").trim()
-            }
-            catch ( e: JSchException )
+            answer = executeRemoteCommandOneCall("whoami").trim()
+
+            if(answer.isEmpty())
             {
-                println(e.message.toString())
                 requirementsOK = false
                 returnComment += "\nConnection cannot be established. Have you added pubkey to your server?\n"
             }
-
-            if (answer != this.username){
+            else if (answer != this.username){
                 requirementsOK = false
                 returnComment += "\nProvided username is not identical to server username.\n"
             }
@@ -92,8 +96,6 @@ class SshConnection(private val serverAddress: String,
             {
                 return Pair(requirementsOK, returnComment)
             }
-
-            answer = ""
         }
 
 //        Check python version
@@ -105,7 +107,6 @@ class SshConnection(private val serverAddress: String,
                 requirementsOK = false
                 returnComment += "\nRequired version on Python3 is not available on server. Please run sudo apt install python3\n"
             }
-            answer = ""
         }
 
 //        Check if python3-pip is installed
@@ -117,8 +118,6 @@ class SshConnection(private val serverAddress: String,
                 requirementsOK = false
                 returnComment += "\npython3-pip is not available on server. Please run sudo apt install python3-pip\n"
             }
-
-            answer = ""
         }
 
 //        Check if git is installed
@@ -130,8 +129,6 @@ class SshConnection(private val serverAddress: String,
                 requirementsOK = false
                 returnComment += "\ngit is not available on server. Please run sudo apt install git\n"
             }
-
-            answer = ""
         }
 
 //        If everything OK check if copilot exists else try to git clone

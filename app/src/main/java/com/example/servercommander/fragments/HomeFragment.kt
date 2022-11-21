@@ -67,7 +67,6 @@ class HomeFragment : Fragment() {
             }
         }
 
-
         connectionTest.setOnClickListener {
             if(connectionTest.isClickable)
             {
@@ -94,7 +93,6 @@ class HomeFragment : Fragment() {
                         }
 
                         val (output, comment) = defer.await()
-
                         rotation = false
 
                         if (output){
@@ -106,8 +104,6 @@ class HomeFragment : Fragment() {
                             context?.getColor(R.color.brightGreen)
                                 ?.let { it1 -> connectionTest.setColorFilter(it1, android.graphics.PorterDuff.Mode.SRC_IN) }
                             connectionTest.setImageResource(R.drawable.server_network)
-
-                            handler.post(runnableCode)
                         }
                         else
                         {
@@ -120,6 +116,10 @@ class HomeFragment : Fragment() {
                                 }
                             }
                             builder?.create()?.show()
+
+                            context?.getColor(R.color.brightRed)
+                                ?.let { it1 -> connectionTest.setColorFilter(it1, android.graphics.PorterDuff.Mode.SRC_IN) }
+                            connectionTest.setImageResource(R.drawable.server_network_off)
                         }
                     }
 
@@ -128,16 +128,9 @@ class HomeFragment : Fragment() {
                             duration = 1000
                             rotationBy(360f)
                         }.withEndAction{
-                            if (rotation)
-                            {
-                                rotate()
-                            }
-                            else
-                            {
-                                connectionTest.isClickable = true
-                            }
+                            if (rotation)  rotate()
+                            else connectionTest.isClickable = true
                         }.start()
-
                     }
                     rotate()
                 }
@@ -166,18 +159,23 @@ class HomeFragment : Fragment() {
                 ?.let { it1 -> connectionTest.setColorFilter(it1, android.graphics.PorterDuff.Mode.SRC_IN) }
             connectionTest.setImageResource(R.drawable.server_network_off)
         }
+
+        if(refreshViewModel.enabled.value == true)
+        {
+            handler.post(autoRefreshRunner)
+        }
     }
 
     override fun onPause() {
         super.onPause()
 
-        handler.removeCallbacks(runnableCode)
+        handler.removeCallbacks(autoRefreshRunner)
     }
 
-    private val runnableCode = object: Runnable {
+    private val autoRefreshRunner = object: Runnable {
         override fun run() {
             refreshDash(auto = true)
-            handler.postDelayed(this, 15000)
+            refreshViewModel.interval.value?.let { handler.postDelayed(this, it.toLong() * 1000) }
         }
     }
 

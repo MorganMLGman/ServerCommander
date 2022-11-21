@@ -100,4 +100,7 @@
     <string name="pubkey_read_error">App is not able to read file location</string>
     <string name="nothingString">---</string>
     <string name="connectionTested">connectionTested</string>
+    <string name="refresh_interval_label">Refresh Interval</string>
+    <string name="refresh_interval_slider">refresh interval slider</string>
+    <string name="auto_refresh">Auto refresh</string>
 </resources>

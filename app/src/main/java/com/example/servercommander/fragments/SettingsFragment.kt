@@ -7,13 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.example.servercommander.R
 import com.example.servercommander.databinding.FragmentSettingsBinding
+import com.example.servercommander.viewModels.RefreshViewModel
+import com.google.android.material.slider.Slider
 
 class SettingsFragment : Fragment() {
 
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
+
+    private val refreshViewModel: RefreshViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +42,10 @@ class SettingsFragment : Fragment() {
         val serverUrlUpdateButton = binding.serverUrlUpdateButton
         val usernameUpdateText = binding.usernameUpdateText
         val usernameUpdateButton = binding.usernameUpdateButton
+        val refreshSlider = binding.refreshIntervalValue
+        val refreshSwitch = binding.refreshSwitch
+
+        refreshSwitch.isChecked = refreshViewModel.enabled.value == true
 
         val sharedPref = requireActivity().getSharedPreferences(
             getString(R.string.app_name), Context.MODE_PRIVATE
@@ -88,6 +97,16 @@ class SettingsFragment : Fragment() {
             {
                 usernameUpdateText.error = getString(R.string.usernameError)
             }
+        }
+
+        refreshSlider.addOnChangeListener(Slider.OnChangeListener {
+            slider, value, fromUser ->
+
+            refreshViewModel.interval(value.toInt())
+        })
+
+        refreshSwitch.setOnClickListener {
+            refreshViewModel.enabled(refreshSwitch.isChecked)
         }
     }
 }
