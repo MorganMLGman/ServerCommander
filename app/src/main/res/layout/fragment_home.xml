@@ -35,6 +35,7 @@
         android:layout_marginEnd="@dimen/_16sdp"
         android:src="@drawable/refresh"
         android:tint="@color/white"
+        android:clickable="true"
 
         app:layout_constraintBottom_toBottomOf="@id/textTitle"
         app:layout_constraintEnd_toEndOf="parent"

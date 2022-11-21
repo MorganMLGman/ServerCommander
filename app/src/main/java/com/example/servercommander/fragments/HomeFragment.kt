@@ -4,14 +4,18 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.example.servercommander.R
 import com.example.servercommander.SshConnection
 import com.example.servercommander.databinding.FragmentHomeBinding
+import com.example.servercommander.viewModels.RefreshViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.async
@@ -23,11 +27,11 @@ class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+    private val refreshViewModel: RefreshViewModel by activityViewModels()
 
     private lateinit var sharedPref: SharedPreferences
     private lateinit var sshConnection: SshConnection
-
-    private var safeToClickConnect = true
+    private lateinit var handler: Handler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +39,8 @@ class HomeFragment : Fragment() {
         sharedPref = requireActivity().getSharedPreferences(
             getString(R.string.app_name), Context.MODE_PRIVATE
         )
+
+        handler = Handler(Looper.getMainLooper())
     }
 
     override fun onCreateView(
@@ -53,97 +59,16 @@ class HomeFragment : Fragment() {
         val refreshWidget = binding.refreshWidget
         val connectionTest = binding.connectionTest
 
-        val tempText = binding.dashTemperatureTextView
-        val cpuUsage = binding.dashCpuTextView
-        val ramUsage = binding.dashRamTextView
-
-        val linuxKernelVersion = binding.kernelInfo.linuxKernelVersion
-        val hostname = binding.kernelInfo.hostname
-        val uptime = binding.uptimeInfo.upTimeValue
-        val localIpAddress = binding.localIpInfo.localIpAddresValue
-        val publicIpAddress = binding.publicIpInfo.publicAddressValue
-        val diskUsage = binding.diskInfo.diskUsageValue
-        val diskName = binding.diskInfo.diskNameText
-        val heaviestApp = binding.HeaviestProcessInfo.heaviestProcessValue
-
         refreshWidget.setOnClickListener {
             if(refreshWidget.isClickable)
             {
                 refreshWidget.isClickable = false
-
-                if(sharedPref.contains(getString(R.string.server_url)) and
-                    sharedPref.contains(getString(R.string.username)) and
-                    sharedPref.contains(getString(R.string.pubkey)) and
-                    sharedPref.contains(getString(R.string.connectionTested))) {
-
-                    sshConnection = SshConnection(
-                        sharedPref.getString(getString(R.string.server_url), "").toString(),
-                        22,
-                        sharedPref.getString(getString(R.string.username), "").toString(),
-                        sharedPref.getString(getString(R.string.pubkey), "").toString()
-                    )
-
-                    if ( sharedPref.getBoolean(getString(R.string.connectionTested), false) ){
-
-                        var rotation: Boolean = true
-
-                        val coroutineScope = MainScope()
-                        coroutineScope.launch {
-                            val defer = async(Dispatchers.IO) {
-                                sshConnection.executeRemoteCommandOneCall("python3 ~/copilot/main.py --dash")
-                            }
-
-                            val output = defer.await()
-
-                            rotation = false
-
-                            val jsonObject = JSONTokener(output).nextValue() as JSONObject
-
-                            tempText.text = jsonObject.getString("cpu_temp")
-                            cpuUsage.text = jsonObject.getString("cpu_usage")
-                            ramUsage.text = jsonObject.getString("ram_usage")
-
-                            linuxKernelVersion.text = jsonObject.getString("kernel")
-                            hostname.text = jsonObject.getString("hostname")
-
-                            uptime.text = jsonObject.getString("uptime")
-                            localIpAddress.text = jsonObject.getString("local_ip")
-                            publicIpAddress.text = jsonObject.getString("public_ip")
-                            diskUsage.text = jsonObject.getString("disk_usage")
-                            diskName.text = jsonObject.getString("disk_name")
-                            heaviestApp.text = jsonObject.getString("stress_app")
-
-                        }
-                        fun rotate(){
-                            refreshWidget.animate().apply {
-                                duration = 1000
-                                rotationBy(360f)
-                            }.withEndAction{
-                                if (rotation) rotate()
-                                else
-                                {
-                                    refreshWidget.isClickable = true
-                                    Toast.makeText(context, "Refreshed manually", Toast.LENGTH_SHORT).show()
-                                }
-                            }.start()
-                        }
-                        rotate()
-                    }
-                    else
-                    {
-                        Toast.makeText(context, "You need to test your connection first. Please click red server icon at the top right corner", Toast.LENGTH_LONG).show()
-                    }
-                }
-                else
-                {
-                    Toast.makeText(context, "Connection to server is not possible with given settings", Toast.LENGTH_SHORT).show()
-                }
+                refreshDash(auto = false)
             }
         }
 
 
         connectionTest.setOnClickListener {
-            println(connectionTest.isClickable)
             if(connectionTest.isClickable)
             {
                 connectionTest.isClickable = false
@@ -182,6 +107,7 @@ class HomeFragment : Fragment() {
                                 ?.let { it1 -> connectionTest.setColorFilter(it1, android.graphics.PorterDuff.Mode.SRC_IN) }
                             connectionTest.setImageResource(R.drawable.server_network)
 
+                            handler.post(runnableCode)
                         }
                         else
                         {
@@ -239,6 +165,107 @@ class HomeFragment : Fragment() {
             context?.getColor(R.color.brightRed)
                 ?.let { it1 -> connectionTest.setColorFilter(it1, android.graphics.PorterDuff.Mode.SRC_IN) }
             connectionTest.setImageResource(R.drawable.server_network_off)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        handler.removeCallbacks(runnableCode)
+    }
+
+    private val runnableCode = object: Runnable {
+        override fun run() {
+            refreshDash(auto = true)
+            handler.postDelayed(this, 15000)
+        }
+    }
+
+    private fun refreshDash(auto: Boolean = false){
+        val refreshWidget = binding.refreshWidget
+
+        val tempText = binding.dashTemperatureTextView
+        val cpuUsage = binding.dashCpuTextView
+        val ramUsage = binding.dashRamTextView
+
+        val linuxKernelVersion = binding.kernelInfo.linuxKernelVersion
+        val hostname = binding.kernelInfo.hostname
+        val uptime = binding.uptimeInfo.upTimeValue
+        val localIpAddress = binding.localIpInfo.localIpAddresValue
+        val publicIpAddress = binding.publicIpInfo.publicAddressValue
+        val diskUsage = binding.diskInfo.diskUsageValue
+        val diskName = binding.diskInfo.diskNameText
+        val heaviestApp = binding.HeaviestProcessInfo.heaviestProcessValue
+
+        if(sharedPref.contains(getString(R.string.server_url)) and
+            sharedPref.contains(getString(R.string.username)) and
+            sharedPref.contains(getString(R.string.pubkey)) and
+            sharedPref.contains(getString(R.string.connectionTested))) {
+
+            sshConnection = SshConnection(
+                sharedPref.getString(getString(R.string.server_url), "").toString(),
+                22,
+                sharedPref.getString(getString(R.string.username), "").toString(),
+                sharedPref.getString(getString(R.string.pubkey), "").toString()
+            )
+
+            if ( sharedPref.getBoolean(getString(R.string.connectionTested), false) ){
+
+                var rotation: Boolean = true
+
+                val coroutineScope = MainScope()
+                coroutineScope.launch {
+                    val defer = async(Dispatchers.IO) {
+                        sshConnection.executeRemoteCommandOneCall("python3 ~/copilot/main.py --dash")
+                    }
+
+                    val output = defer.await()
+
+                    rotation = false
+
+                    val jsonObject = JSONTokener(output).nextValue() as JSONObject
+
+                    tempText.text = jsonObject.getString("cpu_temp")
+                    cpuUsage.text = jsonObject.getString("cpu_usage")
+                    ramUsage.text = jsonObject.getString("ram_usage")
+
+                    linuxKernelVersion.text = jsonObject.getString("kernel")
+                    hostname.text = jsonObject.getString("hostname")
+
+                    uptime.text = jsonObject.getString("uptime")
+                    localIpAddress.text = jsonObject.getString("local_ip")
+                    publicIpAddress.text = jsonObject.getString("public_ip")
+                    diskUsage.text = jsonObject.getString("disk_usage")
+                    diskName.text = jsonObject.getString("disk_name")
+                    heaviestApp.text = jsonObject.getString("stress_app")
+
+                }
+                fun rotate(){
+                    refreshWidget.animate().apply {
+                        duration = 1000
+                        rotationBy(360f)
+                    }.withEndAction{
+                        if (rotation) rotate()
+                        else
+                        {
+                            refreshWidget.isClickable = true
+                            Toast.makeText(context, "Refreshed manually", Toast.LENGTH_SHORT).show()
+                        }
+                    }.start()
+                }
+                if(!auto)
+                {
+                    rotate()
+                }
+            }
+            else
+            {
+                Toast.makeText(context, "You need to test your connection first. Please click red server icon at the top right corner", Toast.LENGTH_LONG).show()
+            }
+        }
+        else
+        {
+            Toast.makeText(context, "Connection to server is not possible with given settings", Toast.LENGTH_SHORT).show()
         }
     }
 }
