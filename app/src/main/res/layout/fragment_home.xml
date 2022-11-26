@@ -236,6 +236,10 @@
                 android:id="@+id/HeaviestProcessInfo"
                 layout="@layout/dashboard_item_heaviest_app_info" />
 
+            <include
+                android:id="@+id/packageNumInfo"
+                layout="@layout/dashboard_item_package_info" />
+
 
         </LinearLayout>
 

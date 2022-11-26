@@ -103,4 +103,7 @@
     <string name="refresh_interval_label">Refresh Interval</string>
     <string name="refresh_interval_slider">refresh interval slider</string>
     <string name="auto_refresh">Auto refresh</string>
+    <string name="packages">Packages</string>
+    <string name="number_of_system_packages">Number of packages</string>
+    <string name="read_error">Read error</string>
 </resources>

@@ -20,6 +20,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import org.json.JSONException
 import org.json.JSONObject
 import org.json.JSONTokener
 
@@ -194,6 +195,7 @@ class HomeFragment : Fragment() {
         val diskUsage = binding.diskInfo.diskUsageValue
         val diskName = binding.diskInfo.diskNameText
         val heaviestApp = binding.HeaviestProcessInfo.heaviestProcessValue
+        val packageNumber = binding.packageNumInfo.packagesNumValue
 
         if(sharedPref.contains(getString(R.string.server_url)) and
             sharedPref.contains(getString(R.string.username)) and
@@ -223,19 +225,50 @@ class HomeFragment : Fragment() {
 
                     val jsonObject = JSONTokener(output).nextValue() as JSONObject
 
-                    tempText.text = jsonObject.getString("cpu_temp")
-                    cpuUsage.text = jsonObject.getString("cpu_usage")
-                    ramUsage.text = jsonObject.getString("ram_usage")
+                    try { tempText.text = jsonObject.getString("cpu_temp") }
+                    catch ( e: JSONException ){ tempText.text = getString(R.string.read_error) }
 
-                    linuxKernelVersion.text = jsonObject.getString("kernel")
-                    hostname.text = jsonObject.getString("hostname")
+                    try { cpuUsage.text = jsonObject.getString("cpu_usage") }
+                    catch ( e: JSONException ) { cpuUsage.text = getString(R.string.read_error) }
 
-                    uptime.text = jsonObject.getString("uptime")
-                    localIpAddress.text = jsonObject.getString("local_ip")
-                    publicIpAddress.text = jsonObject.getString("public_ip")
-                    diskUsage.text = jsonObject.getString("disk_usage")
-                    diskName.text = jsonObject.getString("disk_name")
-                    heaviestApp.text = jsonObject.getString("stress_app")
+                    try { ramUsage.text = jsonObject.getString("ram_usage") }
+                    catch ( e: JSONException ) { ramUsage.text = getString(R.string.read_error) }
+
+                    try { linuxKernelVersion.text = jsonObject.getString("kernel") }
+                    catch ( e: JSONException ) { linuxKernelVersion.text = getString(R.string.read_error) }
+
+                    try { hostname.text = jsonObject.getString("hostname") }
+                    catch ( e: JSONException ) { hostname.text = getString(R.string.read_error) }
+
+                    try { hostname.text = jsonObject.getString("hostname") }
+                    catch ( e: JSONException ) { hostname.text = getString(R.string.read_error) }
+
+                    try { hostname.text = jsonObject.getString("hostname") }
+                    catch ( e: JSONException ) { hostname.text = getString(R.string.read_error) }
+
+                    try { hostname.text = jsonObject.getString("hostname") }
+                    catch ( e: JSONException) { hostname.text = getString(R.string.read_error) }
+
+                    try { uptime.text = jsonObject.getString("uptime") }
+                    catch ( e: JSONException) { uptime.text = getString(R.string.read_error) }
+
+                    try { localIpAddress.text = jsonObject.getString("local_ip") }
+                    catch ( e: JSONException)  { localIpAddress.text = getString(R.string.read_error) }
+
+                    try { publicIpAddress.text = jsonObject.getString("public_ip")  }
+                    catch ( e: JSONException)  { publicIpAddress.text = getString(R.string.read_error) }
+
+                    try { diskUsage.text = jsonObject.getString("disk_usage")  }
+                    catch ( e: JSONException) { diskUsage.text = getString(R.string.read_error) }
+
+                    try { diskName.text = jsonObject.getString("disk_name") }
+                    catch ( e: JSONException) { diskName.text = getString(R.string.read_error) }
+
+                    try { heaviestApp.text = jsonObject.getString("stress_app") }
+                    catch ( e: JSONException ){ heaviestApp.text = getString(R.string.read_error) }
+
+                    try {  packageNumber.text = jsonObject.getString("packages") }
+                    catch ( e: JSONException ){ packageNumber.text = getString(R.string.read_error) }
 
                 }
                 fun rotate(){
