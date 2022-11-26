@@ -4,12 +4,13 @@ import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import java.io.File
 
 class LoginActivity : AppCompatActivity() {
 
@@ -48,7 +49,7 @@ class LoginActivity : AppCompatActivity() {
             val pubKeyPath = getExternalFilesDir(null)?.absolutePath
 
             if (pubKeyPath != null) {
-                if(pubKeyPath.isNotEmpty()) {
+                if( File(pubKeyPath, "id_rsa").exists() and File(pubKeyPath, "id_rsa.pub").exists() ) {
                     pubkey.setText(pubKeyPath)
                 }
                 else
