@@ -134,7 +134,7 @@ class SshConnection(private val serverAddress: String,
 //        If everything OK check if copilot exists else try to git clone
         run {
             if(requirementsOK){
-                answer = executeRemoteCommandOneCall("ls /home/morgan | grep copilot").trim()
+                answer = executeRemoteCommandOneCall("ls /home/${this.username} | grep copilot").trim()
 
                 if (answer == "copilot") // Copilot exists, perform git pull and can finish
                 {
