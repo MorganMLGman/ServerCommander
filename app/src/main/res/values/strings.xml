@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ServerCommander</string>
+    <string name="app_name" translatable="false">ServerCommander</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
@@ -47,10 +47,10 @@
     <string name="ServerUrlLabel">ServerUrl</string>
     <string name="UsernameLabel">Username</string>
     <string name="PasswordLabel">Password</string>
-    <string name="yunohost">YunoHost</string>
+    <string name="yunohost" translatable="false">YunoHost</string>
     <string name="select_system_type">Select system type</string>
     <string name="public_key">Public Key Location</string>
-    <string name="docker">Docker</string>
+    <string name="docker" translatable="false">Docker</string>
     <string name="generate">GENERATE RSA KEY PAIR</string>
     <string name="applogo">appLogo</string>
     <string name="clear_settings">CLEAR APP SETTINGS</string>
@@ -67,8 +67,7 @@
     <string name="cancelButtonLabel">Cancel</string>
     <string name="cautionLabel">CAUTION</string>
     <string name="overwriteMessage">You are about to overwrite previously generated keys! Are you sure you want to do this?</string>
-    <string name="pubkeyComment">user@ServerCommander</string>
-    <!-- TODO: Remove or change this placeholder text -->
+    <string name="pubkeyComment" translatable="false">user@ServerCommander</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Email</string>
@@ -79,7 +78,7 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
-    <string name="appName">ServerCommander</string>
+    <string name="appName" translatable="false">ServerCommander</string>
     <string name="quick_overview">Quick Overview</string>
     <string name="temp">Temp</string>
     <string name="overiewTemp">43 C</string>
@@ -87,10 +86,10 @@
     <string name="update">UPDATE</string>
     <string name="server_address_label">Server Address</string>
     <string name="username_updated">Username updated</string>
-    <string name="username">username</string>
+    <string name="username" translatable="false">username</string>
     <string name="server_addres_updated">Server address updated</string>
-    <string name="server_url">serverUrl</string>
-    <string name="pubkey">pubkey</string>
+    <string name="server_url" translatable="false">serverUrl</string>
+    <string name="pubkey" translatable="false">pubkey</string>
     <string name="not_available">Not available</string>
     <string name="send">SEND</string>
     <string name="command">Command</string>
@@ -98,8 +97,8 @@
     <string name="read_pubkey">READ PUBKEY</string>
     <string name="no_pubkey_found">No pubkey available. You can generate one now.</string>
     <string name="pubkey_read_error">App is not able to read file location</string>
-    <string name="nothingString">---</string>
-    <string name="connectionTested">connectionTested</string>
+    <string name="nothingString" translatable="false">---</string>
+    <string name="connectionTested" translatable="false">connectionTested</string>
     <string name="refresh_interval_label">Refresh Interval</string>
     <string name="refresh_interval_slider">refresh interval slider</string>
     <string name="auto_refresh">Auto refresh</string>
