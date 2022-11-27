@@ -121,7 +121,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
-                        android:src="@drawable/archive_search" />
+                        android:src="@drawable/archive_search"
+                        android:tint="@color/iconColour"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -169,7 +170,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
-                        android:src="@drawable/download" />
+                        android:src="@drawable/download"
+                        android:tint="@color/iconColour"/>
 
                     <TextView
                         android:layout_width="wrap_content"

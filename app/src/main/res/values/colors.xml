@@ -17,4 +17,5 @@
     <color name="brightRed">#ff0003</color>
     <color name="brightGreen">#4ff055</color>
     <color name="packageColor">#8762c9</color>
+    <color name="iconColour">#262626</color>
 </resources>

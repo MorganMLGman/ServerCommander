@@ -95,7 +95,8 @@
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="@dimen/_28sdp"
                     android:layout_height="@dimen/_28sdp"
-                    android:src="@drawable/thermometer"/>
+                    android:src="@drawable/thermometer"
+                    android:tint="@color/iconColour"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -130,7 +131,8 @@
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="@dimen/_28sdp"
                     android:layout_height="@dimen/_28sdp"
-                    android:src="@drawable/cpu_64_bit"/>
+                    android:src="@drawable/cpu_64_bit"
+                    android:tint="@color/iconColour"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -165,7 +167,8 @@
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="@dimen/_28sdp"
                     android:layout_height="@dimen/_28sdp"
-                    android:src="@drawable/memory"/>
+                    android:src="@drawable/memory"
+                    android:tint="@color/iconColour"/>
 
                 <TextView
                     android:layout_width="wrap_content"
