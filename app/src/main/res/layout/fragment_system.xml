@@ -6,6 +6,7 @@
     android:fillViewport="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:scrollbars="none"
     tools:context=".fragments.SystemFragment">
 
     <RelativeLayout
@@ -65,7 +66,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/fire_alert"
-                    android:tint="@color/dashboard_item_7"/>
+                    android:tint="@color/dashboard_item_7"
+                    android:layout_margin="5dp"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -81,7 +83,8 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:textColor="@color/primary_text"
-                    android:backgroundTint="@color/dashboard_item_2"
+                    android:textStyle="bold"
+                    android:backgroundTint="@color/dashboard_item_1"
                     android:text="Button" />
 
 
@@ -111,7 +114,8 @@
                     <androidx.appcompat.widget.AppCompatImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/download"/>
+                        android:src="@drawable/download"
+                        android:layout_margin="5dp"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -128,7 +132,8 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="8dp"
                         android:textColor="@color/primary_text"
-                        android:backgroundTint="@color/dashboard_item_2"
+                        android:backgroundTint="@color/dashboard_item_1"
+                        android:textStyle="bold"
                         android:text="Button" />
 
                 </LinearLayout>
@@ -157,7 +162,8 @@
                     <androidx.appcompat.widget.AppCompatImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/download"/>
+                        android:src="@drawable/download"
+                        android:layout_margin="5dp"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -174,7 +180,8 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="8dp"
                         android:textColor="@color/primary_text"
-                        android:backgroundTint="@color/dashboard_item_2"
+                        android:backgroundTint="@color/dashboard_item_1"
+                        android:textStyle="bold"
                         android:text="Button" />
 
                 </LinearLayout>
@@ -204,7 +211,8 @@
                     <androidx.appcompat.widget.AppCompatImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/download"/>
+                        android:src="@drawable/download"
+                        android:layout_margin="5dp"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -221,7 +229,8 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="8dp"
                         android:textColor="@color/primary_text"
-                        android:backgroundTint="@color/dashboard_item_2"
+                        android:backgroundTint="@color/dashboard_item_1"
+                        android:textStyle="bold"
                         android:text="Button" />
 
                 </LinearLayout>
@@ -250,7 +259,8 @@
                     <androidx.appcompat.widget.AppCompatImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/download"/>
+                        android:src="@drawable/download"
+                        android:layout_margin="5dp"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -267,7 +277,8 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="8dp"
                         android:textColor="@color/primary_text"
-                        android:backgroundTint="@color/dashboard_item_2"
+                        android:backgroundTint="@color/dashboard_item_1"
+                        android:textStyle="bold"
                         android:text="Button" />
 
                 </LinearLayout>
@@ -296,7 +307,8 @@
                     <androidx.appcompat.widget.AppCompatImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/download"/>
+                        android:src="@drawable/download"
+                        android:layout_margin="5dp"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -313,7 +325,8 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="8dp"
                         android:textColor="@color/primary_text"
-                        android:backgroundTint="@color/dashboard_item_2"
+                        android:backgroundTint="@color/dashboard_item_1"
+                        android:textStyle="bold"
                         android:text="Button" />
 
                 </LinearLayout>
@@ -342,7 +355,8 @@
                     <androidx.appcompat.widget.AppCompatImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/download"/>
+                        android:src="@drawable/download"
+                        android:layout_margin="5dp"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -359,7 +373,8 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="8dp"
                         android:textColor="@color/primary_text"
-                        android:backgroundTint="@color/dashboard_item_2"
+                        android:backgroundTint="@color/dashboard_item_1"
+                        android:textStyle="bold"
                         android:text="Button" />
 
                 </LinearLayout>
@@ -388,7 +403,8 @@
                     <androidx.appcompat.widget.AppCompatImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/download"/>
+                        android:src="@drawable/download"
+                        android:layout_margin="5dp"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -405,7 +421,8 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="8dp"
                         android:textColor="@color/primary_text"
-                        android:backgroundTint="@color/dashboard_item_2"
+                        android:backgroundTint="@color/dashboard_item_1"
+                        android:textStyle="bold"
                         android:text="Button" />
 
                 </LinearLayout>
@@ -413,6 +430,5 @@
 
 
         </GridLayout>
-
     </RelativeLayout>
 </ScrollView>
