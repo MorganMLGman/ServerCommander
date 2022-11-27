@@ -3,11 +3,11 @@ package com.example.servercommander.fragments
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import com.example.servercommander.R
 import com.example.servercommander.SshConnection
 import com.example.servercommander.databinding.FragmentTerminalBinding
@@ -49,30 +49,37 @@ class TerminalFragment : Fragment() {
         val commandSendButton = binding.commandSendButton
 
         commandSendButton.setOnClickListener{
-            if(sharedPref.contains(getString(R.string.server_url)) and
-               sharedPref.contains(getString(R.string.username)) and
-               sharedPref.contains(getString(R.string.pubkey))) {
-                sshConnection = SshConnection(
-                    sharedPref.getString(getString(R.string.server_url), "").toString(),
-                    22,
-                    sharedPref.getString(getString(R.string.username), "").toString(),
-                    sharedPref.getString(getString(R.string.pubkey), "").toString()
-                )
+            if(sharedPref.getBoolean(getString(R.string.connectionTested), false))
+            {
+                if(sharedPref.contains(getString(R.string.server_url)) and
+                    sharedPref.contains(getString(R.string.username)) and
+                    sharedPref.contains(getString(R.string.pubkey))) {
+                    sshConnection = SshConnection(
+                        sharedPref.getString(getString(R.string.server_url), "").toString(),
+                        22,
+                        sharedPref.getString(getString(R.string.username), "").toString(),
+                        sharedPref.getString(getString(R.string.pubkey), "").toString()
+                    )
 
-                val coroutineScope = MainScope()
-                coroutineScope.launch {
-                    val defer = async(Dispatchers.IO) {
-                        sshConnection.executeRemoteCommandOneCall(commandText.text.toString())
+                    val coroutineScope = MainScope()
+                    coroutineScope.launch {
+                        val defer = async(Dispatchers.IO) {
+                            sshConnection.executeRemoteCommandOneCall(commandText.text.toString())
+                        }
+
+                        val output = defer.await()
+
+                        terminalText.setText(terminalText.text.toString()  + output)
                     }
-
-                    val output = defer.await()
-
-                    terminalText.setText(terminalText.text.toString()  + output)
+                }
+                else
+                {
+                    Toast.makeText(context, "Connection to server is not possible with given settings", Toast.LENGTH_SHORT).show()
                 }
             }
             else
             {
-                Toast.makeText(context, "Connection to server is not possible with given settings", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "You need to test your connection first. Please click red server icon at the HOME tab", Toast.LENGTH_LONG).show()
             }
         }
     }
