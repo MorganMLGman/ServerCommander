@@ -45,6 +45,9 @@ class SettingsFragment : Fragment() {
         val refreshSlider = binding.refreshIntervalValue
         val refreshSwitch = binding.refreshSwitch
 
+        val sudoPassword = binding.sudoPassword
+        val sudoSave = binding.sudoSaveButton
+
         refreshSwitch.isChecked = refreshViewModel.enabled.value == true
 
         val sharedPref = requireActivity().getSharedPreferences(
@@ -59,6 +62,7 @@ class SettingsFragment : Fragment() {
                 remove(getString(R.string.server_url))
                 remove(getString(R.string.username))
                 remove(getString(R.string.pubkey))
+                remove(getString(R.string.sudo_password))
                 putBoolean(getString(R.string.connectionTested), false)
                 apply()
 
@@ -107,6 +111,20 @@ class SettingsFragment : Fragment() {
 
         refreshSwitch.setOnClickListener {
             refreshViewModel.enabled(refreshSwitch.isChecked)
+        }
+
+        sudoSave.setOnClickListener {
+            val password = sudoPassword.text.toString()
+
+            if (password.isNotEmpty() and (password != ""))
+            {
+                with(sharedPref.edit()){
+                    putString("sudo_password", password)
+                    apply()
+                }
+                Toast.makeText(context, "Password saved", Toast.LENGTH_SHORT).show()
+            }
+            else Toast.makeText(context, "Password cannot be saved", Toast.LENGTH_SHORT).show()
         }
     }
 }

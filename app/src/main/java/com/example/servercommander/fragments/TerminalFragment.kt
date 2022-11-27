@@ -77,10 +77,7 @@ class TerminalFragment : Fragment() {
                     Toast.makeText(context, "Connection to server is not possible with given settings", Toast.LENGTH_SHORT).show()
                 }
             }
-            else
-            {
-                Toast.makeText(context, "You need to test your connection first. Please click red server icon at the HOME tab", Toast.LENGTH_LONG).show()
-            }
+            else Toast.makeText(context, "You need to test your connection first. Please click red server icon at the HOME tab", Toast.LENGTH_LONG).show()
         }
     }
 }

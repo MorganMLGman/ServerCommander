@@ -221,7 +221,7 @@ class SshConnection(private val serverAddress: String,
                 val idRsaPub = File(context.getExternalFilesDir(null), "id_rsa.pub")
 
                 if (idRsa.exists() or idRsaPub.exists()) {
-                    val builder: AlertDialog.Builder? = context.let {
+                    val builder: AlertDialog.Builder = context.let {
                         val builder = AlertDialog.Builder(it)
                         builder.apply {
                             setPositiveButton(
@@ -255,7 +255,7 @@ class SshConnection(private val serverAddress: String,
                             setMessage(context.getString(R.string.overwriteMessage))
                         }
                     }
-                    builder?.create()?.show()
+                    builder.create()?.show()
                 } else {
 
                     keyPair.writePrivateKey(idRsa.absolutePath)

@@ -127,4 +127,32 @@
         app:layout_constraintBaseline_toBaselineOf="@+id/refreshSwitch"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <EditText
+        android:id="@+id/sudoPassword"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:autofillHints=""
+        android:ems="10"
+        android:hint="@string/sudo_password"
+        android:inputType="textPassword"
+        android:minHeight="48dp"
+        android:textSize="18sp"
+        android:textStyle="normal"
+        app:layout_constraintEnd_toStartOf="@+id/sudoSaveButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/refreshEnableText" />
+
+    <Button
+        android:id="@+id/sudoSaveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:text="@string/save"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/refreshEnableText" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

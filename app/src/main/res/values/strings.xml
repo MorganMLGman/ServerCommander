@@ -106,4 +106,7 @@
     <string name="number_of_system_packages">Number of packages</string>
     <string name="read_error">Read error</string>
     <string name="uptime">Uptime</string>
+    <string name="reboot">REBOOT</string>
+    <string name="save">SAVE</string>
+    <string name="sudo_password">SUDO Password</string>
 </resources>
