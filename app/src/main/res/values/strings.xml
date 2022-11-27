@@ -106,4 +106,5 @@
     <string name="packages">Packages</string>
     <string name="number_of_system_packages">Number of packages</string>
     <string name="read_error">Read error</string>
+    <string name="uptime">Uptime</string>
 </resources>

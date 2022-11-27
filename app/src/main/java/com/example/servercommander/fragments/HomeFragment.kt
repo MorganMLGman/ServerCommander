@@ -190,6 +190,7 @@ class HomeFragment : Fragment() {
         val linuxKernelVersion = binding.kernelInfo.linuxKernelVersion
         val hostname = binding.kernelInfo.hostname
         val uptime = binding.uptimeInfo.upTimeValue
+        val uptimeSince = binding.uptimeInfo.upTimeInfo
         val localIpAddress = binding.localIpInfo.localIpAddresValue
         val publicIpAddress = binding.publicIpInfo.publicAddressValue
         val diskUsage = binding.diskInfo.diskUsageValue
@@ -251,6 +252,9 @@ class HomeFragment : Fragment() {
 
                     try { uptime.text = jsonObject.getString("uptime") }
                     catch ( e: JSONException) { uptime.text = getString(R.string.read_error) }
+
+                    try { uptimeSince.text = jsonObject.getString("uptime_since") }
+                    catch ( e: JSONException) { uptimeSince.text = getString(R.string.read_error) }
 
                     try { localIpAddress.text = jsonObject.getString("local_ip") }
                     catch ( e: JSONException)  { localIpAddress.text = getString(R.string.read_error) }
