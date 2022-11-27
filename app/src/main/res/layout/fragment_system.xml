@@ -45,6 +45,7 @@
             android:columnCount="2"
             android:rowCount="4">
 
+<!--        REBOOT-->
             <androidx.cardview.widget.CardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -87,7 +88,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="8dp"
                         android:backgroundTint="@color/dashboard_item_1"
-                        android:text="RUN"
+                        android:text="@string/run"
                         android:textColor="@color/primary_text"
                         android:textStyle="bold" />
 
@@ -95,12 +96,61 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
+<!--        CHECK UPDATE-->
             <androidx.cardview.widget.CardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_row="0"
                 android:layout_rowWeight="1"
                 android:layout_column="1"
+                android:layout_columnWeight="1"
+                android:layout_gravity="fill"
+                android:layout_margin="8dp"
+                app:cardBackgroundColor="@color/card_background"
+                app:cardCornerRadius="@dimen/_14sdp"
+                app:cardElevation="8dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:src="@drawable/archive_search" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/update"
+                        android:textAlignment="center"
+                        android:textColor="@color/primary_text"
+                        android:textSize="@dimen/_12ssp"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/updateButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:backgroundTint="@color/dashboard_item_1"
+                        android:text="@string/run"
+                        android:textColor="@color/primary_text"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="1"
+                android:layout_rowWeight="1"
+                android:layout_column="0"
                 android:layout_columnWeight="1"
                 android:layout_gravity="fill"
                 android:layout_margin="8dp"
@@ -142,7 +192,6 @@
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
-
 
         </GridLayout>
 

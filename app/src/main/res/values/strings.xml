@@ -109,4 +109,5 @@
     <string name="reboot">REBOOT</string>
     <string name="save">SAVE</string>
     <string name="sudo_password">SUDO Password</string>
+    <string name="run">RUN</string>
 </resources>
