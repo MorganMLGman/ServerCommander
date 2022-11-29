@@ -3,17 +3,16 @@ package com.example.servercommander.fragments
 import android.app.AlertDialog
 import android.content.Context
 import android.content.SharedPreferences
-import android.graphics.Typeface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.servercommander.R
 import com.example.servercommander.SshConnection
 import com.example.servercommander.databinding.AlertDialogPasswordBinding
+import com.example.servercommander.databinding.AlertDialogUpdatesBinding
 import com.example.servercommander.databinding.FragmentSystemBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -232,34 +231,31 @@ class SystemFragment : Fragment() {
                         i -> updates.getString(i)
                     }
 
-                    val builder: AlertDialog.Builder = context.let {
-                        val builder = AlertDialog.Builder(it)
-                        var text = ""
-                        builder.apply {
-                            if(updatesArray.isEmpty()){
-                                setTitle("No updates")
-                                setMessage("No available updates")
-                            }
-                            else{
-                                setTitle("Available updates")
-                                updatesArray.forEach { it_string ->
-                                    text += it_string + "\n"
-                                }
-                                val item = TextView(it)
-                                item.text = text
-                                item.typeface = Typeface.MONOSPACE
-                                item.textSize = resources.getDimension(com.intuit.ssp.R.dimen._4ssp)
-                                item.setPadding(resources.getDimension(com.intuit.ssp.R.dimen._8ssp).toInt(),
-                                    0,
-                                    4,
-                                    resources.getDimension(com.intuit.ssp.R.dimen._8ssp).toInt())
-                                setView(item)
-                            }
-                            setCancelable(true)
-                        }
-                    }
-                    builder.create()?.show()
+                    val inflater = activity?.layoutInflater
+                    if (inflater != null) {
+                        val updateLayout = AlertDialogUpdatesBinding.inflate(inflater)
 
+                        val builder: AlertDialog.Builder = context.let {
+                            val builder = AlertDialog.Builder(it)
+                            var text = ""
+                            builder.apply {
+                                if(updatesArray.isEmpty()){
+                                    setTitle("No updates")
+                                    setMessage("No available updates")
+                                }
+                                else{
+                                    updatesArray.forEach { it_string ->
+                                        text += it_string + "\n"
+                                    }
+                                    updateLayout.updatesText.setText(text)
+                                    setView(updateLayout.root)
+                                }
+                                setCancelable(true)
+                            }
+                        }
+                        builder.create()?.show()
+                    }
+                    else return@launch
                 }
                 catch ( e: JSONException )
                 {
