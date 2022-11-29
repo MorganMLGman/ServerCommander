@@ -5,16 +5,15 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Typeface
 import android.os.Bundle
-import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.servercommander.R
 import com.example.servercommander.SshConnection
+import com.example.servercommander.databinding.AlertDialogPasswordBinding
 import com.example.servercommander.databinding.FragmentSystemBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -24,6 +23,7 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import org.json.JSONTokener
+import kotlin.reflect.KFunction2
 
 class SystemFragment : Fragment() {
 
@@ -54,17 +54,20 @@ class SystemFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val rebootButton = binding.rebootButton
-        val updateButtom = binding.updateButton
+        val updateButton = binding.updateButton
+        val upgradeButton = binding.upgradeButton
 
         if( !(::sshConnection.isInitialized or sharedPref.getBoolean(getString(R.string.connectionTested), false)))
         {
             rebootButton.isEnabled = false
-            updateButtom.isEnabled = false
+            updateButton.isEnabled = false
+            upgradeButton.isEnabled = false
         }
         else
         {
             rebootButton.isEnabled = true
-            updateButtom.isEnabled = true
+            updateButton.isEnabled = true
+            upgradeButton.isEnabled = true
 
             if (sharedPref.contains(getString(R.string.server_url)) and
                 sharedPref.contains(getString(R.string.username)) and
@@ -86,24 +89,35 @@ class SystemFragment : Fragment() {
                 var password = sharedPref.getString("sudo_password", "")!!
 
                 if(password.isEmpty() or ( password == "" )) {
-                    password = showPasswordModal()
-                    callReboot(username, password)
+                    password = showPasswordModal(username, ::callUpdate)
                 }
                 else callReboot(username, password)
             }
             else Toast.makeText(context, "You need to test your connection first. Please click red server icon at the HOME tab", Toast.LENGTH_LONG).show()
         }
 
-        updateButtom.setOnClickListener {
+        updateButton.setOnClickListener {
             if(::sshConnection.isInitialized and sharedPref.getBoolean(getString(R.string.connectionTested), false)) {
                 val username = sharedPref.getString(getString(R.string.username), "")!!
                 var password = sharedPref.getString("sudo_password", "")!!
 
                 if(password.isEmpty() or ( password == "" )) {
-                    password = showPasswordModal()
-                    callUpdate(username, password)
+                    password = showPasswordModal(username, ::callUpdate)
                 }
                 else callUpdate(username, password)
+            }
+            else Toast.makeText(context, "You need to test your connection first. Please click red server icon at the HOME tab", Toast.LENGTH_LONG).show()
+        }
+
+        upgradeButton.setOnClickListener {
+            if(::sshConnection.isInitialized and sharedPref.getBoolean(getString(R.string.connectionTested), false)) {
+                val username = sharedPref.getString(getString(R.string.username), "")!!
+                var password = sharedPref.getString("sudo_password", "")!!
+
+                if(password.isEmpty() or ( password == "" )) {
+                    password = showPasswordModal(username, ::callUpgrade)
+                }
+                else callUpgrade(username, password)
             }
             else Toast.makeText(context, "You need to test your connection first. Please click red server icon at the HOME tab", Toast.LENGTH_LONG).show()
         }
@@ -113,17 +127,20 @@ class SystemFragment : Fragment() {
         super.onResume()
 
         val rebootButton = binding.rebootButton
-        val updateButtom = binding.updateButton
+        val updateButton = binding.updateButton
+        val upgradeButton = binding.upgradeButton
 
         if( !(::sshConnection.isInitialized or sharedPref.getBoolean(getString(R.string.connectionTested), false)))
         {
             rebootButton.isEnabled = false
-            updateButtom.isEnabled = false
+            updateButton.isEnabled = false
+            upgradeButton.isEnabled = false
         }
         else
         {
             rebootButton.isEnabled = true
-            updateButtom.isEnabled = true
+            updateButton.isEnabled = true
+            upgradeButton.isEnabled = true
 
             if (sharedPref.contains(getString(R.string.server_url)) and
                 sharedPref.contains(getString(R.string.username)) and
@@ -140,34 +157,38 @@ class SystemFragment : Fragment() {
         }
     }
 
-    private fun showPasswordModal(): String {
+    private fun showPasswordModal(username: String, func: KFunction2<String, String, Unit>): String {
         var password = ""
-        val builder: AlertDialog.Builder = context.let {
-            val builder = AlertDialog.Builder(it)
-            builder.apply {
-                val input = EditText(it)
-                input.hint = "Enter SUDO password"
-                input.inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD
-                setView(input)
+
+        val inflater = activity?.layoutInflater
+        if (inflater != null) {
+            val passwordLayout = AlertDialogPasswordBinding.inflate(inflater)
+
+            val builder: AlertDialog.Builder = context.let {
+                val builder = AlertDialog.Builder(it)
+                builder.apply {
+                val input = passwordLayout.passwordText
                 setPositiveButton(
                     "Send"
                 ) { _, _ ->
                     password = if(input.text.toString() != "") {
                         input.text.toString()
                     } else ""
+                    println(password)
+                    func(username, password)
                 }
                 setNegativeButton(
                     context.getString(R.string.cancelButtonLabel)
                 ) { _, _ ->
                     password = ""
                 }
-
-                setTitle("Password")
-                setMessage("Please provide SUDO password.")
+                    setView(passwordLayout.root)
+                }
             }
+            builder.create()?.show()
+            return password
         }
-        builder.create()?.show()
-        return password
+        return ""
     }
 
     private fun callReboot(username: String, password: String) {
@@ -245,6 +266,33 @@ class SystemFragment : Fragment() {
                     Toast.makeText(context, "Check updates command was not successful.", Toast.LENGTH_LONG).show()
                     return@launch
                 }
+            }
+        }
+        else Toast.makeText(context, "Please provide valid SUDO password!", Toast.LENGTH_LONG).show()
+    }
+
+    private fun callUpgrade(username: String, password: String){
+        if (password != "")
+        {
+            val coroutineScope = MainScope()
+            coroutineScope.launch {
+                val defer = async(Dispatchers.IO) {
+                    sshConnection.executeRemoteCommandOneCall("python3 /home/$username/copilot/main.py update run $password")
+                }
+
+                val output = defer.await().trim()
+
+                val builder: AlertDialog.Builder = context.let {
+                    val builder = AlertDialog.Builder(it)
+                    var text = ""
+                    builder.apply {
+                        setTitle("Upgrades")
+                        setMessage("Number of upgraded packages: $output")
+                        setCancelable(true)
+                    }
+                }
+                builder.create()?.show()
+
             }
         }
         else Toast.makeText(context, "Please provide valid SUDO password!", Toast.LENGTH_LONG).show()

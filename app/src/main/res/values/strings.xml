@@ -110,4 +110,6 @@
     <string name="save">SAVE</string>
     <string name="sudo_password">SUDO Password</string>
     <string name="run">RUN</string>
+    <string name="upgrade">UPGRADE</string>
+    <string name="please_enter_sudo_password">Please enter SUDO password</string>
 </resources>

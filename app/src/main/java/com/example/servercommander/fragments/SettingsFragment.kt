@@ -62,7 +62,7 @@ class SettingsFragment : Fragment() {
                 remove(getString(R.string.server_url))
                 remove(getString(R.string.username))
                 remove(getString(R.string.pubkey))
-                remove(getString(R.string.sudo_password))
+                remove("sudo_password")
                 putBoolean(getString(R.string.connectionTested), false)
                 apply()
 
