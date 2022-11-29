@@ -36,11 +36,7 @@ jobs:
       - name: Create tag
         id: create_tag
         run: |
-          if [[ "${{ github.event_name }}" == "schedule" ]]; then
-            tag=v$(date +%Y%m%d.%H%M%S)
-          else
-            tag=$(basename "${{ github.ref }}")
-          fi
+          tag=v$(date +%Y%m%d.%H%M%S)
           echo "::set-output name=tag::$tag"
 
       - name: Create Draft Release
