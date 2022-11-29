@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.example.servercommander.R
@@ -49,11 +48,11 @@ class AppsFragment : Fragment() {
 
         if( !(::sshConnection.isInitialized or sharedPref.getBoolean(getString(R.string.connectionTested), false)))
         {
-            Toast.makeText(context, "You need to test your connection first. Please click red server icon at the HOME tab", Toast.LENGTH_LONG).show()
-            TODO("Disable buttons")
+            // TODO: DISABLE BUTTONS
         }
         else
         {
+            // TODO: ENABLE BUTTONS
             if (sharedPref.contains(getString(R.string.server_url)) and
                 sharedPref.contains(getString(R.string.username)) and
                 sharedPref.contains(getString(R.string.pubkey)) and
@@ -72,6 +71,5 @@ class AppsFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        TODO("Something")
     }
 }

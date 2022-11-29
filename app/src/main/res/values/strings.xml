@@ -113,4 +113,6 @@
     <string name="upgrade">UPGRADE</string>
     <string name="please_enter_sudo_password">Please enter SUDO password</string>
     <string name="available_updates">Available updates</string>
+    <string name="connection_test">connection test</string>
+    <string name="refresh">refresh</string>
 </resources>
