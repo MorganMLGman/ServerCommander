@@ -16,6 +16,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:tabIndicatorColor="#673AB7"
+        app:tabMode="scrollable"
         app:tabIndicatorGravity="top">
 
         <com.google.android.material.tabs.TabItem
@@ -29,6 +30,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="SYSTEM" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/appsTab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="APPS" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/terminalTab"

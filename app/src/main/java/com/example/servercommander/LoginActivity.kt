@@ -79,6 +79,10 @@ class LoginActivity : AppCompatActivity() {
                         putString(getString(R.string.server_url), serverUrl.text.toString())
                         putString(getString(R.string.username), username.text.toString())
                         putString(getString(R.string.pubkey), pubkey.text.toString())
+
+                        if(radioYunohost.isChecked) putString("server_type", "yunohost")
+                        else                        putString("server_type", "docker")
+
                         apply()
                     }
 
