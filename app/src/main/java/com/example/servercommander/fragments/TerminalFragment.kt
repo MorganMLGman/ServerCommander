@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import com.example.servercommander.R
 import com.example.servercommander.SshConnection
 import com.example.servercommander.databinding.FragmentTerminalBinding
+import com.jcraft.jsch.Session
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.async
@@ -24,12 +25,27 @@ class TerminalFragment : Fragment() {
     private lateinit var sharedPref: SharedPreferences
     private lateinit var sshConnection: SshConnection
 
+    private lateinit var session: Session
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         sharedPref = requireActivity().getSharedPreferences(
             getString(R.string.app_name), Context.MODE_PRIVATE
         )
+
+        if(sharedPref.getBoolean(getString(R.string.connectionTested), false)) {
+            if (!::sshConnection.isInitialized) {
+                if (sharedPref.contains("serverUrl") and sharedPref.contains("username") and sharedPref.contains("pubkey")) {
+                    sshConnection = SshConnection(
+                        sharedPref.getString(getString(R.string.server_url), "").toString(),
+                        22,
+                        sharedPref.getString(getString(R.string.username), "").toString(),
+                        sharedPref.getString(getString(R.string.pubkey), "").toString()
+                    )
+                }
+            }
+        }
     }
 
     override fun onCreateView(
@@ -51,30 +67,28 @@ class TerminalFragment : Fragment() {
         commandSendButton.setOnClickListener{
             if(sharedPref.getBoolean(getString(R.string.connectionTested), false))
             {
-                if(sharedPref.contains(getString(R.string.server_url)) and
-                    sharedPref.contains(getString(R.string.username)) and
-                    sharedPref.contains(getString(R.string.pubkey))) {
-                    sshConnection = SshConnection(
-                        sharedPref.getString(getString(R.string.server_url), "").toString(),
-                        22,
-                        sharedPref.getString(getString(R.string.username), "").toString(),
-                        sharedPref.getString(getString(R.string.pubkey), "").toString()
-                    )
-
+                if(::sshConnection.isInitialized)
+                {
                     val coroutineScope = MainScope()
                     coroutineScope.launch {
                         val defer = async(Dispatchers.IO) {
-                            sshConnection.executeRemoteCommandOneCall(commandText.text.toString())
+                            sshConnection.executeRemoteCommand(commandText.text.toString())
                         }
 
                         val output = defer.await()
-
-                        terminalText.setText(terminalText.text.toString()  + output)
                     }
                 }
                 else
                 {
-                    Toast.makeText(context, "Connection to server is not possible with given settings", Toast.LENGTH_SHORT).show()
+                    if (sharedPref.contains("serverUrl") and sharedPref.contains("username") and sharedPref.contains("pubkey")) {
+                        sshConnection = SshConnection(
+                            sharedPref.getString(getString(R.string.server_url), "").toString(),
+                            22,
+                            sharedPref.getString(getString(R.string.username), "").toString(),
+                            sharedPref.getString(getString(R.string.pubkey), "").toString()
+                        )
+                    }
+                    else Toast.makeText(context, "Connection to server is not possible with given settings", Toast.LENGTH_SHORT).show()
                 }
             }
             else Toast.makeText(context, "You need to test your connection first. Please click red server icon at the HOME tab", Toast.LENGTH_LONG).show()

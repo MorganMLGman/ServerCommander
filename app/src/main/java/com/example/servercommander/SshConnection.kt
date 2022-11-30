@@ -5,8 +5,7 @@ import android.content.Context
 import android.os.Environment
 import android.widget.Toast
 import com.jcraft.jsch.*
-import java.io.ByteArrayOutputStream
-import java.io.File
+import java.io.*
 import java.util.*
 
 
@@ -17,7 +16,11 @@ class SshConnection(private val serverAddress: String,
 
     private var jsch = JSch()
     private val sessionTimeout: Int = 30000
+
+    private lateinit var session: Session
     private lateinit var shell: ChannelShell
+    private lateinit var fromServer: BufferedReader
+    private lateinit var toServer: OutputStream
 
     fun executeRemoteCommandOneCall(command: String): String {
         if (serverAddress.isNotEmpty() and username.isNotEmpty() and keyPath.isNotEmpty() and command.isNotEmpty()) {
@@ -161,7 +164,7 @@ class SshConnection(private val serverAddress: String,
         return newSession
     }
 
-    fun openConnection(): Session? {
+    fun openConnection() {
         if (serverAddress.isNotEmpty() and username.isNotEmpty() and keyPath.isNotEmpty()) {
             if (File("$keyPath/id_rsa").exists() and File("$keyPath/id_rsa.pub").exists()) {
                 try {
@@ -175,39 +178,58 @@ class SshConnection(private val serverAddress: String,
                     session.setConfig(properties)
                     session.connect()
 
-                    return session
+                    this.session = session
+                    shell = session.openChannel("shell") as ChannelShell
+                    shell.setPty(false)
+
+                    fromServer = BufferedReader(InputStreamReader(shell.inputStream))
+                    toServer = shell.outputStream
+
+                    shell.connect()
+
                 } catch (e: JSchException) {
                     println(e.message.toString())
-                    return null
                 }
             }
-            return null
         }
-        return null
     }
 
-    fun closeConnection(session: Session) {
+    fun closeConnection() {
+        shell.disconnect()
         session.disconnect()
+        fromServer.close()
+        toServer.flush()
+        toServer.close()
     }
 
-    fun executeRemoteCommand(session: Session, command: String): Pair<String, Session> {
-        // FIXME Connection with keep alive is not possible
-        val fsession = isAlive(session)
-        var out: String = ""
-
+    fun executeRemoteCommand(command: String): String {
         if (command.isNotEmpty() and (command != "")) {
-            if(!::shell.isInitialized){
-                shell = session.openChannel("shell") as ChannelShell
-                val outputStream = ByteArrayOutputStream()
-                shell.outputStream = System.out
-                shell.inputStream = System.`in`
+            if(!(::session.isInitialized and ::shell.isInitialized)){
+                openConnection()
+                println("Connection opened")
+            }
 
-                shell.connect()
-                shell.start()
+            toServer.write((command.trim() + "\r\n").toByteArray())
+            toServer.flush()
+
+            val builder = StringBuilder()
+            var line:Int = 0
+
+            while ( line != -1 ){
+
+                line = fromServer.read()
+                if(line == '$'.code){
+                    break
+                }
+                builder.append(line)
 
             }
+
+            val result: String = builder.toString()
+            println(result)
+            return result
         }
-        return  Pair(out, fsession)
+        return ""
     }
 
     companion object {
