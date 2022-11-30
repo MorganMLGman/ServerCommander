@@ -115,4 +115,7 @@
     <string name="available_updates">Available updates</string>
     <string name="connection_test">connection test</string>
     <string name="refresh">refresh</string>
+    <string name="running_containers">Running Containers</string>
+    <string name="stopped_ctr">Stopped CTR</string>
+    <string name="docker_dashboard">Docker Dashboard</string>
 </resources>
