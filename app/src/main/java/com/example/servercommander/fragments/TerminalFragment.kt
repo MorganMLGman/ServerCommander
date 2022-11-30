@@ -3,6 +3,7 @@ package com.example.servercommander.fragments
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +12,6 @@ import androidx.fragment.app.Fragment
 import com.example.servercommander.R
 import com.example.servercommander.SshConnection
 import com.example.servercommander.databinding.FragmentTerminalBinding
-import com.jcraft.jsch.Session
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.async
@@ -25,8 +25,6 @@ class TerminalFragment : Fragment() {
     private lateinit var sharedPref: SharedPreferences
     private lateinit var sshConnection: SshConnection
 
-    private lateinit var session: Session
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -34,25 +32,20 @@ class TerminalFragment : Fragment() {
             getString(R.string.app_name), Context.MODE_PRIVATE
         )
 
-        if(sharedPref.getBoolean(getString(R.string.connectionTested), false)) {
-            if (!::sshConnection.isInitialized) {
-                if (sharedPref.contains("serverUrl") and sharedPref.contains("username") and sharedPref.contains("pubkey")) {
-                    sshConnection = SshConnection(
-                        sharedPref.getString(getString(R.string.server_url), "").toString(),
-                        22,
-                        sharedPref.getString(getString(R.string.username), "").toString(),
-                        sharedPref.getString(getString(R.string.pubkey), "").toString()
-                    )
-                }
-            }
+        if (sharedPref.contains("serverUrl") and sharedPref.contains("username") and sharedPref.contains("pubkey"))
+        {
+            val serverUrl = sharedPref.getString("serverUrl", "")!!
+            val username = sharedPref.getString("username", "")!!
+            val pubkey = sharedPref.getString("pubkey", "")!!
+            sshConnection = SshConnection(serverUrl, 22, username, pubkey)
         }
+
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
+    ): View {
         _binding = FragmentTerminalBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -64,34 +57,88 @@ class TerminalFragment : Fragment() {
         val commandText = binding.commandText
         val commandSendButton = binding.commandSendButton
 
+        terminalText.movementMethod = ScrollingMovementMethod()
+
+        if (sharedPref.getBoolean("connectionTested", false)){
+            if (::sshConnection.isInitialized){
+                val coroutineScope = MainScope()
+                coroutineScope.launch {
+                    val defer = async(Dispatchers.IO) {
+                        if (!sshConnection.isOpen()) {
+                            sshConnection.openConnection()
+                        }
+                    }
+                    defer.await()
+                }
+            }
+        }
+
         commandSendButton.setOnClickListener{
-            if(sharedPref.getBoolean(getString(R.string.connectionTested), false))
-            {
-                if(::sshConnection.isInitialized)
-                {
+
+            if (sharedPref.getBoolean("connectionTested", false)){
+                if (::sshConnection.isInitialized){
                     val coroutineScope = MainScope()
                     coroutineScope.launch {
+                        var text = terminalText.text.toString()
+                        val command = commandText.text.toString()
                         val defer = async(Dispatchers.IO) {
-                            sshConnection.executeRemoteCommand(commandText.text.toString())
+                            sshConnection.executeRemoteCommand(command)
                         }
-
                         val output = defer.await()
+                        text += output
+                        terminalText.text = text
+
+                        val scrollAmount: Int = terminalText.layout.getLineTop(terminalText.lineCount) - terminalText.height
+
+                        if (scrollAmount > 0)
+                            terminalText.scrollTo(0, scrollAmount);
+                        else
+                            terminalText.scrollTo(0, 0);
+
+                        commandText.setText("")
                     }
                 }
-                else
-                {
-                    if (sharedPref.contains("serverUrl") and sharedPref.contains("username") and sharedPref.contains("pubkey")) {
-                        sshConnection = SshConnection(
-                            sharedPref.getString(getString(R.string.server_url), "").toString(),
-                            22,
-                            sharedPref.getString(getString(R.string.username), "").toString(),
-                            sharedPref.getString(getString(R.string.pubkey), "").toString()
-                        )
-                    }
-                    else Toast.makeText(context, "Connection to server is not possible with given settings", Toast.LENGTH_SHORT).show()
-                }
+                else Toast.makeText(context, "Connection with provided settings is not possible", Toast.LENGTH_LONG).show()
             }
             else Toast.makeText(context, "You need to test your connection first. Please click red server icon at the HOME tab", Toast.LENGTH_LONG).show()
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+
+        if( (sharedPref.getString("serverUrl", "") != sshConnection.serverAddress )
+            or  (sharedPref.getString("username", "") != sshConnection.username )   )
+        {
+            val serverUrl = sharedPref.getString("serverUrl", "")!!
+            val username = sharedPref.getString("username", "")!!
+            val pubkey = sharedPref.getString("pubkey", "")!!
+            sshConnection = SshConnection(serverUrl, 22, username, pubkey)
+        }
+
+        if(::sshConnection.isInitialized)
+        {
+            val coroutineScope = MainScope()
+            coroutineScope.launch {
+                val defer = async(Dispatchers.IO) {
+                    if (!sshConnection.isOpen()) {
+                        sshConnection.openConnection()
+                    }
+                }
+                defer.await()
+            }
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        if (::sshConnection.isInitialized){
+            sshConnection.closeConnection()
+        }
+
+        val terminalText = binding.terminalText
+        terminalText.text = ""
+    }
+
 }

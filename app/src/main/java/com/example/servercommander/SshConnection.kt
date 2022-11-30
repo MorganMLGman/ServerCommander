@@ -9,9 +9,9 @@ import java.io.*
 import java.util.*
 
 
-class SshConnection(private val serverAddress: String,
+class SshConnection(val serverAddress: String,
                     private val serverPort: Int = 22,
-                    private val username: String,
+                    val username: String,
                     private val keyPath: String ) {
 
     private var jsch = JSch()
@@ -180,7 +180,7 @@ class SshConnection(private val serverAddress: String,
 
                     this.session = session
                     shell = session.openChannel("shell") as ChannelShell
-                    shell.setPty(false)
+                    shell.setPtyType("dumb");
 
                     fromServer = BufferedReader(InputStreamReader(shell.inputStream))
                     toServer = shell.outputStream
@@ -194,42 +194,48 @@ class SshConnection(private val serverAddress: String,
         }
     }
 
+    fun isOpen(): Boolean
+    {
+        return if(::session.isInitialized and ::shell.isInitialized) {
+            session.isConnected and shell.isConnected
+        } else {
+            false
+        }
+    }
+
     fun closeConnection() {
         shell.disconnect()
         session.disconnect()
-        fromServer.close()
-        toServer.flush()
-        toServer.close()
     }
 
     fun executeRemoteCommand(command: String): String {
-        if (command.isNotEmpty() and (command != "")) {
-            if(!(::session.isInitialized and ::shell.isInitialized)){
-                openConnection()
-                println("Connection opened")
-            }
-
-            toServer.write((command.trim() + "\r\n").toByteArray())
-            toServer.flush()
-
-            val builder = StringBuilder()
-            var line:Int = 0
-
-            while ( line != -1 ){
-
-                line = fromServer.read()
-                if(line == '$'.code){
-                    break
-                }
-                builder.append(line)
-
-            }
-
-            val result: String = builder.toString()
-            println(result)
-            return result
+        if(!isOpen()){
+            return ""
         }
-        return ""
+        if (command.isEmpty() or (command == "")) {
+            return ""
+        }
+
+        toServer.write((command.trim() + "\r\n").toByteArray())
+        toServer.flush()
+
+        val builder = StringBuilder()
+        var line: String = " "
+
+        while (true) {
+            try {
+                line = fromServer.readLine()
+                builder.append(line).append("\n")
+            } catch (e: java.lang.NullPointerException) {
+                break
+            }
+
+            if (line.endsWith("$ ")) break
+            else if (line.endsWith("# ")) break
+            else if (line.endsWith("> ")) break
+        }
+
+        return builder.toString()
     }
 
     companion object {
