@@ -46,7 +46,7 @@ class DockerFragment : Fragment() {
         containers = Container.createContainersList(20)
         val adapter = ContainersAdapter(containers)
         recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
         if( !(::sshConnection.isInitialized or sharedPref.getBoolean(getString(R.string.connectionTested), false)))
         {

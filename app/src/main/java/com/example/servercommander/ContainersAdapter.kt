@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.recyclerview.widget.RecyclerView
 
@@ -11,7 +12,7 @@ class ContainersAdapter(private val mContainers: List<Container>) : RecyclerView
 
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         // Your holder should contain and initialize a member variable
         // for any view that will be set as you render a row
 
@@ -22,6 +23,19 @@ class ContainersAdapter(private val mContainers: List<Container>) : RecyclerView
         val buttonContainerDown = itemView.findViewById<AppCompatImageButton>(R.id.buttonContainerDown)
         val buttonContainerRestart = itemView.findViewById<AppCompatImageButton>(R.id.buttonContainerRestart)
 
+        init {
+            buttonContainerUp.setOnClickListener {
+                Toast.makeText(itemView.context, "${dockerAppName.text} button UP", Toast.LENGTH_SHORT).show()
+            }
+
+            buttonContainerDown.setOnClickListener {
+                Toast.makeText(itemView.context, "${dockerAppName.text} button DOWN", Toast.LENGTH_SHORT).show()
+            }
+
+            buttonContainerRestart.setOnClickListener {
+                Toast.makeText(itemView.context, "${dockerAppName.text} button RESTART", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -37,7 +51,9 @@ class ContainersAdapter(private val mContainers: List<Container>) : RecyclerView
         val container = mContainers[position]
 
         val dockerAppName = holder.dockerAppName
+
         dockerAppName.text = container.name
+
     }
 
     override fun getItemCount(): Int {

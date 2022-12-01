@@ -204,8 +204,11 @@ class SshConnection(val serverAddress: String,
     }
 
     fun closeConnection() {
-        shell.disconnect()
-        session.disconnect()
+        if(::session.isInitialized and ::shell.isInitialized)
+        {
+            shell.disconnect()
+            session.disconnect()
+        }
     }
 
     fun executeRemoteCommand(command: String): String {

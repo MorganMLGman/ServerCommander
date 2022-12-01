@@ -120,9 +120,12 @@ class TerminalFragment : Fragment() {
         {
             val coroutineScope = MainScope()
             coroutineScope.launch {
+                val terminalText = binding.terminalText
+
                 val defer = async(Dispatchers.IO) {
                     if (!sshConnection.isOpen()) {
                         sshConnection.openConnection()
+                        terminalText.text = ""
                     }
                 }
                 defer.await()
@@ -133,12 +136,6 @@ class TerminalFragment : Fragment() {
     override fun onPause() {
         super.onPause()
 
-        if (::sshConnection.isInitialized){
-            sshConnection.closeConnection()
-        }
-
-        val terminalText = binding.terminalText
-        terminalText.text = ""
     }
 
 }
