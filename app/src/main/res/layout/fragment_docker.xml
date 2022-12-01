@@ -47,7 +47,7 @@
                 android:id="@+id/textViews"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Container Status"
+                android:text="@string/containers_status"
                 android:textColor="@color/primary_text"
                 android:textSize="@dimen/_14ssp"
                 android:textStyle="bold"
@@ -75,7 +75,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_4sdp"
-                    android:text="All CTR"
+                    android:text="@string/all_ctr"
                     android:textColor="@color/secondary_text"
                     android:textSize="@dimen/_10ssp"/>
 

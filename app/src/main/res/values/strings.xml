@@ -119,4 +119,6 @@
     <string name="stopped_ctr">Stopped CTR</string>
     <string name="docker_dashboard">Docker Dashboard</string>
     <string name="running_ctr">Running CTR</string>
+    <string name="containers_status">Containers Status</string>
+    <string name="all_ctr">All CTR</string>
 </resources>
