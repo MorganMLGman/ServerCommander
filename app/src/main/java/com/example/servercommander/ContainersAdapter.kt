@@ -10,11 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class ContainersAdapter(private val mContainers: List<Container>) : RecyclerView.Adapter<ContainersAdapter.ViewHolder>() {
 
-    // Provide a direct reference to each of the views within a data item
-    // Used to cache the views within the item layout for fast access
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        // Your holder should contain and initialize a member variable
-        // for any view that will be set as you render a row
 
         val dockerAppName = itemView.findViewById<TextView>(R.id.dockerAppName)
         val dockerAppStatus = itemView.findViewById<TextView>(R.id.dockerAppStatus)
@@ -41,9 +37,7 @@ class ContainersAdapter(private val mContainers: List<Container>) : RecyclerView
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val context = parent.context
         val inflater = LayoutInflater.from(context)
-        // Inflate the custom layout
         val contactView = inflater.inflate(R.layout.docker_app_item, parent, false)
-        // Return a new holder instance
         return ViewHolder(contactView)
     }
 
