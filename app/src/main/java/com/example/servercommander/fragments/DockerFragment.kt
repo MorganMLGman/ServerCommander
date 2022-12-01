@@ -1,11 +1,13 @@
 package com.example.servercommander.fragments
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.servercommander.Container
@@ -39,6 +41,7 @@ class DockerFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -47,6 +50,15 @@ class DockerFragment : Fragment() {
         val adapter = ContainersAdapter(containers)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+
+        val swipeRefreshLayout = binding.swipeRefreshLayout
+        swipeRefreshLayout.setOnRefreshListener {
+            Toast.makeText(context, "Refresh", Toast.LENGTH_SHORT).show()
+            containers.clear()
+            containers = Container.createContainersList(20)
+            recyclerView.adapter!!.notifyDataSetChanged()
+            swipeRefreshLayout.isRefreshing = false
+        }
 
         if( !(::sshConnection.isInitialized or sharedPref.getBoolean(getString(R.string.connectionTested), false)))
         {
