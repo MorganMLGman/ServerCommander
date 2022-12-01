@@ -77,7 +77,8 @@
             app:layout_constraintEnd_toStartOf="@+id/buttonContainerDown"
             app:layout_constraintTop_toTopOf="parent"
             android:tint="@color/iconColour"
-            android:padding="@dimen/_12sdp"/>
+            android:padding="@dimen/_12sdp"
+            android:contentDescription="@string/container_start"/>
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/buttonContainerDown"
@@ -92,7 +93,7 @@
             android:backgroundTint="@color/buttonRed"
             android:tint="@color/iconColour"
             android:padding="@dimen/_12sdp"
-            />
+            android:contentDescription="@string/container_down"/>
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/buttonContainerRestart"
@@ -105,7 +106,8 @@
             app:layout_constraintTop_toTopOf="parent"
             android:src="@drawable/restart"
             android:tint="@color/iconColour"
-            android:padding="@dimen/_12sdp"/>
+            android:padding="@dimen/_12sdp"
+            android:contentDescription="@string/container_restart"/>
 
 
 
