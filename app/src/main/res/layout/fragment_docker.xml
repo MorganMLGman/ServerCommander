@@ -27,6 +27,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/refreshDocker"
+        android:layout_width="@dimen/_26sdp"
+        android:layout_height="@dimen/_26sdp"
+        android:layout_marginEnd="@dimen/_16sdp"
+        android:clickable="true"
+        android:src="@drawable/refresh"
+        android:tint="@color/white"
+        app:layout_constraintBottom_toBottomOf="@id/textTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/textTitle"
+        tools:ignore="TouchTargetSizeCheck"
+        android:contentDescription="@string/refresh"/>
+
     <androidx.cardview.widget.CardView
         android:id="@+id/cardHeader"
         android:layout_width="match_parent"

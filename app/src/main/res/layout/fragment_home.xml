@@ -63,7 +63,7 @@
         android:layout_marginStart="@dimen/_16sdp"
         android:layout_marginEnd="@dimen/_16sdp"
         app:cardBackgroundColor="@color/card_background"
-        app:cardCornerRadius="@dimen/_16sdp"
+        app:cardCornerRadius="@dimen/_4sdp"
         app:layout_constraintBottom_toBottomOf="@id/viewHeaderBackground"
         app:layout_constraintTop_toBottomOf="@id/viewHeaderBackground">
 
