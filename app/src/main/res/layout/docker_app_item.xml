@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -28,14 +29,15 @@
             android:paddingBottom="@dimen/_10sdp">
 
         <TextView
+            android:id="@+id/dockerAppName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/_8sdp"
             android:layout_marginRight="@dimen/_8sdp"
-            android:text="Nextcloud"
+            android:text="@string/nothingString"
             android:textColor="@color/primary_text"
             android:textSize="@dimen/_14ssp"
-            app:layout_constraintEnd_toEndOf="@id/buttonUp"
+            app:layout_constraintEnd_toEndOf="@id/buttonContainerStart"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             />
@@ -44,34 +46,45 @@
             android:id="@+id/dockerAppStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/secondary_text"
+            android:layout_marginTop="@dimen/_4sdp"
             android:text="@string/nothingString"
+            android:textColor="@color/secondary_text"
+            android:textSize="@dimen/_10ssp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dockerAppName" />
+
+        <TextView
+            android:id="@+id/dockerAppRuntime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_4sdp"
+            android:text="@string/nothingString"
+            android:textColor="@color/secondary_text"
             android:textSize="@dimen/_10ssp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="@dimen/_20sdp"/>
+            app:layout_constraintTop_toBottomOf="@+id/dockerAppStatus"/>
 
         <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/buttonUp"
+            android:id="@+id/buttonContainerStart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/_2sdp"
             android:backgroundTint="@color/runningGreen"
-            android:src="@drawable/archive_arrow_up"
+            android:src="@drawable/play_circle"
             app:cornerRadius="@dimen/_12sdp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/buttonDown"
+            app:layout_constraintEnd_toStartOf="@+id/buttonContainerDown"
             app:layout_constraintTop_toTopOf="parent"
             android:tint="@color/iconColour"
             android:padding="@dimen/_12sdp"/>
 
         <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/buttonDown"
+            android:id="@+id/buttonContainerDown"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/buttonRestart"
+            app:layout_constraintEnd_toStartOf="@+id/buttonContainerRestart"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginLeft="@dimen/_2sdp"
             android:layout_marginRight="@dimen/_2sdp"
@@ -82,7 +95,7 @@
             />
 
         <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/buttonRestart"
+            android:id="@+id/buttonContainerRestart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -104,4 +117,4 @@
 
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
