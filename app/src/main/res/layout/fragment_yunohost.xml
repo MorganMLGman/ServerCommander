@@ -42,7 +42,7 @@
 <!--        tools:ignore="TouchTargetSizeCheck"-->
 <!--        android:contentDescription="@string/go_to_sso"/>-->
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/refreshDocker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -51,7 +51,9 @@
         android:text="Open SSO"
         app:layout_constraintBottom_toBottomOf="@id/textTitle"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/textTitle" />
+        app:layout_constraintTop_toTopOf="@id/textTitle"
+        app:cornerRadius="@dimen/_4sdp"
+        />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardHeader"
@@ -105,14 +107,14 @@
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="@dimen/_28sdp"
                     android:layout_height="@dimen/_28sdp"
-                    android:src="@drawable/oci"
+                    android:src=""
                     android:tint="@color/normalBlue"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_4sdp"
-                    android:text="@string/all_ctr"
+                    android:text="@string/nothingString"
                     android:textColor="@color/secondary_text"
                     android:textSize="@dimen/_10ssp"/>
 
@@ -141,14 +143,14 @@
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="@dimen/_28sdp"
                     android:layout_height="@dimen/_28sdp"
-                    android:src="@drawable/run_fast"
+                    android:src=""
                     android:tint="@color/runningGreen"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_4sdp"
-                    android:text="@string/running_ctr"
+                    android:text="@string/nothingString"
                     android:textColor="@color/secondary_text"
                     android:textSize="@dimen/_10ssp"/>
 
@@ -177,14 +179,14 @@
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="@dimen/_28sdp"
                     android:layout_height="@dimen/_28sdp"
-                    android:src="@drawable/stop_circle"
+                    android:src=""
                     android:tint="@color/buttonRed"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_4sdp"
-                    android:text="@string/stopped_ctr"
+                    android:text="@string/nothingString"
                     android:textColor="@color/secondary_text"
                     android:textSize="@dimen/_10ssp"/>
 
