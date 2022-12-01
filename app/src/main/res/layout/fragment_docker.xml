@@ -55,14 +55,14 @@
                 app:layout_constraintTop_toTopOf="parent"/>
 
             <LinearLayout
-                android:id="@+id/dashboardAllContainers"
+                android:id="@+id/dockerAllContainers"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:gravity="center"
                 android:orientation="vertical"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/dashboardRunningContainers"
+                app:layout_constraintEnd_toStartOf="@id/dockerRunningContainers"
                 app:layout_constraintTop_toBottomOf="@id/textViews">
 
                 <androidx.appcompat.widget.AppCompatImageView
@@ -80,7 +80,7 @@
                     android:textSize="@dimen/_10ssp"/>
 
                 <TextView
-                    android:id="@+id/dashboardAllContainersTextView"
+                    android:id="@+id/dockerAllContainersTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/nothingString"
@@ -91,14 +91,14 @@
 
 
             <LinearLayout
-                android:id="@+id/dashboardRunningContainers"
+                android:id="@+id/dockerRunningContainers"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:gravity="center"
                 android:orientation="vertical"
-                app:layout_constraintStart_toEndOf="@id/dashboardAllContainers"
-                app:layout_constraintEnd_toStartOf="@id/dashboardStoppedContainers"
+                app:layout_constraintStart_toEndOf="@id/dockerAllContainers"
+                app:layout_constraintEnd_toStartOf="@id/dockerStoppedContainers"
                 app:layout_constraintTop_toBottomOf="@id/textViews">
 
                 <androidx.appcompat.widget.AppCompatImageView
@@ -111,12 +111,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_4sdp"
-                    android:text="@string/stopped_ctr"
+                    android:text="@string/running_ctr"
                     android:textColor="@color/secondary_text"
                     android:textSize="@dimen/_10ssp"/>
 
                 <TextView
-                    android:id="@+id/dashboardRunningContainersTextView"
+                    android:id="@+id/dockerRunningContainersTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/nothingString"
@@ -127,13 +127,13 @@
 
 
             <LinearLayout
-                android:id="@+id/dashboardStoppedContainers"
+                android:id="@+id/dockerStoppedContainers"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:gravity="center"
                 android:orientation="vertical"
-                app:layout_constraintStart_toEndOf="@id/dashboardRunningContainers"
+                app:layout_constraintStart_toEndOf="@id/dockerRunningContainers"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/textViews">
 
@@ -152,7 +152,7 @@
                     android:textSize="@dimen/_10ssp"/>
 
                 <TextView
-                    android:id="@+id/dashboardStoppedContainersTextView"
+                    android:id="@+id/dockerStoppedContainersTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/nothingString"
@@ -183,8 +183,10 @@
             android:orientation="vertical">
 
                 <include
-                    android:id="@+id/docker_app_dashboard"
-                    layout="@layout/dashboard_docker_app" />
+                    android:id="@+id/docker_app_item"
+                    layout="@layout/docker_app_item" />
+
+
 
 
 

@@ -13,6 +13,7 @@
         app:cardBackgroundColor="@color/card_background"
         app:cardCornerRadius="@dimen/_4sdp"
         app:cardElevation="0dp"
+        android:layout_marginTop="@dimen/_8sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -37,7 +38,19 @@
             app:layout_constraintEnd_toEndOf="@id/buttonUp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            />
+
+        <TextView
+            android:id="@+id/dockerAppStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/secondary_text"
+            android:text="@string/nothingString"
+            android:textSize="@dimen/_10ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="@dimen/_20sdp"/>
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/buttonUp"
