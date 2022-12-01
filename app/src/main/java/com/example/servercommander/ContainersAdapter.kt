@@ -34,7 +34,10 @@ class ContainersAdapter(private val mContainers: List<Container>) : RecyclerView
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        TODO("Not yet implemented")
+        val container = mContainers[position]
+
+        val dockerAppName = holder.dockerAppName
+        dockerAppName.text = container.name
     }
 
     override fun getItemCount(): Int {

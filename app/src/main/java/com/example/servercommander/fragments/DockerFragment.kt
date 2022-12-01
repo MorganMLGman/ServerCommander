@@ -7,19 +7,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.viewbinding.ViewBinding
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.servercommander.Container
+import com.example.servercommander.ContainersAdapter
 import com.example.servercommander.R
 import com.example.servercommander.SshConnection
 import com.example.servercommander.databinding.FragmentDockerBinding
-import com.example.servercommander.databinding.FragmentYunohostBinding
 
-class AppsFragment : Fragment() {
+class DockerFragment : Fragment() {
 
-    private var _binding: ViewBinding? = null
+    private var _binding: FragmentDockerBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var sharedPref: SharedPreferences
     private lateinit var sshConnection: SshConnection
+    private lateinit var containers: ArrayList<Container>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,18 +35,18 @@ class AppsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val serverType = sharedPref.getString("server_type", "")
-        _binding =
-            when (serverType) {
-                "yunohost" -> FragmentYunohostBinding.inflate(inflater, container, false)
-                "docker" -> FragmentDockerBinding.inflate(inflater, container, false)
-                else -> null
-            }
+        _binding = FragmentDockerBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val recyclerView = binding.dockerRecyclerView
+        containers = Container.createContainersList(20)
+        val adapter = ContainersAdapter(containers)
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(context)
 
         if( !(::sshConnection.isInitialized or sharedPref.getBoolean(getString(R.string.connectionTested), false)))
         {

@@ -15,7 +15,7 @@ class MyViewPagerAdapter(fragmentActivity: FragmentActivity) :
         return when(position){
             0 -> HomeFragment()
             1 -> SystemFragment()
-            2 -> AppsFragment()
+            2 -> DockerFragment()
             3 -> TerminalFragment()
             4 -> SettingsFragment()
             else -> HomeFragment()
