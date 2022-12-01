@@ -118,4 +118,5 @@
     <string name="running_containers">Running Containers</string>
     <string name="stopped_ctr">Stopped CTR</string>
     <string name="docker_dashboard">Docker Dashboard</string>
+    <string name="running_ctr">Running CTR</string>
 </resources>
