@@ -76,7 +76,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/buttonContainerDown"
             app:layout_constraintTop_toTopOf="parent"
-            android:tint="@color/iconColour"
+            android:tint="@color/white"
             android:padding="@dimen/_12sdp"
             android:contentDescription="@string/container_start"/>
 
@@ -91,7 +91,7 @@
             android:layout_marginRight="@dimen/_2sdp"
             android:src="@drawable/stop_circle"
             android:backgroundTint="@color/buttonRed"
-            android:tint="@color/iconColour"
+            android:tint="@color/white"
             android:padding="@dimen/_12sdp"
             android:contentDescription="@string/container_down"/>
 
@@ -104,7 +104,7 @@
             android:backgroundTint="@color/dashboard_item_5"
             app:layout_constraintTop_toTopOf="parent"
             android:src="@drawable/restart"
-            android:tint="@color/iconColour"
+            android:tint="@color/white"
             android:padding="@dimen/_12sdp"
             android:contentDescription="@string/container_restart"/>
 
