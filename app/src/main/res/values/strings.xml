@@ -124,4 +124,6 @@
     <string name="container_restart">Container restart</string>
     <string name="container_down">Container down</string>
     <string name="container_start">Container start</string>
+    <string name="yunohost_dashboard">YunoHost Dashboard</string>
+    <string name="go_to_sso">Go to SSO</string>
 </resources>
