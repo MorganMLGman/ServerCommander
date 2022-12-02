@@ -1,6 +1,5 @@
 package com.example.servercommander.fragments
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.content.SharedPreferences
@@ -21,6 +20,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import org.json.JSONArray
+import org.json.JSONException
+import org.json.JSONObject
+import org.json.JSONTokener
 import kotlin.reflect.KFunction2
 
 class DockerFragment : Fragment() {
@@ -48,7 +51,6 @@ class DockerFragment : Fragment() {
         return binding.root
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -83,6 +85,7 @@ class DockerFragment : Fragment() {
         swipeRefreshLayout.setOnRefreshListener {
 
             if(::sshConnection.isInitialized and sharedPref.getBoolean(getString(R.string.connectionTested), false)) {
+                Toast.makeText(context, "Refreshing...", Toast.LENGTH_SHORT).show()
                 val username = sharedPref.getString(getString(R.string.username), "")!!
                 var password = sharedPref.getString("sudo_password", "")!!
 
@@ -91,14 +94,11 @@ class DockerFragment : Fragment() {
                 }
                 else callGetContainersData(username, password)
             }
-            else Toast.makeText(context, "You need to test your connection first. Please click red server icon at the HOME tab", Toast.LENGTH_LONG).show()
-
-            Toast.makeText(context, "Refresh", Toast.LENGTH_SHORT).show()
-            containers.clear()
-            containers.addAll(Container.createContainersList(1))
-
-            recyclerView.adapter!!.notifyDataSetChanged()
-            swipeRefreshLayout.isRefreshing = false
+            else
+            {
+                Toast.makeText(context, "You need to test your connection first. Please click red server icon at the HOME tab", Toast.LENGTH_LONG).show()
+                swipeRefreshLayout.isRefreshing = false
+            }
         }
     }
 
@@ -155,6 +155,7 @@ class DockerFragment : Fragment() {
                         context.getString(R.string.cancelButtonLabel)
                     ) { _, _ ->
                         password = ""
+                        binding.swipeRefreshLayout.isRefreshing = false
                     }
                     setView(passwordLayout.root)
                 }
@@ -166,6 +167,9 @@ class DockerFragment : Fragment() {
     }
 
     private fun callGetContainersData(username: String, password: String){
+
+        var newContainers = ArrayList<Container>()
+
         if (username.isNotEmpty() and password.isNotEmpty()){
             val coroutineScope = MainScope()
             coroutineScope.launch {
@@ -173,13 +177,62 @@ class DockerFragment : Fragment() {
                     sshConnection.executeRemoteCommandOneCall("python3 /home/$username/copilot/main.py docker show $password")
                 }
 
-                val output = defer.await()
-                println(output)
+                val output = defer.await().trim()
+
+                if (output != "False") newContainers = parseContainersData(output)
+
+                if (newContainers.size == 0){
+                    newContainers.clear()
+                    newContainers.addAll(Container.createContainersList(1))
+                    println("SIZE 0")
+                }
+
+                val adapter = binding.dockerRecyclerView.adapter!! as ContainersAdapter
+                adapter.updateList(newContainers)
+
+                binding.swipeRefreshLayout.isRefreshing = false
             }
         }
         else{
             Toast.makeText(context, "Connection with given parameters is not possible.", Toast.LENGTH_LONG).show()
+            binding.swipeRefreshLayout.isRefreshing = false
         }
+    }
+
+    private fun parseContainersData(data: String): ArrayList<Container>{
+        val output = ArrayList<Container>()
+
+        if (data.isNotEmpty())
+        {
+            var running: Int = 0
+            try {
+                val jsonObject = JSONTokener(data).nextValue() as JSONObject
+                val containers: JSONArray = jsonObject.getJSONArray("containers")
+                val items: Int = jsonObject.getInt("items")
+
+                for( i: Int in 0 until items)
+                {
+                    val container = containers.get(i) as JSONObject
+                    val name = container.getString("name")
+                    val runtime = container.getString("runtime")
+                    val isRunning = when(container.getString("state")){
+                        "running" -> true
+                        else -> false
+                    }
+                    if (isRunning) running++
+                    println("$name $isRunning $runtime")
+                    output.add(Container(name, isRunning, runtime))
+                }
+                binding.dockerAllContainersTextView.text = items.toString()
+                binding.dockerRunningContainersTextView.text = running.toString()
+                binding.dockerStoppedContainersTextView.text = (items - running).toString()
+            }
+            catch ( e: JSONException)
+            {
+                println(e.stackTrace)
+            }
+        }
+        return output
     }
 
 }
