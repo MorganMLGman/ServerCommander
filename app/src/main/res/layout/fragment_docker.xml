@@ -5,7 +5,7 @@
     android:id="@+id/dockerConstraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.AppsFragment" >
+    tools:context=".fragments.DockerFragment" >
 
     <View
         android:id="@+id/viewHeaderBackground"
@@ -27,6 +27,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/refreshDocker"
+        android:layout_width="@dimen/_26sdp"
+        android:layout_height="@dimen/_26sdp"
+        android:layout_marginEnd="@dimen/_16sdp"
+        android:clickable="true"
+        android:src="@drawable/refresh"
+        android:tint="@color/white"
+        app:layout_constraintBottom_toBottomOf="@id/textTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/textTitle"
+        tools:ignore="TouchTargetSizeCheck"
+        android:contentDescription="@string/refresh"/>
+
     <androidx.cardview.widget.CardView
         android:id="@+id/cardHeader"
         android:layout_width="match_parent"
@@ -47,7 +61,7 @@
                 android:id="@+id/textViews"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Container Status"
+                android:text="@string/containers_status"
                 android:textColor="@color/primary_text"
                 android:textSize="@dimen/_14ssp"
                 android:textStyle="bold"
@@ -55,14 +69,14 @@
                 app:layout_constraintTop_toTopOf="parent"/>
 
             <LinearLayout
-                android:id="@+id/dashboardAllContainers"
+                android:id="@+id/dockerAllContainers"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:gravity="center"
                 android:orientation="vertical"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/dashboardRunningContainers"
+                app:layout_constraintEnd_toStartOf="@id/dockerRunningContainers"
                 app:layout_constraintTop_toBottomOf="@id/textViews">
 
                 <androidx.appcompat.widget.AppCompatImageView
@@ -75,12 +89,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_4sdp"
-                    android:text="All CTR"
+                    android:text="@string/all_ctr"
                     android:textColor="@color/secondary_text"
                     android:textSize="@dimen/_10ssp"/>
 
                 <TextView
-                    android:id="@+id/dashboardAllContainersTextView"
+                    android:id="@+id/dockerAllContainersTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/nothingString"
@@ -91,14 +105,14 @@
 
 
             <LinearLayout
-                android:id="@+id/dashboardRunningContainers"
+                android:id="@+id/dockerRunningContainers"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:gravity="center"
                 android:orientation="vertical"
-                app:layout_constraintStart_toEndOf="@id/dashboardAllContainers"
-                app:layout_constraintEnd_toStartOf="@id/dashboardStoppedContainers"
+                app:layout_constraintStart_toEndOf="@id/dockerAllContainers"
+                app:layout_constraintEnd_toStartOf="@id/dockerStoppedContainers"
                 app:layout_constraintTop_toBottomOf="@id/textViews">
 
                 <androidx.appcompat.widget.AppCompatImageView
@@ -111,12 +125,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_4sdp"
-                    android:text="@string/stopped_ctr"
+                    android:text="@string/running_ctr"
                     android:textColor="@color/secondary_text"
                     android:textSize="@dimen/_10ssp"/>
 
                 <TextView
-                    android:id="@+id/dashboardRunningContainersTextView"
+                    android:id="@+id/dockerRunningContainersTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/nothingString"
@@ -127,13 +141,13 @@
 
 
             <LinearLayout
-                android:id="@+id/dashboardStoppedContainers"
+                android:id="@+id/dockerStoppedContainers"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:gravity="center"
                 android:orientation="vertical"
-                app:layout_constraintStart_toEndOf="@id/dashboardRunningContainers"
+                app:layout_constraintStart_toEndOf="@id/dockerRunningContainers"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/textViews">
 
@@ -152,7 +166,7 @@
                     android:textSize="@dimen/_10ssp"/>
 
                 <TextView
-                    android:id="@+id/dashboardStoppedContainersTextView"
+                    android:id="@+id/dockerStoppedContainersTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/nothingString"
@@ -167,30 +181,30 @@
 
     </androidx.cardview.widget.CardView>
 
-    <ScrollView
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:clipToPadding="false"
-        android:overScrollMode="never"
-        android:padding="@dimen/_16sdp"
-        android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cardHeader">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardHeader">
 
-        <LinearLayout
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/dockerRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            android:padding="@dimen/_16sdp"
+            android:scrollbars="none"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-                <include
-                    android:id="@+id/docker_app_dashboard"
-                    layout="@layout/dashboard_docker_app" />
+        </androidx.recyclerview.widget.RecyclerView>
 
-
-
-
-        </LinearLayout>
-
-    </ScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
