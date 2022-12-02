@@ -140,19 +140,27 @@ class SystemFragment : Fragment() {
             rebootButton.isEnabled = true
             updateButton.isEnabled = true
             upgradeButton.isEnabled = true
+        }
 
-            if (sharedPref.contains(getString(R.string.server_url)) and
-                sharedPref.contains(getString(R.string.username)) and
-                sharedPref.contains(getString(R.string.pubkey)) and
-                sharedPref.contains(getString(R.string.connectionTested))) {
-
-                sshConnection = SshConnection(
-                    sharedPref.getString(getString(R.string.server_url), "").toString(),
-                    22,
-                    sharedPref.getString(getString(R.string.username), "").toString(),
-                    sharedPref.getString(getString(R.string.pubkey), "").toString()
-                )
+        if( ::sshConnection.isInitialized )
+        {
+            if ((sharedPref.getString("serverUrl", "") != sshConnection.serverAddress )
+                or  (sharedPref.getString("username", "") != sshConnection.username ))
+            {
+                val serverUrl = sharedPref.getString("serverUrl", "")!!
+                val username = sharedPref.getString("username", "")!!
+                val pubkey = sharedPref.getString("pubkey", "")!!
+                sshConnection = SshConnection(serverUrl, 22, username, pubkey)
             }
+        }
+
+
+        if(!::sshConnection.isInitialized)
+        {
+            val serverUrl = sharedPref.getString("serverUrl", "")!!
+            val username = sharedPref.getString("username", "")!!
+            val pubkey = sharedPref.getString("pubkey", "")!!
+            sshConnection = SshConnection(serverUrl, 22, username, pubkey)
         }
     }
 

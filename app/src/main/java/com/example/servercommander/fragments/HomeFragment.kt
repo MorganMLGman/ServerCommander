@@ -178,6 +178,27 @@ class HomeFragment : Fragment() {
         {
             handler.post(autoRefreshRunner)
         }
+
+        if( ::sshConnection.isInitialized )
+        {
+            if ((sharedPref.getString("serverUrl", "") != sshConnection.serverAddress )
+                or  (sharedPref.getString("username", "") != sshConnection.username ))
+            {
+                val serverUrl = sharedPref.getString("serverUrl", "")!!
+                val username = sharedPref.getString("username", "")!!
+                val pubkey = sharedPref.getString("pubkey", "")!!
+                sshConnection = SshConnection(serverUrl, 22, username, pubkey)
+            }
+        }
+
+
+        if(!::sshConnection.isInitialized)
+        {
+            val serverUrl = sharedPref.getString("serverUrl", "")!!
+            val username = sharedPref.getString("username", "")!!
+            val pubkey = sharedPref.getString("pubkey", "")!!
+            sshConnection = SshConnection(serverUrl, 22, username, pubkey)
+        }
     }
 
     override fun onPause() {
