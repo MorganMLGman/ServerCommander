@@ -34,7 +34,7 @@ jobs:
         id: create_tag
         run: |
           tag=v$(date +%Y%m%d.%H%M%S)
-          echo "name=$tag" >> $GITHUB_OUTPUT
+          echo "::set-output name=tag::$tag"
 
       - name: Create Draft Release
         id: create_release
