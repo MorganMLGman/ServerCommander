@@ -205,12 +205,12 @@ class DockerFragment : Fragment() {
 
                 val output = defer.await().trim()
 
-                if (output != "False") newContainers = parseContainersData(output)
+                if ((output != "False") and (output != "{False}")) newContainers = parseContainersData(output)
 
                 if (newContainers.size == 0){
                     newContainers.clear()
                     newContainers.addAll(Container.createContainersList(1))
-                    println("SIZE 0")
+                    Toast.makeText(context, "Refresh was not successful. Please try again or run  \"python3 /home/$username/copilot/main.py docker show $password\" on your server to check the output", Toast.LENGTH_LONG).show()
                 }
 
                 val adapter = binding.dockerRecyclerView.adapter!! as ContainersAdapter
@@ -255,7 +255,10 @@ class DockerFragment : Fragment() {
             }
             catch ( e: JSONException)
             {
-                println(e.stackTrace)
+                //
+            }
+            catch (e: ClassCastException){
+                //
             }
         }
         return output
