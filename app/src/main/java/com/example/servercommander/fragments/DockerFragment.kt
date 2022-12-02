@@ -85,7 +85,33 @@ class DockerFragment : Fragment() {
         swipeRefreshLayout.setOnRefreshListener {
 
             if(::sshConnection.isInitialized and sharedPref.getBoolean(getString(R.string.connectionTested), false)) {
-                Toast.makeText(context, "Refreshing...", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(R.string.refreshing), Toast.LENGTH_SHORT).show()
+                val username = sharedPref.getString(getString(R.string.username), "")!!
+                var password = sharedPref.getString("sudo_password", "")!!
+
+                if(password.isEmpty() or ( password == "" )) {
+                    password = showPasswordModal(username, ::callGetContainersData)
+                }
+                else callGetContainersData(username, password)
+            }
+            else
+            {
+                Toast.makeText(context, "You need to test your connection first. Please click red server icon at the HOME tab", Toast.LENGTH_LONG).show()
+                swipeRefreshLayout.isRefreshing = false
+            }
+        }
+
+        val refreshButton = binding.refreshDocker
+        refreshButton.setOnClickListener {
+            refreshButton.isClickable = false
+            refreshButton.animate().apply {
+                duration = 1000
+                rotationBy(360f)
+            }.withEndAction{
+                refreshButton.isClickable = true
+            }.start()
+            if(::sshConnection.isInitialized and sharedPref.getBoolean(getString(R.string.connectionTested), false)) {
+                Toast.makeText(context, getString(R.string.refreshing), Toast.LENGTH_SHORT).show()
                 val username = sharedPref.getString(getString(R.string.username), "")!!
                 var password = sharedPref.getString("sudo_password", "")!!
 
