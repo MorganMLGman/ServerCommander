@@ -5,15 +5,26 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
+import android.os.StrictMode
+import android.os.StrictMode.ThreadPolicy
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.WebView
 import androidx.fragment.app.Fragment
 import com.example.servercommander.R
 import com.example.servercommander.SshConnection
 import com.example.servercommander.databinding.FragmentYunohostBinding
+import okhttp3.*
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStreamReader
+import java.io.OutputStreamWriter
+import java.net.HttpURLConnection
+import java.net.URL
+import java.net.URLEncoder
+import com.example.servercommander.YunohostAuthenticate
+
 
 class YunohostFragment : Fragment() {
     private var _binding: FragmentYunohostBinding? = null
@@ -46,9 +57,12 @@ class YunohostFragment : Fragment() {
 
         val openSSOButton = binding.openSSOButton
         val goToAdminPage = binding.moreButton
+        val refreshButton = binding.refreshYunohostConnection
 
         val ssoWebpage = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/sso/portal.html"
         val adminWebPage = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/admin/"
+        val adminLoginPage = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api/login/"
+        val adminAPI = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api"
 
         openSSOButton.setOnClickListener{
             var intent = Intent(Intent.ACTION_VIEW, Uri.parse(ssoWebpage))
@@ -60,10 +74,19 @@ class YunohostFragment : Fragment() {
             startActivity(intent)
         }
 
+        refreshButton.setOnClickListener {
 
+                YunohostAuthenticate().run()
+
+            }
+
+
+        }
 
 
 
     }
+
+
 
 }
