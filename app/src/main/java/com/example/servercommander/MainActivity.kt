@@ -45,6 +45,15 @@ class MainActivity : AppCompatActivity() {
             apply()
         }
 
+        if ( !sharedPref.contains(getString(R.string.server_url)) or
+            !sharedPref.contains(getString(R.string.username)) or
+            !sharedPref.contains(getString(R.string.pubkey)) or
+            !sharedPref.contains("server_type")
+        ) {
+            val intent = Intent( this, LoginActivity::class.java).apply{}
+            resultLauncher.launch(intent)
+        }
+
         tabLayout = findViewById(R.id.tabLayout)
         viewPager2 = findViewById(R.id.viewPager)
 
@@ -58,7 +67,8 @@ class MainActivity : AppCompatActivity() {
                 tabLayout.getTabAt(2)?.text = "YUNOHOST"
             }
             else -> {
-                throw Exception("ServerType value not permitted")
+                val intent = Intent( this, LoginActivity::class.java).apply{}
+                resultLauncher.launch(intent)
             }
         }
 
@@ -76,16 +86,6 @@ class MainActivity : AppCompatActivity() {
                 tabLayout.getTabAt(position)!!.select()
             }
         })
-
-        if ( !sharedPref.contains(getString(R.string.server_url)) or
-             !sharedPref.contains(getString(R.string.username)) or
-             !sharedPref.contains(getString(R.string.pubkey)) or
-             !sharedPref.contains("server_type")
-        ) {
-            val intent = Intent( this, LoginActivity::class.java).apply{}
-
-            resultLauncher.launch(intent)
-        }
     }
 
     override fun onPause() {
