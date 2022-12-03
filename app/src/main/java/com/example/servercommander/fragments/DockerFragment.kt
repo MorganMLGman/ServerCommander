@@ -15,6 +15,7 @@ import com.example.servercommander.Container
 import com.example.servercommander.ContainersAdapter
 import com.example.servercommander.R
 import com.example.servercommander.SshConnection
+import com.example.servercommander.databinding.AlertDialogContainerStatsBinding
 import com.example.servercommander.databinding.AlertDialogPasswordBinding
 import com.example.servercommander.databinding.FragmentDockerBinding
 import kotlinx.coroutines.Dispatchers
@@ -333,6 +334,75 @@ class DockerFragment : Fragment(), ContainersAdapter.OnViewClickListener {
         }
     }
 
+    private fun callContainerStats(username: String, password: String, container: Container) {
+        if (username.isNotEmpty() and password.isNotEmpty()){
+            val coroutineScope = MainScope()
+            coroutineScope.launch {
+                val defer = async(Dispatchers.IO) {
+                    sshConnection.executeRemoteCommandOneCall("python3 /home/$username/copilot/main.py docker stats --container ${container.name} $password")
+                }
+
+                val output = defer.await().trim()
+
+                if ( (output != "False") or (output != "{False}"))
+                {
+                    try {
+                        val map = mutableMapOf<String, String>()
+                        val jsonObject = JSONTokener(output).nextValue() as JSONObject
+
+                        map["name"] = jsonObject.getString("name")
+                        map["cpu"] = jsonObject.getString("cpu")
+                        map["ram"] = jsonObject.getString("ram")
+                        map["net_io"] = jsonObject.getString("net_io")
+                        map["disk_io"] = jsonObject.getString("disk_io")
+
+                        showContainerStatsAlert(map)
+                    }
+                    catch ( e: JSONException)
+                    {
+                        //
+                    }
+                    catch (e: ClassCastException){
+                        //
+                    }
+                }
+                else{
+                    Toast.makeText(context, "Stats of ${container.name} not available", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+        else{
+            Toast.makeText(context, "Connection with given parameters is not possible.", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun showContainerStatsAlert(map: Map<String, String>){
+
+        val inflater = activity?.layoutInflater
+        if (inflater != null) {
+            val statsLayout = AlertDialogContainerStatsBinding.inflate(inflater)
+            statsLayout.containerNameValue.text = map["name"]
+            statsLayout.containerCpuValue.text = map["cpu"]
+            statsLayout.containerRamValue.text = map["ram"]
+            statsLayout.containerDiskValue.text = map["disk_io"]
+            statsLayout.containerNetValue.text = map["net_io"]
+
+            val builder: AlertDialog.Builder = context.let {
+                val builder = AlertDialog.Builder(it)
+                builder.apply {
+                    setView(statsLayout.root)
+
+                    setCancelable(true)
+                }
+            }
+            builder.create()?.show()
+        }
+        else
+        {
+            Toast.makeText(context, "Unable to render stats window", Toast.LENGTH_LONG).show()
+        }
+    }
+
     private fun parseContainersData(data: String): ArrayList<Container>{
         val output = ArrayList<Container>()
 
@@ -372,7 +442,20 @@ class DockerFragment : Fragment(), ContainersAdapter.OnViewClickListener {
     }
 
     override fun onRowClickListener(view: View, container: Container) {
-        Toast.makeText(context, "Row, container: ${container.name}", Toast.LENGTH_SHORT).show()
+        if(::sshConnection.isInitialized and sharedPref.getBoolean(getString(R.string.connectionTested), false)) {
+            Toast.makeText(context, getString(R.string.refreshing), Toast.LENGTH_SHORT).show()
+            val username = sharedPref.getString(getString(R.string.username), "")!!
+            var password = sharedPref.getString("sudo_password", "")!!
+
+            if(password.isEmpty() or ( password == "" )) {
+                password = showPasswordModal(username, container, ::callContainerStats)
+            }
+            else callContainerStats(username, password, container)
+        }
+        else
+        {
+            Toast.makeText(context, "You need to test your connection first. Please click red server icon at the HOME tab", Toast.LENGTH_LONG).show()
+        }
     }
 
     override fun onButtonStartClickListener(button: AppCompatImageButton, container: Container) {
