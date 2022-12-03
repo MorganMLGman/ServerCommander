@@ -85,7 +85,6 @@ class YunohostFragment : Fragment() {
 
 
 
-    }
 
 
 
