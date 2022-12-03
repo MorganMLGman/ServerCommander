@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatImageButton
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.servercommander.Container
@@ -26,7 +27,7 @@ import org.json.JSONObject
 import org.json.JSONTokener
 import kotlin.reflect.KFunction2
 
-class DockerFragment : Fragment() {
+class DockerFragment : Fragment(), ContainersAdapter.OnViewClickListener {
 
     private var _binding: FragmentDockerBinding? = null
     private val binding get() = _binding!!
@@ -56,7 +57,7 @@ class DockerFragment : Fragment() {
 
         val recyclerView = binding.dockerRecyclerView
         containers = Container.createContainersList(1)
-        val adapter = ContainersAdapter(containers)
+        val adapter = ContainersAdapter(containers, this)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
@@ -225,6 +226,22 @@ class DockerFragment : Fragment() {
         }
     }
 
+    private fun callContainerRestart(username: String, password: String){
+        if (username.isNotEmpty() and password.isNotEmpty()){
+            val coroutineScope = MainScope()
+            coroutineScope.launch {
+                val defer = async(Dispatchers.IO) {
+//                    sshConnection.executeRemoteCommandOneCall("python3 /home/$username/copilot/main.py docker restart --container ${container.name} $password")
+                }
+
+//                val output = defer.await().trim()
+            }
+        }
+        else{
+            Toast.makeText(context, "Connection with given parameters is not possible.", Toast.LENGTH_LONG).show()
+        }
+    }
+
     private fun parseContainersData(data: String): ArrayList<Container>{
         val output = ArrayList<Container>()
 
@@ -262,6 +279,42 @@ class DockerFragment : Fragment() {
             }
         }
         return output
+    }
+
+    override fun onRowClickListener(view: View, container: Container) {
+        Toast.makeText(context, "Row, container: ${container.name}", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onButtonStartClickListener(button: AppCompatImageButton, container: Container) {
+        Toast.makeText(context, "Button START, container: ${container.name}", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onButtonStopClickListener(button: AppCompatImageButton, container: Container) {
+        Toast.makeText(context, "Button STOP, container: ${container.name}", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onButtonRestartClickListener(button: AppCompatImageButton, container: Container) {
+        button.isClickable = false
+        button.animate().apply {
+            duration = 1000
+            rotationBy(360f)
+        }.withEndAction{
+
+        }.start()
+        if(::sshConnection.isInitialized and sharedPref.getBoolean(getString(R.string.connectionTested), false)) {
+            Toast.makeText(context, getString(R.string.refreshing), Toast.LENGTH_SHORT).show()
+            val username = sharedPref.getString(getString(R.string.username), "")!!
+            var password = sharedPref.getString("sudo_password", "")!!
+
+            if(password.isEmpty() or ( password == "" )) {
+                password = showPasswordModal(username, ::callContainerRestart)
+            }
+            else callContainerRestart(username, password)
+        }
+        else
+        {
+            Toast.makeText(context, "You need to test your connection first. Please click red server icon at the HOME tab", Toast.LENGTH_LONG).show()
+        }
     }
 
 }
