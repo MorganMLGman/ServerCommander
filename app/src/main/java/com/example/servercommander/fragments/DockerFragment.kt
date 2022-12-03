@@ -26,6 +26,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import org.json.JSONTokener
 import kotlin.reflect.KFunction2
+import kotlin.reflect.KFunction3
 
 class DockerFragment : Fragment(), ContainersAdapter.OnViewClickListener {
 
@@ -193,6 +194,40 @@ class DockerFragment : Fragment(), ContainersAdapter.OnViewClickListener {
         return ""
     }
 
+    private fun showPasswordModal(username: String, container: Container, func: KFunction3<String, String, Container, Unit>): String {
+        var password = ""
+
+        val inflater = activity?.layoutInflater
+        if (inflater != null) {
+            val passwordLayout = AlertDialogPasswordBinding.inflate(inflater)
+
+            val builder: AlertDialog.Builder = context.let {
+                val builder = AlertDialog.Builder(it)
+                builder.apply {
+                    val input = passwordLayout.passwordText
+                    setPositiveButton(
+                        "Send"
+                    ) { _, _ ->
+                        password = if(input.text.toString() != "") {
+                            input.text.toString()
+                        } else ""
+                        func(username, password, container)
+                    }
+                    setNegativeButton(
+                        context.getString(R.string.cancelButtonLabel)
+                    ) { _, _ ->
+                        password = ""
+                        binding.swipeRefreshLayout.isRefreshing = false
+                    }
+                    setView(passwordLayout.root)
+                }
+            }
+            builder.create()?.show()
+            return password
+        }
+        return ""
+    }
+
     private fun callGetContainersData(username: String, password: String){
 
         var newContainers = ArrayList<Container>()
@@ -226,15 +261,71 @@ class DockerFragment : Fragment(), ContainersAdapter.OnViewClickListener {
         }
     }
 
-    private fun callContainerRestart(username: String, password: String){
+    private fun callContainerStart(username: String, password: String, container: Container){
         if (username.isNotEmpty() and password.isNotEmpty()){
             val coroutineScope = MainScope()
             coroutineScope.launch {
                 val defer = async(Dispatchers.IO) {
-//                    sshConnection.executeRemoteCommandOneCall("python3 /home/$username/copilot/main.py docker restart --container ${container.name} $password")
+                    sshConnection.executeRemoteCommandOneCall("python3 /home/$username/copilot/main.py docker start --container ${container.name} $password")
                 }
 
-//                val output = defer.await().trim()
+                val output = defer.await().trim()
+
+                if ( (output != "False") or (output != "{False}"))
+                {
+                    callGetContainersData(username, password)
+                }
+                else{
+                    Toast.makeText(context, "Start of ${container.name} was unsuccessful", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+        else{
+            Toast.makeText(context, "Connection with given parameters is not possible.", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun callContainerStop(username: String, password: String, container: Container){
+        if (username.isNotEmpty() and password.isNotEmpty()){
+            val coroutineScope = MainScope()
+            coroutineScope.launch {
+                val defer = async(Dispatchers.IO) {
+                    sshConnection.executeRemoteCommandOneCall("python3 /home/$username/copilot/main.py docker stop --container ${container.name} $password")
+                }
+
+                val output = defer.await().trim()
+
+                if ( (output != "False") or (output != "{False}"))
+                {
+                    callGetContainersData(username, password)
+                }
+                else{
+                    Toast.makeText(context, "Stop of ${container.name} was unsuccessful", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+        else{
+            Toast.makeText(context, "Connection with given parameters is not possible.", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun callContainerRestart(username: String, password: String, container: Container){
+        if (username.isNotEmpty() and password.isNotEmpty()){
+            val coroutineScope = MainScope()
+            coroutineScope.launch {
+                val defer = async(Dispatchers.IO) {
+                    sshConnection.executeRemoteCommandOneCall("python3 /home/$username/copilot/main.py docker restart --container ${container.name} $password")
+                }
+
+                val output = defer.await().trim()
+
+                if ( (output != "False") or (output != "{False}"))
+                {
+                    callGetContainersData(username, password)
+                }
+                else{
+                    Toast.makeText(context, "Restart of ${container.name} was unsuccessful", Toast.LENGTH_LONG).show()
+                }
             }
         }
         else{
@@ -263,7 +354,6 @@ class DockerFragment : Fragment(), ContainersAdapter.OnViewClickListener {
                         else -> false
                     }
                     if (isRunning) running++
-                    println("$name $isRunning $runtime")
                     output.add(Container(name, isRunning, runtime))
                 }
                 binding.dockerAllContainersTextView.text = items.toString()
@@ -286,11 +376,51 @@ class DockerFragment : Fragment(), ContainersAdapter.OnViewClickListener {
     }
 
     override fun onButtonStartClickListener(button: AppCompatImageButton, container: Container) {
-        Toast.makeText(context, "Button START, container: ${container.name}", Toast.LENGTH_SHORT).show()
+        button.isClickable = false
+        button.animate().apply {
+            duration = 1000
+            rotationBy(360f)
+        }.withEndAction{
+
+        }.start()
+        if(::sshConnection.isInitialized and sharedPref.getBoolean(getString(R.string.connectionTested), false)) {
+            Toast.makeText(context, getString(R.string.refreshing), Toast.LENGTH_SHORT).show()
+            val username = sharedPref.getString(getString(R.string.username), "")!!
+            var password = sharedPref.getString("sudo_password", "")!!
+
+            if(password.isEmpty() or ( password == "" )) {
+                password = showPasswordModal(username, container, ::callContainerStart)
+            }
+            else callContainerStart(username, password, container)
+        }
+        else
+        {
+            Toast.makeText(context, "You need to test your connection first. Please click red server icon at the HOME tab", Toast.LENGTH_LONG).show()
+        }
     }
 
     override fun onButtonStopClickListener(button: AppCompatImageButton, container: Container) {
-        Toast.makeText(context, "Button STOP, container: ${container.name}", Toast.LENGTH_SHORT).show()
+        button.isClickable = false
+        button.animate().apply {
+            duration = 1000
+            rotationBy(360f)
+        }.withEndAction{
+
+        }.start()
+        if(::sshConnection.isInitialized and sharedPref.getBoolean(getString(R.string.connectionTested), false)) {
+            Toast.makeText(context, getString(R.string.refreshing), Toast.LENGTH_SHORT).show()
+            val username = sharedPref.getString(getString(R.string.username), "")!!
+            var password = sharedPref.getString("sudo_password", "")!!
+
+            if(password.isEmpty() or ( password == "" )) {
+                password = showPasswordModal(username, container, ::callContainerStop)
+            }
+            else callContainerStop(username, password, container)
+        }
+        else
+        {
+            Toast.makeText(context, "You need to test your connection first. Please click red server icon at the HOME tab", Toast.LENGTH_LONG).show()
+        }
     }
 
     override fun onButtonRestartClickListener(button: AppCompatImageButton, container: Container) {
@@ -307,9 +437,9 @@ class DockerFragment : Fragment(), ContainersAdapter.OnViewClickListener {
             var password = sharedPref.getString("sudo_password", "")!!
 
             if(password.isEmpty() or ( password == "" )) {
-                password = showPasswordModal(username, ::callContainerRestart)
+                password = showPasswordModal(username, container, ::callContainerRestart)
             }
-            else callContainerRestart(username, password)
+            else callContainerRestart(username, password, container)
         }
         else
         {
