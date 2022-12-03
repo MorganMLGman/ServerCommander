@@ -15,15 +15,8 @@ import androidx.fragment.app.Fragment
 import com.example.servercommander.R
 import com.example.servercommander.SshConnection
 import com.example.servercommander.databinding.FragmentYunohostBinding
-import okhttp3.*
-import java.io.BufferedReader
-import java.io.IOException
-import java.io.InputStreamReader
-import java.io.OutputStreamWriter
-import java.net.HttpURLConnection
-import java.net.URL
-import java.net.URLEncoder
-import com.example.servercommander.YunohostAuthenticate
+import com.example.servercommander.YunohostConnection
+import java.net.CookieHandler
 
 
 class YunohostFragment : Fragment() {
@@ -78,9 +71,12 @@ class YunohostFragment : Fragment() {
 
         refreshButton.setOnClickListener {
 
-                YunohostAuthenticate().run()
+            val cookie = YunohostConnection().authenticate("", "")
+
 
             }
+
+
 
 
     }
