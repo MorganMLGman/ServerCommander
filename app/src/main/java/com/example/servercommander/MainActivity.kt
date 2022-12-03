@@ -108,7 +108,30 @@ class MainActivity : AppCompatActivity() {
                 tabLayout.getTabAt(2)?.text = "YUNOHOST"
             }
             else -> {
-                throw Exception("ServerType value not permitted")
+                val intent = Intent( this, LoginActivity::class.java).apply{}
+                resultLauncher.launch(intent)
+            }
+        }
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+
+        tabLayout = findViewById(R.id.tabLayout)
+        viewPager2 = findViewById(R.id.viewPager)
+
+        when (sharedPref.getString("server_type", "")) {
+            "docker" -> {
+                viewPager2.adapter = DockerViewPagerAdapter(this)
+                tabLayout.getTabAt(2)?.text = "DOCKER"
+            }
+            "yunohost" -> {
+                viewPager2.adapter = YunohostViewPagerAdapter(this)
+                tabLayout.getTabAt(2)?.text = "YUNOHOST"
+            }
+            else -> {
+                val intent = Intent( this, LoginActivity::class.java).apply{}
+                resultLauncher.launch(intent)
             }
         }
     }
