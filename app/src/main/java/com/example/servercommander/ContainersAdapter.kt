@@ -6,11 +6,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageButton
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 
-class ContainersAdapter(private val mContainers: List<Container>) : RecyclerView.Adapter<ContainersAdapter.ViewHolder>() {
+class ContainersAdapter(var mContainers: List<Container>) : RecyclerView.Adapter<ContainersAdapter.ViewHolder>() {
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         val dockerAppName: TextView = itemView.findViewById(R.id.dockerAppName)
         val dockerAppStatus: TextView = itemView.findViewById(R.id.dockerAppStatus)
@@ -60,5 +61,12 @@ class ContainersAdapter(private val mContainers: List<Container>) : RecyclerView
 
     override fun getItemCount(): Int {
         return mContainers.size
+    }
+
+    fun updateList(newContainers: List<Container>){
+        val diffCallback = ContainersDiffCallback(this.mContainers, newContainers)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+        diffResult.dispatchUpdatesTo(this)
+        this.mContainers = newContainers
     }
 }

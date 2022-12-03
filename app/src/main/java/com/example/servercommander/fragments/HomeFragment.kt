@@ -68,6 +68,19 @@ class HomeFragment : Fragment() {
             }
         }
 
+        val swipeRefreshLayout = binding.swipeRefreshLayout
+        swipeRefreshLayout.setOnRefreshListener {
+
+            if(::sshConnection.isInitialized and sharedPref.getBoolean(getString(R.string.connectionTested), false)) {
+                refreshDash(false)
+            }
+            else
+            {
+                Toast.makeText(context, "You need to test your connection first. Please click red server icon at the HOME tab", Toast.LENGTH_LONG).show()
+                swipeRefreshLayout.isRefreshing = false
+            }
+        }
+
         connectionTest.setOnClickListener {
             if(connectionTest.isClickable)
             {
@@ -164,6 +177,27 @@ class HomeFragment : Fragment() {
         if(refreshViewModel.enabled.value == true)
         {
             handler.post(autoRefreshRunner)
+        }
+
+        if( ::sshConnection.isInitialized )
+        {
+            if ((sharedPref.getString("serverUrl", "") != sshConnection.serverAddress )
+                or  (sharedPref.getString("username", "") != sshConnection.username ))
+            {
+                val serverUrl = sharedPref.getString("serverUrl", "")!!
+                val username = sharedPref.getString("username", "")!!
+                val pubkey = sharedPref.getString("pubkey", "")!!
+                sshConnection = SshConnection(serverUrl, 22, username, pubkey)
+            }
+        }
+
+
+        if(!::sshConnection.isInitialized)
+        {
+            val serverUrl = sharedPref.getString("serverUrl", "")!!
+            val username = sharedPref.getString("username", "")!!
+            val pubkey = sharedPref.getString("pubkey", "")!!
+            sshConnection = SshConnection(serverUrl, 22, username, pubkey)
         }
     }
 
@@ -273,6 +307,8 @@ class HomeFragment : Fragment() {
 
                     try {  packageNumber.text = jsonObject.getString("packages") }
                     catch ( e: JSONException ){ packageNumber.text = getString(R.string.read_error) }
+
+                    binding.swipeRefreshLayout.isRefreshing = false
 
                 }
                 fun rotate(){
