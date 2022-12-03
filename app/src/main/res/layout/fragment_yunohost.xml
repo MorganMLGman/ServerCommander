@@ -43,17 +43,32 @@
 <!--        android:contentDescription="@string/go_to_sso"/>-->
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/refreshDocker"
+        android:id="@+id/openSSOButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/_16sdp"
         android:backgroundTint="@color/dashboard_item_7"
-        android:text="Open SSO"
+        android:text="SSO"
         app:layout_constraintBottom_toBottomOf="@id/textTitle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/textTitle"
         app:cornerRadius="@dimen/_4sdp"
         />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/getCookieButton"
+        android:layout_width="@dimen/_26sdp"
+        android:layout_height="@dimen/_26sdp"
+        android:layout_marginEnd="@dimen/_20sdp"
+        android:clickable="true"
+        android:src="@drawable/refresh"
+        android:tint="@color/white"
+        app:layout_constraintBottom_toBottomOf="@id/textTitle"
+        app:layout_constraintEnd_toStartOf="@+id/openSSOButton"
+        app:layout_constraintTop_toTopOf="@id/textTitle"
+        app:layout_constraintVertical_bias="0.0"
+        tools:ignore="TouchTargetSizeCheck"
+        android:contentDescription="@string/connection_test"/>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardHeader"
@@ -83,7 +98,7 @@
                 app:layout_constraintTop_toTopOf="parent"/>
 
             <TextView
-                android:id="@+id/moreTextView"
+                android:id="@+id/moreButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="more settings"
@@ -107,14 +122,14 @@
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="@dimen/_28sdp"
                     android:layout_height="@dimen/_28sdp"
-                    android:src=""
-                    android:tint="@color/normalBlue"/>
+                    android:src="@drawable/application"
+                    android:tint="@color/iconColour"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_4sdp"
-                    android:text="@string/nothingString"
+                    android:text="Apps"
                     android:textColor="@color/secondary_text"
                     android:textSize="@dimen/_10ssp"/>
 
@@ -143,14 +158,14 @@
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="@dimen/_28sdp"
                     android:layout_height="@dimen/_28sdp"
-                    android:src=""
-                    android:tint="@color/runningGreen"/>
+                    android:src="@drawable/domain"
+                    android:tint="@color/iconColour"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_4sdp"
-                    android:text="@string/nothingString"
+                    android:text="Domains"
                     android:textColor="@color/secondary_text"
                     android:textSize="@dimen/_10ssp"/>
 
@@ -179,14 +194,14 @@
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="@dimen/_28sdp"
                     android:layout_height="@dimen/_28sdp"
-                    android:src=""
-                    android:tint="@color/buttonRed"/>
+                    android:src="@drawable/account_group"
+                    android:tint="@color/iconColour"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_4sdp"
-                    android:text="@string/nothingString"
+                    android:text="Users"
                     android:textColor="@color/secondary_text"
                     android:textSize="@dimen/_10ssp"/>
 
