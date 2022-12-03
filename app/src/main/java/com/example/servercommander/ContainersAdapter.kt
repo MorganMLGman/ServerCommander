@@ -4,14 +4,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 
-class ContainersAdapter(var mContainers: List<Container>) : RecyclerView.Adapter<ContainersAdapter.ViewHolder>() {
+class ContainersAdapter(var mContainers: List<Container>, var mListener: OnViewClickListener) : RecyclerView.Adapter<ContainersAdapter.ViewHolder>() {
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView: View, mListener: OnViewClickListener) : RecyclerView.ViewHolder(itemView) {
 
         val dockerAppName: TextView = itemView.findViewById(R.id.dockerAppName)
         val dockerAppStatus: TextView = itemView.findViewById(R.id.dockerAppStatus)
@@ -22,17 +21,6 @@ class ContainersAdapter(var mContainers: List<Container>) : RecyclerView.Adapter
 
         init {
 
-            buttonContainerUp.setOnClickListener {
-                Toast.makeText(itemView.context, "${dockerAppName.text} button UP", Toast.LENGTH_SHORT).show()
-            }
-
-            buttonContainerDown.setOnClickListener {
-                Toast.makeText(itemView.context, "${dockerAppName.text} button DOWN", Toast.LENGTH_SHORT).show()
-            }
-
-            buttonContainerRestart.setOnClickListener {
-                Toast.makeText(itemView.context, "${dockerAppName.text} button RESTART", Toast.LENGTH_SHORT).show()
-            }
         }
     }
 
@@ -40,7 +28,7 @@ class ContainersAdapter(var mContainers: List<Container>) : RecyclerView.Adapter
         val context = parent.context
         val inflater = LayoutInflater.from(context)
         val contactView = inflater.inflate(R.layout.docker_app_item, parent, false)
-        return ViewHolder(contactView)
+        return ViewHolder(contactView, mListener)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -57,6 +45,22 @@ class ContainersAdapter(var mContainers: List<Container>) : RecyclerView.Adapter
 
         dockerAppRuntime.text = container.runtime
 
+        holder.itemView.setOnClickListener{
+            mListener.onRowClickListener(holder.itemView, container)
+        }
+
+        holder.buttonContainerUp.setOnClickListener{
+            mListener.onButtonStartClickListener(holder.buttonContainerUp, container)
+        }
+
+        holder.buttonContainerDown.setOnClickListener{
+            mListener.onButtonStopClickListener(holder.buttonContainerDown, container)
+        }
+
+        holder.buttonContainerRestart.setOnClickListener {
+            mListener.onButtonRestartClickListener(holder.buttonContainerRestart, container)
+        }
+
     }
 
     override fun getItemCount(): Int {
@@ -68,5 +72,12 @@ class ContainersAdapter(var mContainers: List<Container>) : RecyclerView.Adapter
         val diffResult = DiffUtil.calculateDiff(diffCallback)
         diffResult.dispatchUpdatesTo(this)
         this.mContainers = newContainers
+    }
+
+    interface OnViewClickListener{
+        fun onRowClickListener(view: View, container: Container)
+        fun onButtonStartClickListener(button: AppCompatImageButton, container: Container)
+        fun onButtonStopClickListener(button: AppCompatImageButton, container: Container)
+        fun onButtonRestartClickListener(button: AppCompatImageButton, container: Container)
     }
 }

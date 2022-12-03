@@ -124,5 +124,12 @@
     <string name="container_restart">Container restart</string>
     <string name="container_down">Container down</string>
     <string name="container_start">Container start</string>
-    <string name="refreshing">Refreshing...</string>
+    <string name="yunohost_dashboard">YunoHost Dashboard</string>
+    <string name="go_to_sso">Go to SSO</string>
+    <string name="refreshing">Refreshing…</string>
+    <string name="container">Container</string>
+    <string name="cpu_usage">CPU Usage</string>
+    <string name="ram_usage">RAM Usage</string>
+    <string name="disk_reads_writes">Disk read / write</string>
+    <string name="network_up_down">Network up / down</string>
 </resources>

@@ -15,7 +15,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var tabLayout: TabLayout
     private lateinit var viewPager2: ViewPager2
-    private lateinit var myViewPagerAdapter: MyViewPagerAdapter
 
     private lateinit var sharedPref: SharedPreferences
 
@@ -48,9 +47,20 @@ class MainActivity : AppCompatActivity() {
 
         tabLayout = findViewById(R.id.tabLayout)
         viewPager2 = findViewById(R.id.viewPager)
-        myViewPagerAdapter = MyViewPagerAdapter(this)
 
-        viewPager2.adapter = myViewPagerAdapter
+        when (sharedPref.getString("server_type", "")) {
+            "docker" -> {
+                viewPager2.adapter = DockerViewPagerAdapter(this)
+                tabLayout.getTabAt(2)?.text = "DOCKER"
+            }
+            "yunohost" -> {
+                viewPager2.adapter = YunohostViewPagerAdapter(this)
+                tabLayout.getTabAt(2)?.text = "YUNOHOST"
+            }
+            else -> {
+                throw Exception("ServerType value not permitted")
+            }
+        }
 
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
@@ -84,6 +94,23 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+
+        tabLayout = findViewById(R.id.tabLayout)
+        viewPager2 = findViewById(R.id.viewPager)
+
+        when (sharedPref.getString("server_type", "")) {
+            "docker" -> {
+                viewPager2.adapter = DockerViewPagerAdapter(this)
+                tabLayout.getTabAt(2)?.text = "DOCKER"
+            }
+            "yunohost" -> {
+                viewPager2.adapter = YunohostViewPagerAdapter(this)
+                tabLayout.getTabAt(2)?.text = "YUNOHOST"
+            }
+            else -> {
+                throw Exception("ServerType value not permitted")
+            }
+        }
     }
 
 }
