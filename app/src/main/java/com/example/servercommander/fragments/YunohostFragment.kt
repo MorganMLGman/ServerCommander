@@ -35,6 +35,8 @@ class YunohostFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val policy = ThreadPolicy.Builder().permitAll().build()
+        StrictMode.setThreadPolicy(policy)
 
         sharedPref = requireActivity().getSharedPreferences(
             getString(R.string.app_name), Context.MODE_PRIVATE
@@ -81,11 +83,6 @@ class YunohostFragment : Fragment() {
             }
 
 
-        }
-
-
-
-
-
+    }
 
 }
