@@ -132,4 +132,5 @@
     <string name="ram_usage">RAM Usage</string>
     <string name="disk_reads_writes">Disk read / write</string>
     <string name="network_up_down">Network up / down</string>
+    <string name="commands">Commands</string>
 </resources>
