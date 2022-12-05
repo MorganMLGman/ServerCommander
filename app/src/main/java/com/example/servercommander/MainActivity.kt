@@ -108,7 +108,8 @@ class MainActivity : AppCompatActivity() {
                 tabLayout.getTabAt(2)?.text = "YUNOHOST"
             }
             else -> {
-                throw Exception("ServerType value not permitted")
+                val intent = Intent( this, LoginActivity::class.java).apply{}
+                resultLauncher.launch(intent)
             }
         }
     }
