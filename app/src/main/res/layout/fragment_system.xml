@@ -33,6 +33,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBar"
+            android:progressDrawable="@drawable/circular_loading_bar"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:visibility="gone"/>
+
+
         <GridLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
