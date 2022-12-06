@@ -1,8 +1,11 @@
 package com.example.servercommander.fragments
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Bundle
 import android.os.StrictMode
@@ -11,12 +14,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.servercommander.R
 import com.example.servercommander.SshConnection
 import com.example.servercommander.databinding.FragmentYunohostBinding
 import com.example.servercommander.YunohostConnection
-import java.net.CookieHandler
+import com.example.servercommander.databinding.AlertDialogPasswordBinding
+import kotlin.reflect.KFunction2
 
 
 class YunohostFragment : Fragment() {
@@ -26,6 +31,14 @@ class YunohostFragment : Fragment() {
     private lateinit var sharedPref: SharedPreferences
     private lateinit var sshConnection: SshConnection
 
+    private lateinit var adminLoginPage: String
+
+    private lateinit var ssoWebpage : String
+    private lateinit var adminWebPage : String
+    private lateinit var adminAPI : String
+    private lateinit var getUsersLink : String
+    private lateinit var isAPIInstalledLink : String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val policy = ThreadPolicy.Builder().permitAll().build()
@@ -34,6 +47,13 @@ class YunohostFragment : Fragment() {
         sharedPref = requireActivity().getSharedPreferences(
             getString(R.string.app_name), Context.MODE_PRIVATE
         )
+
+        adminLoginPage = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api/login"
+        ssoWebpage = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/sso/portal.html"
+        adminWebPage = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/admin/"
+        adminAPI = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api"
+        getUsersLink = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api/users?fields=username"
+        isAPIInstalledLink = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api/installed"
     }
 
     override fun onCreateView(
@@ -54,11 +74,6 @@ class YunohostFragment : Fragment() {
         val goToAdminPage = binding.moreButton
         val refreshButton = binding.refreshYunohostConnection
 
-        val ssoWebpage = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/sso/portal.html"
-        val adminWebPage = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/admin/"
-        val adminLoginPage = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api/login/"
-        val adminAPI = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api"
-
         openSSOButton.setOnClickListener{
             var intent = Intent(Intent.ACTION_VIEW, Uri.parse(ssoWebpage))
             startActivity(intent)
@@ -71,14 +86,99 @@ class YunohostFragment : Fragment() {
 
         refreshButton.setOnClickListener {
 
-            val cookie = YunohostConnection().authenticate("", "")
+            var password = sharedPref.getString("yunohost_password", "")!!
+
+            if (password.isEmpty() or (password == "")) {
+                password = showPasswordModal(getUsersLink, ::callGetUsers)
+            } else callGetUsers(getUsersLink, password)
+        }
 
 
+    }
+
+    private fun callGetUsers(url: String, password: String){
+        Log.d("Password", password)
+
+        if(context?.let { isOnline(it) }!!) {
+
+            val isYunohostReachable = YunohostConnection().isAPIInstalled(isAPIInstalledLink)
+
+            if (isYunohostReachable) {
+                val cookie = YunohostConnection().authenticate(adminLoginPage, password)
+                if (cookie.isEmpty()) {
+                    Toast.makeText(context, "Wrong Password", Toast.LENGTH_SHORT).show()
+                }
+                else {
+                    try {
+                        YunohostConnection().getUserNumber(getUsersLink, cookie[0])
+                    } catch (e: Exception) {
+                        Toast.makeText(context, "Connection aborted", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+
+            else {Toast.makeText(context, "Connection aborted", Toast.LENGTH_SHORT).show()}
             }
 
 
+    }
 
 
+
+
+    private fun showPasswordModal(url: String, func: KFunction2<String, String, Unit>): String {
+        var password = ""
+
+        val inflater = activity?.layoutInflater
+        if (inflater != null) {
+            val passwordLayout = AlertDialogPasswordBinding.inflate(inflater)
+
+            val builder: AlertDialog.Builder = context.let {
+                val builder = AlertDialog.Builder(it)
+                builder.apply {
+                    val input = passwordLayout.passwordText
+                    setPositiveButton(
+                        "Send"
+                    ) { _, _ ->
+                        password = if(input.text.toString() != "") {
+                            input.text.toString()
+                        } else ""
+                        func(url, password)
+                    }
+                    setNegativeButton(
+                        context.getString(R.string.cancelButtonLabel)
+                    ) { _, _ ->
+                        password = ""
+                    }
+                    setView(passwordLayout.root)
+                }
+            }
+            builder.create()?.show()
+            return password
+        }
+        return ""
+    }
+
+    fun isOnline(context: Context): Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (connectivityManager != null) {
+            val capabilities =
+                connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+            if (capabilities != null) {
+                if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_CELLULAR")
+                    return true
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_WIFI")
+                    return true
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
+                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_ETHERNET")
+                    return true
+                }
+            }
+        }
+        return false
     }
 
 }

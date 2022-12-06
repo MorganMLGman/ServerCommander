@@ -1,7 +1,10 @@
 package com.example.servercommander
 
 import android.util.Log
+import android.widget.Toast
 import okhttp3.*
+import org.json.JSONObject
+import org.json.JSONTokener
 import java.io.IOException
 
 class YunohostConnection {
@@ -23,24 +26,23 @@ class YunohostConnection {
             .build()
 
         client.newCall(request).execute().use { response ->
-            Log.d("Czy działa?", response.body!!.string())
-            val cookieList = response.headers.values("Set-Cookie").also {
-                println(it)
-            }
 
-            return@authenticate cookieList
+            return response.headers.values("Set-Cookie")
+
         }
     }
 
-    fun getUserNumber(url: String, cookie: List<String>) {
+    fun getUserNumber(url: String, cookie: String) {
+
         val client = OkHttpClient()
 
         val request = Request.Builder()
             .url(url)
             .header(
-                name = "admin.yunohost",
+                name = "Cookie",
                 value = cookie.toString()
             )
+            .header("accept", "*/*")
             .build()
 
         client.newCall(request).enqueue(object : Callback {
@@ -54,6 +56,33 @@ class YunohostConnection {
                 }
             }
         })
+
+    }
+
+    fun isAPIInstalled (url: String) : Boolean {
+
+            val request = Request.Builder()
+                .url(url)
+                .header("accept", "*/*")
+                .build()
+
+            client.newCall(request).execute().use { response ->
+
+                val output = response.body!!.string()
+                val resp = JSONTokener(output).nextValue() as JSONObject
+
+                if (!response.isSuccessful){
+                    return false
+                }
+
+                else {
+                    if (resp.getBoolean("installed") ) {
+                        return true
+                    }
+                    return false
+                }
+            }
+
     }
 
 }

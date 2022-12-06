@@ -127,4 +127,5 @@
     <string name="yunohost_dashboard">YunoHost Dashboard</string>
     <string name="go_to_sso">Go to SSO</string>
     <string name="refreshing">Refreshing...</string>
+    <string name="yunohost_password">Yunohost password</string>
 </resources>
