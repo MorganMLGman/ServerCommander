@@ -27,7 +27,7 @@ class SettingsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
         return binding.root
@@ -47,6 +47,9 @@ class SettingsFragment : Fragment() {
 
         val sudoPassword = binding.sudoPassword
         val sudoSave = binding.sudoSaveButton
+
+        val yunohostPassword = binding.yunohostPassword
+        val yunohostSave = binding.saveYunohostPassword
 
         refreshSwitch.isChecked = refreshViewModel.enabled.value == true
 
@@ -104,7 +107,7 @@ class SettingsFragment : Fragment() {
         }
 
         refreshSlider.addOnChangeListener(Slider.OnChangeListener {
-            slider, value, fromUser ->
+                _, value, _ ->
 
             refreshViewModel.interval(value.toInt())
         })
@@ -125,6 +128,23 @@ class SettingsFragment : Fragment() {
                 Toast.makeText(context, "Password saved", Toast.LENGTH_SHORT).show()
             }
             else Toast.makeText(context, "Password cannot be saved", Toast.LENGTH_SHORT).show()
+        }
+
+
+        yunohostSave.setOnClickListener{
+            val yunohostPasswordText = yunohostPassword.text.toString()
+
+            if (yunohostPasswordText.isNotEmpty() and (yunohostPasswordText != ""))
+            {
+                with(sharedPref.edit()){
+                    putString("yunohost_password", yunohostPasswordText)
+                    apply()
+                }
+                Toast.makeText(context, "Password saved", Toast.LENGTH_SHORT).show()
+            }
+            else Toast.makeText(context, "Password cannot be saved", Toast.LENGTH_SHORT).show()
+
+
         }
     }
 }

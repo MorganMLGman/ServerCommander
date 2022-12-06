@@ -47,7 +47,7 @@ class SshConnection(val serverAddress: String,
                         Thread.sleep(100)
                     }
 
-                    val exitCode = sshChannel.exitStatus
+//                    val exitCode = sshChannel.exitStatus
 
                     sshChannel.disconnect()
 
@@ -66,8 +66,8 @@ class SshConnection(val serverAddress: String,
 
     fun checkRequirements(): Pair<Boolean, String> {
         var returnComment = ""
-        var requirementsOK: Boolean = true
-        var answer: String = ""
+        var requirementsOK = true
+        var answer: String
 
 //        Check if ssh connection is OK and specified user matches system user
         run {
@@ -146,23 +146,23 @@ class SshConnection(val serverAddress: String,
         return Pair(requirementsOK, returnComment)
     }
 
-    private fun isAlive(session: Session): Session {
-        lateinit var newSession: Session
-        try {
-            val testChannel = session.openChannel("exec") as ChannelExec
-            testChannel.setCommand("true")
-            testChannel.connect()
-            testChannel.disconnect()
-            newSession = session
-        } catch (e: JSchException) {
-            newSession = jsch.getSession(username, serverAddress, serverPort)
-            val properties = Properties()
-            properties["StrictHostKeyChecking"] = "no"
-            newSession.setConfig(properties)
-            newSession.connect()
-        }
-        return newSession
-    }
+//    private fun isAlive(session: Session): Session {
+//        lateinit var newSession: Session
+//        try {
+//            val testChannel = session.openChannel("exec") as ChannelExec
+//            testChannel.setCommand("true")
+//            testChannel.connect()
+//            testChannel.disconnect()
+//            newSession = session
+//        } catch (e: JSchException) {
+//            newSession = jsch.getSession(username, serverAddress, serverPort)
+//            val properties = Properties()
+//            properties["StrictHostKeyChecking"] = "no"
+//            newSession.setConfig(properties)
+//            newSession.connect()
+//        }
+//        return newSession
+//    }
 
     fun openConnection() {
         if (serverAddress.isNotEmpty() and username.isNotEmpty() and keyPath.isNotEmpty()) {
@@ -180,7 +180,7 @@ class SshConnection(val serverAddress: String,
 
                     this.session = session
                     shell = session.openChannel("shell") as ChannelShell
-                    shell.setPtyType("dumb");
+                    shell.setPtyType("dumb")
 
                     fromServer = BufferedReader(InputStreamReader(shell.inputStream))
                     toServer = shell.outputStream
@@ -203,13 +203,13 @@ class SshConnection(val serverAddress: String,
         }
     }
 
-    fun closeConnection() {
-        if(::session.isInitialized and ::shell.isInitialized)
-        {
-            shell.disconnect()
-            session.disconnect()
-        }
-    }
+//    fun closeConnection() {
+//        if(::session.isInitialized and ::shell.isInitialized)
+//        {
+//            shell.disconnect()
+//            session.disconnect()
+//        }
+//    }
 
     fun executeRemoteCommand(command: String): String {
         if(!isOpen()){
@@ -223,7 +223,7 @@ class SshConnection(val serverAddress: String,
         toServer.flush()
 
         val builder = StringBuilder()
-        var line: String = " "
+        var line: String
 
         while (true) {
             try {
