@@ -55,6 +55,7 @@ class SystemFragment : Fragment() {
         val rebootButton = binding.rebootButton
         val updateButton = binding.updateButton
         val upgradeButton = binding.upgradeButton
+        val shutdownButton =  binding.buttonShutdown
         val progressBar = binding.progressBar
 
         if( !(::sshConnection.isInitialized or sharedPref.getBoolean(getString(R.string.connectionTested), false)))
@@ -86,14 +87,29 @@ class SystemFragment : Fragment() {
         rebootButton.setOnClickListener {
             if(::sshConnection.isInitialized and sharedPref.getBoolean(getString(R.string.connectionTested), false)) {
                 val username = sharedPref.getString(getString(R.string.username), "")!!
-                var password = sharedPref.getString("sudo_password", "")!!
+                val password = sharedPref.getString("sudo_password", "")!!
 
                 progressBar.visibility = View.VISIBLE
 
                 if(password.isEmpty() or ( password == "" )) {
-                    password = showPasswordModal(username, ::callUpdate)
+                    showPasswordModal(username, ::callUpdate)
                 }
                 else callReboot(username, password)
+            }
+            else Toast.makeText(context, "You need to test your connection first. Please click red server icon at the HOME tab", Toast.LENGTH_LONG).show()
+        }
+
+        shutdownButton.setOnClickListener {
+            if(::sshConnection.isInitialized and sharedPref.getBoolean(getString(R.string.connectionTested), false)) {
+                val username = sharedPref.getString(getString(R.string.username), "")!!
+                val password = sharedPref.getString("sudo_password", "")!!
+
+                progressBar.visibility = View.VISIBLE
+
+                if(password.isEmpty() or ( password == "" )) {
+                    showPasswordModal(username, ::callShutdown)
+                }
+                else callShutdown(username, password)
             }
             else Toast.makeText(context, "You need to test your connection first. Please click red server icon at the HOME tab", Toast.LENGTH_LONG).show()
         }
@@ -101,12 +117,12 @@ class SystemFragment : Fragment() {
         updateButton.setOnClickListener {
             if(::sshConnection.isInitialized and sharedPref.getBoolean(getString(R.string.connectionTested), false)) {
                 val username = sharedPref.getString(getString(R.string.username), "")!!
-                var password = sharedPref.getString("sudo_password", "")!!
+                val password = sharedPref.getString("sudo_password", "")!!
 
                 progressBar.visibility = View.VISIBLE
 
                 if(password.isEmpty() or ( password == "" )) {
-                    password = showPasswordModal(username, ::callUpdate)
+                    showPasswordModal(username, ::callUpdate)
                 }
                 else callUpdate(username, password)
             }
@@ -116,12 +132,12 @@ class SystemFragment : Fragment() {
         upgradeButton.setOnClickListener {
             if(::sshConnection.isInitialized and sharedPref.getBoolean(getString(R.string.connectionTested), false)) {
                 val username = sharedPref.getString(getString(R.string.username), "")!!
-                var password = sharedPref.getString("sudo_password", "")!!
+                val password = sharedPref.getString("sudo_password", "")!!
 
                 progressBar.visibility = View.VISIBLE
 
                 if(password.isEmpty() or ( password == "" )) {
-                    password = showPasswordModal(username, ::callUpgrade)
+                    showPasswordModal(username, ::callUpgrade)
                 }
                 else callUpgrade(username, password)
             }
@@ -195,6 +211,7 @@ class SystemFragment : Fragment() {
                     context.getString(R.string.cancelButtonLabel)
                 ) { _, _ ->
                     password = ""
+                    binding.progressBar.visibility = View.GONE
                 }
                     setView(passwordLayout.root)
                 }
@@ -228,6 +245,38 @@ class SystemFragment : Fragment() {
                 else{
                     binding.progressBar.visibility = View.GONE
                     Toast.makeText(context, "Reboot command was not successful.", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+
+        else{
+            binding.progressBar.visibility = View.GONE
+            Toast.makeText(context, "Please provide valid SUDO password!", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun callShutdown(username: String, password: String) {
+        if (password != "")
+        {
+            val coroutineScope = MainScope()
+            coroutineScope.launch {
+                val defer = async(Dispatchers.IO) {
+                    sshConnection.executeRemoteCommandOneCall("python3 /home/$username/copilot/main.py shutdown $password")
+                }
+
+                val output = defer.await().trim()
+                if (output != "False")
+                {
+                    with(sharedPref.edit()){
+                        putBoolean(getString(R.string.connectionTested), false)
+                        apply()
+                    }
+                    binding.progressBar.visibility = View.GONE
+                    Toast.makeText(context, "Shutdown command successfully send.", Toast.LENGTH_LONG).show()
+                }
+                else{
+                    binding.progressBar.visibility = View.GONE
+                    Toast.makeText(context, "Shutdown command was not successful.", Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -312,7 +361,6 @@ class SystemFragment : Fragment() {
 
                 val builder: AlertDialog.Builder = context.let {
                     val builder = AlertDialog.Builder(it)
-                    var text = ""
                     builder.apply {
                         setTitle("Upgrades")
                         setMessage("Number of upgraded packages: $output")
