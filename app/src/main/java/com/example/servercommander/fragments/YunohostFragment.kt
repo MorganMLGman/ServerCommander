@@ -89,14 +89,14 @@ class YunohostFragment : Fragment() {
             var password = sharedPref.getString("yunohost_password", "")!!
 
             if (password.isEmpty() or (password == "")) {
-                password = showPasswordModal(getUsersLink, ::callGetUsers)
-            } else callGetUsers(getUsersLink, password)
+                password = showPasswordModal(getUsersLink, ::getYunohostConnection)
+            } else getYunohostConnection(getUsersLink, password)
         }
 
 
     }
 
-    private fun callGetUsers(url: String, password: String){
+    private fun getYunohostConnection(url: String, password: String){
         Log.d("Password", password)
 
         if(context?.let { isOnline(it) }!!) {
