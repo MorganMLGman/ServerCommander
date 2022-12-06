@@ -97,7 +97,6 @@ class YunohostFragment : Fragment() {
     }
 
     private fun getYunohostConnection(url: String, password: String){
-        Log.d("Password", password)
 
         if(context?.let { isOnline(it) }!!) {
 
