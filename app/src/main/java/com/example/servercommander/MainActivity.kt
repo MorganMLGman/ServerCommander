@@ -82,7 +82,7 @@ class MainActivity : AppCompatActivity() {
 
     private var resultLauncher = registerForActivityResult(StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            val data: Intent? = result.data
+//            val data: Intent? = result.data
 
             when (sharedPref.getString("server_type", "")) {
                 "docker" -> {

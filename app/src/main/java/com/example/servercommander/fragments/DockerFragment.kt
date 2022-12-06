@@ -90,10 +90,10 @@ class DockerFragment : Fragment(), ContainersAdapter.OnViewClickListener {
             if(::sshConnection.isInitialized and sharedPref.getBoolean(getString(R.string.connectionTested), false)) {
                 Toast.makeText(context, getString(R.string.refreshing), Toast.LENGTH_SHORT).show()
                 val username = sharedPref.getString(getString(R.string.username), "")!!
-                var password = sharedPref.getString("sudo_password", "")!!
+                val password = sharedPref.getString("sudo_password", "")!!
 
                 if(password.isEmpty() or ( password == "" )) {
-                    password = showPasswordModal(username, ::callGetContainersData)
+                    showPasswordModal(username, ::callGetContainersData)
                 }
                 else callGetContainersData(username, password)
             }
@@ -116,10 +116,10 @@ class DockerFragment : Fragment(), ContainersAdapter.OnViewClickListener {
             if(::sshConnection.isInitialized and sharedPref.getBoolean(getString(R.string.connectionTested), false)) {
                 Toast.makeText(context, getString(R.string.refreshing), Toast.LENGTH_SHORT).show()
                 val username = sharedPref.getString(getString(R.string.username), "")!!
-                var password = sharedPref.getString("sudo_password", "")!!
+                val password: String = sharedPref.getString("sudo_password", "")!!
 
                 if(password.isEmpty() or ( password == "" )) {
-                    password = showPasswordModal(username, ::callGetContainersData)
+                    showPasswordModal(username, ::callGetContainersData)
                 }
                 else callGetContainersData(username, password)
             }
@@ -408,7 +408,7 @@ class DockerFragment : Fragment(), ContainersAdapter.OnViewClickListener {
 
         if (data.isNotEmpty())
         {
-            var running: Int = 0
+            var running = 0
             try {
                 val jsonObject = JSONTokener(data).nextValue() as JSONObject
                 val containers: JSONArray = jsonObject.getJSONArray("containers")
@@ -445,10 +445,10 @@ class DockerFragment : Fragment(), ContainersAdapter.OnViewClickListener {
         if(::sshConnection.isInitialized and sharedPref.getBoolean(getString(R.string.connectionTested), false)) {
             Toast.makeText(context, getString(R.string.refreshing), Toast.LENGTH_SHORT).show()
             val username = sharedPref.getString(getString(R.string.username), "")!!
-            var password = sharedPref.getString("sudo_password", "")!!
+            val password = sharedPref.getString("sudo_password", "")!!
 
             if(password.isEmpty() or ( password == "" )) {
-                password = showPasswordModal(username, container, ::callContainerStats)
+                showPasswordModal(username, container, ::callContainerStats)
             }
             else callContainerStats(username, password, container)
         }
@@ -469,10 +469,10 @@ class DockerFragment : Fragment(), ContainersAdapter.OnViewClickListener {
         if(::sshConnection.isInitialized and sharedPref.getBoolean(getString(R.string.connectionTested), false)) {
             Toast.makeText(context, getString(R.string.refreshing), Toast.LENGTH_SHORT).show()
             val username = sharedPref.getString(getString(R.string.username), "")!!
-            var password = sharedPref.getString("sudo_password", "")!!
+            val password = sharedPref.getString("sudo_password", "")!!
 
             if(password.isEmpty() or ( password == "" )) {
-                password = showPasswordModal(username, container, ::callContainerStart)
+                showPasswordModal(username, container, ::callContainerStart)
             }
             else callContainerStart(username, password, container)
         }
@@ -493,10 +493,10 @@ class DockerFragment : Fragment(), ContainersAdapter.OnViewClickListener {
         if(::sshConnection.isInitialized and sharedPref.getBoolean(getString(R.string.connectionTested), false)) {
             Toast.makeText(context, getString(R.string.refreshing), Toast.LENGTH_SHORT).show()
             val username = sharedPref.getString(getString(R.string.username), "")!!
-            var password = sharedPref.getString("sudo_password", "")!!
+            val password = sharedPref.getString("sudo_password", "")!!
 
             if(password.isEmpty() or ( password == "" )) {
-                password = showPasswordModal(username, container, ::callContainerStop)
+                showPasswordModal(username, container, ::callContainerStop)
             }
             else callContainerStop(username, password, container)
         }
@@ -517,10 +517,10 @@ class DockerFragment : Fragment(), ContainersAdapter.OnViewClickListener {
         if(::sshConnection.isInitialized and sharedPref.getBoolean(getString(R.string.connectionTested), false)) {
             Toast.makeText(context, getString(R.string.refreshing), Toast.LENGTH_SHORT).show()
             val username = sharedPref.getString(getString(R.string.username), "")!!
-            var password = sharedPref.getString("sudo_password", "")!!
+            val password = sharedPref.getString("sudo_password", "")!!
 
             if(password.isEmpty() or ( password == "" )) {
-                password = showPasswordModal(username, container, ::callContainerRestart)
+                showPasswordModal(username, container, ::callContainerRestart)
             }
             else callContainerRestart(username, password, container)
         }
