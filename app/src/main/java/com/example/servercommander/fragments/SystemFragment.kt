@@ -55,6 +55,7 @@ class SystemFragment : Fragment() {
         val rebootButton = binding.rebootButton
         val updateButton = binding.updateButton
         val upgradeButton = binding.upgradeButton
+        val progressBar = binding.progressBar
 
         if( !(::sshConnection.isInitialized or sharedPref.getBoolean(getString(R.string.connectionTested), false)))
         {
@@ -87,6 +88,8 @@ class SystemFragment : Fragment() {
                 val username = sharedPref.getString(getString(R.string.username), "")!!
                 var password = sharedPref.getString("sudo_password", "")!!
 
+                progressBar.visibility = View.VISIBLE
+
                 if(password.isEmpty() or ( password == "" )) {
                     password = showPasswordModal(username, ::callUpdate)
                 }
@@ -100,6 +103,8 @@ class SystemFragment : Fragment() {
                 val username = sharedPref.getString(getString(R.string.username), "")!!
                 var password = sharedPref.getString("sudo_password", "")!!
 
+                progressBar.visibility = View.VISIBLE
+
                 if(password.isEmpty() or ( password == "" )) {
                     password = showPasswordModal(username, ::callUpdate)
                 }
@@ -112,6 +117,8 @@ class SystemFragment : Fragment() {
             if(::sshConnection.isInitialized and sharedPref.getBoolean(getString(R.string.connectionTested), false)) {
                 val username = sharedPref.getString(getString(R.string.username), "")!!
                 var password = sharedPref.getString("sudo_password", "")!!
+
+                progressBar.visibility = View.VISIBLE
 
                 if(password.isEmpty() or ( password == "" )) {
                     password = showPasswordModal(username, ::callUpgrade)
@@ -195,6 +202,7 @@ class SystemFragment : Fragment() {
             builder.create()?.show()
             return password
         }
+        binding.progressBar.visibility = View.GONE
         return ""
     }
 
@@ -214,12 +222,20 @@ class SystemFragment : Fragment() {
                         putBoolean(getString(R.string.connectionTested), false)
                         apply()
                     }
+                    binding.progressBar.visibility = View.GONE
                     Toast.makeText(context, "Reboot command successfully send.", Toast.LENGTH_LONG).show()
                 }
-                else Toast.makeText(context, "Reboot command was not successful.", Toast.LENGTH_LONG).show()
+                else{
+                    binding.progressBar.visibility = View.GONE
+                    Toast.makeText(context, "Reboot command was not successful.", Toast.LENGTH_LONG).show()
+                }
             }
         }
-        else Toast.makeText(context, "Please provide valid SUDO password!", Toast.LENGTH_LONG).show()
+
+        else{
+            binding.progressBar.visibility = View.GONE
+            Toast.makeText(context, "Please provide valid SUDO password!", Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun callUpdate(username: String, password: String){
@@ -262,17 +278,25 @@ class SystemFragment : Fragment() {
                             }
                         }
                         builder.create()?.show()
+                        binding.progressBar.visibility = View.GONE
                     }
-                    else return@launch
+                    else{
+                        binding.progressBar.visibility = View.GONE
+                        return@launch
+                    }
                 }
                 catch ( e: JSONException )
                 {
+                    binding.progressBar.visibility = View.GONE
                     Toast.makeText(context, "Check updates command was not successful.", Toast.LENGTH_LONG).show()
                     return@launch
                 }
             }
         }
-        else Toast.makeText(context, "Please provide valid SUDO password!", Toast.LENGTH_LONG).show()
+        else{
+            binding.progressBar.visibility = View.GONE
+            Toast.makeText(context, "Please provide valid SUDO password!", Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun callUpgrade(username: String, password: String){
@@ -296,9 +320,13 @@ class SystemFragment : Fragment() {
                     }
                 }
                 builder.create()?.show()
+                binding.progressBar.visibility = View.GONE
 
             }
         }
-        else Toast.makeText(context, "Please provide valid SUDO password!", Toast.LENGTH_LONG).show()
+        else{
+            binding.progressBar.visibility = View.GONE
+            Toast.makeText(context, "Please provide valid SUDO password!", Toast.LENGTH_LONG).show()
+        }
     }
 }

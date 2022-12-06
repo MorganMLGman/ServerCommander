@@ -4,7 +4,9 @@ import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.RadioButton
@@ -86,8 +88,12 @@ class LoginActivity : AppCompatActivity() {
                         apply()
                     }
 
-                    Toast.makeText(this, getString(R.string.connectionSaved), Toast.LENGTH_SHORT).show()
-                    setResult(Activity.RESULT_OK)
+                    Toast.makeText(this, getString(R.string.connectionSaved), Toast.LENGTH_LONG).show()
+
+                    val intent = Intent()
+                    intent.putExtra("server_type", sharedPref.getString("server_type", ""))
+                    setResult(Activity.RESULT_OK, intent)
+                    Log.d("test", "activity result")
                     finish()
                 }
             }
@@ -129,17 +135,6 @@ class LoginActivity : AppCompatActivity() {
             pubkey.error = getString(R.string.pubkeyError)
         }
 
-//        if (radioRequired and !(username.text.toString().contentEquals("admin")) and radioYunohost.isChecked)
-//        {
-//            username.error = getString(R.string.yhAdminUserError)
-//            wrongData = true
-//        }
-
-        if (radioRequired and radioDocker.isChecked)
-        {
-    //            wrongData = true
-        }
-
         return !wrongData
     }
 
@@ -153,4 +148,5 @@ class LoginActivity : AppCompatActivity() {
             finishAffinity()
         }
     }
+
 }
