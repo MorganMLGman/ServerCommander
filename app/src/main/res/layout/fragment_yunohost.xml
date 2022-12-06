@@ -56,7 +56,7 @@
 <!--        />-->
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/getCookieButton"
+        android:id="@+id/refreshYunohostConnection"
         android:layout_width="@dimen/_26sdp"
         android:layout_height="@dimen/_26sdp"
         android:layout_marginEnd="@dimen/_20sdp"

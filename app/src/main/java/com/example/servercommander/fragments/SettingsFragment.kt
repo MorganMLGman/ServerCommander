@@ -48,6 +48,9 @@ class SettingsFragment : Fragment() {
         val sudoPassword = binding.sudoPassword
         val sudoSave = binding.sudoSaveButton
 
+        val yunohostPassword = binding.yunohostPassword
+        val yunohostSave = binding.saveYunohostPassword
+
         refreshSwitch.isChecked = refreshViewModel.enabled.value == true
 
         val sharedPref = requireActivity().getSharedPreferences(
@@ -125,6 +128,23 @@ class SettingsFragment : Fragment() {
                 Toast.makeText(context, "Password saved", Toast.LENGTH_SHORT).show()
             }
             else Toast.makeText(context, "Password cannot be saved", Toast.LENGTH_SHORT).show()
+        }
+
+
+        yunohostSave.setOnClickListener{
+            val yunohostPasswordText = yunohostPassword.text.toString()
+
+            if (yunohostPasswordText.isNotEmpty() and (yunohostPasswordText != ""))
+            {
+                with(sharedPref.edit()){
+                    putString("yunohost_password", yunohostPasswordText)
+                    apply()
+                }
+                Toast.makeText(context, "Password saved", Toast.LENGTH_SHORT).show()
+            }
+            else Toast.makeText(context, "Password cannot be saved", Toast.LENGTH_SHORT).show()
+
+
         }
     }
 }
