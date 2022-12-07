@@ -1,4 +1,4 @@
-package com.example.servercommander
+package com.doyouhost.servercommander
 
 import android.util.Log
 import android.widget.Toast

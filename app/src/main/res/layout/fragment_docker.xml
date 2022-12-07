@@ -5,7 +5,7 @@
     android:id="@+id/dockerConstraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.DockerFragment" >
+    tools:context="com.doyouhost.servercommander.fragments.DockerFragment" >
 
     <View
         android:id="@+id/viewHeaderBackground"

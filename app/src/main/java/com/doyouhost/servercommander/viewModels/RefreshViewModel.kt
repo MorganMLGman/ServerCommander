@@ -1,4 +1,4 @@
-package com.example.servercommander.viewModels
+package com.doyouhost.servercommander.viewModels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

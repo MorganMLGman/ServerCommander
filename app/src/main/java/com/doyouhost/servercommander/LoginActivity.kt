@@ -1,4 +1,4 @@
-package com.example.servercommander
+package com.doyouhost.servercommander
 
 import android.app.Activity
 import android.content.ClipData

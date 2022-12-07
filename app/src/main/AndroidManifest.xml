@@ -19,7 +19,7 @@
         android:theme="@style/Theme.ServerCommander"
         tools:targetApi="31">
         <activity
-            android:name=".LoginActivity"
+            android:name="com.doyouhost.servercommander.LoginActivity"
             android:exported="false"
             android:screenOrientation="sensorPortrait">
             <meta-data
@@ -27,7 +27,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name="com.doyouhost.servercommander.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.ServerCommander"
             android:screenOrientation="sensorPortrait">

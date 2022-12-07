@@ -1,4 +1,4 @@
-package com.example.servercommander
+package com.doyouhost.servercommander
 
 import androidx.recyclerview.widget.DiffUtil
 

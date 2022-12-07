@@ -1,4 +1,4 @@
-package com.example.servercommander
+package com.doyouhost.servercommander
 
 import android.app.AlertDialog
 import android.content.Context

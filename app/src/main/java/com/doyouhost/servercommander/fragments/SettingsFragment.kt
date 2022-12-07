@@ -1,4 +1,4 @@
-package com.example.servercommander.fragments
+package com.doyouhost.servercommander.fragments
 
 import android.content.Context
 import android.os.Bundle
@@ -8,9 +8,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.example.servercommander.R
-import com.example.servercommander.databinding.FragmentSettingsBinding
-import com.example.servercommander.viewModels.RefreshViewModel
+import com.doyouhost.servercommander.R
+import com.doyouhost.servercommander.databinding.FragmentSettingsBinding
+import com.doyouhost.servercommander.viewModels.RefreshViewModel
 import com.google.android.material.slider.Slider
 
 class SettingsFragment : Fragment() {

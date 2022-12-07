@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scrollbars="none"
-    tools:context=".fragments.SystemFragment">
+    tools:context="com.doyouhost.servercommander.fragments.SystemFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"

@@ -1,4 +1,4 @@
-package com.example.servercommander.fragments
+package com.doyouhost.servercommander.fragments
 
 import android.app.AlertDialog
 import android.content.Context
@@ -12,10 +12,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.example.servercommander.R
-import com.example.servercommander.SshConnection
-import com.example.servercommander.databinding.FragmentHomeBinding
-import com.example.servercommander.viewModels.RefreshViewModel
+import com.doyouhost.servercommander.R
+import com.doyouhost.servercommander.SshConnection
+import com.doyouhost.servercommander.databinding.FragmentHomeBinding
+import com.doyouhost.servercommander.viewModels.RefreshViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.async

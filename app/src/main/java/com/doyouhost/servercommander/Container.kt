@@ -1,4 +1,4 @@
-package com.example.servercommander
+package com.doyouhost.servercommander
 
 class Container(val name: String, val isRunning: Boolean, val runtime: String) {
 

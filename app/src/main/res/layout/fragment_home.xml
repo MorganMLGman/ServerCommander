@@ -5,7 +5,7 @@
     android:id="@+id/homeConstrainedLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.HomeFragment">
+    tools:context="com.doyouhost.servercommander.fragments.HomeFragment">
 
     <View
         android:id="@+id/viewHeaderBackground"
