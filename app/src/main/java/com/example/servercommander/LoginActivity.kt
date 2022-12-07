@@ -41,8 +41,10 @@ class LoginActivity : AppCompatActivity() {
 
             pubkey.setText(pubKeyPath)
 
+            val idRsaPub = File(pubKeyPath, "id_rsa.pub").readText()
+
             val clipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-            val clip = ClipData.newPlainText("pubKeyPath", pubKeyPath)
+            val clip = ClipData.newPlainText("id_rsa.pub", idRsaPub)
             clipboard.setPrimaryClip(clip)
         }
 
