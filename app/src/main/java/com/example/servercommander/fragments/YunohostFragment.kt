@@ -48,6 +48,8 @@ class YunohostFragment : Fragment() {
             getString(R.string.app_name), Context.MODE_PRIVATE
         )
 
+
+        //TODO: Add "http://" too
         adminLoginPage = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api/login"
         ssoWebpage = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/sso/portal.html"
         adminWebPage = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/admin/"
