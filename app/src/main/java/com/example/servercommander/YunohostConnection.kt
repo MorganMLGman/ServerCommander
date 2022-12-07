@@ -12,7 +12,6 @@ import java.io.IOException
 class YunohostConnection {
     private val client = OkHttpClient()
 
-
     fun authenticate(url: String, password: String): List<String> {
 
 
@@ -70,49 +69,53 @@ class YunohostConnection {
 
     fun isAPIInstalled (url: String) : Boolean {
 
+
+
         val request = Request.Builder()
             .url(url)
             .header("accept", "*/*")
             .build()
 
         try {
-            client.newCall(request).enqueue(object : Callback {
-                override fun onFailure(call: Call, e: IOException) {
-                    e.printStackTrace()
-                    throw IOException()
-                }
-
-
-                override fun onResponse(call: Call, response: Response) {
-
-                    response.use {
-                        if (!response.isSuccessful) {
-                            throw IOException("Unexpected code $response")
-                        }
-
-                        val output = response.body!!.string()
-                        //println(output)
-
-                        if (output.isEmpty()) {
+            client.run {
+                newCall(request).enqueue(object : Callback {
+                        override fun onFailure(call: Call, e: IOException) {
+                            e.printStackTrace()
                             throw IOException()
                         }
 
-                            try {
-                                val resp = JSONTokener(output).nextValue() as JSONObject
-                                Log.d("Czy wchodzi do try w JSON", "Tak")
-                                if (resp.getBoolean("installed")) {
-                                    Log.d("Czy wchodzi w ifa w JSON", "Tak")
-                                } else {throw IOException()}
 
-                            } catch (e: JSONException) {
-                                throw IOException("Unexpected code $response")
-                            } catch (e: java.lang.ClassCastException){
-                                throw IOException("Unexpected code $response")
-                            } catch (e: IOException){throw IOException()}
-                    }
-                }
-            })
-            return true
+                       override fun onResponse(call: Call, response: Response) {
+
+                            response.use {
+                                if (!response.isSuccessful) {
+                                    throw IOException("Unexpected code $response")
+                                }
+
+                                val output = response.body!!.string()
+                                //println(output)
+
+                                if (output.isEmpty()) {
+                                    throw IOException()
+                                }
+
+                                    try {
+                                        val resp = JSONTokener(output).nextValue() as JSONObject
+                                        Log.d("Czy wchodzi do try w JSON", "Tak")
+                                        if (resp.getBoolean("installed")) {
+                                            Log.d("Czy wchodzi w ifa w JSON", "Tak")
+
+                                        } else {throw IOException()}
+
+                                    } catch (e: JSONException) {
+                                        throw IOException("Unexpected code $response")
+                                    } catch (e: java.lang.ClassCastException){
+                                        throw IOException("Unexpected code $response")
+                                    } catch (e: IOException){throw IOException()}
+                            }
+                        }
+                    })
+            }
 
         } catch (e: IOException) {
          return false
