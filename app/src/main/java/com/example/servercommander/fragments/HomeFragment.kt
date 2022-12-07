@@ -47,7 +47,7 @@ class HomeFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
@@ -98,7 +98,7 @@ class HomeFragment : Fragment() {
                         sharedPref.getString(getString(R.string.pubkey), "").toString()
                     )
 
-                    var rotation: Boolean = true
+                    var rotation = true
 
                     val coroutineScope = MainScope()
                     coroutineScope.launch {
@@ -121,7 +121,7 @@ class HomeFragment : Fragment() {
                         }
                         else
                         {
-                            val builder: AlertDialog.Builder? = context.let {
+                            val builder: AlertDialog.Builder = context.let {
                                 val builder = AlertDialog.Builder(it)
                                 builder.apply {
                                     setCancelable(true)
@@ -129,7 +129,7 @@ class HomeFragment : Fragment() {
                                     setMessage(comment.trim())
                                 }
                             }
-                            builder?.create()?.show()
+                            builder.create()?.show()
 
                             context?.getColor(R.color.brightRed)
                                 ?.let { it1 -> connectionTest.setColorFilter(it1, android.graphics.PorterDuff.Mode.SRC_IN) }
@@ -246,7 +246,7 @@ class HomeFragment : Fragment() {
 
             if ( sharedPref.getBoolean(getString(R.string.connectionTested), false) ){
 
-                var rotation: Boolean = true
+                var rotation = true
 
                 val coroutineScope = MainScope()
                 coroutineScope.launch {
@@ -338,5 +338,72 @@ class HomeFragment : Fragment() {
         {
             Toast.makeText(context, "Connection to server is not possible with given settings", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        val tempText = binding.dashTemperatureTextView
+        val cpuUsage = binding.dashCpuTextView
+        val ramUsage = binding.dashRamTextView
+        val linuxKernelVersion = binding.kernelInfo.linuxKernelVersion
+        val hostname = binding.kernelInfo.hostname
+        val uptime = binding.uptimeInfo.upTimeValue
+        val uptimeSince = binding.uptimeInfo.upTimeInfo
+        val localIpAddress = binding.localIpInfo.localIpAddresValue
+        val publicIpAddress = binding.publicIpInfo.publicAddressValue
+        val diskUsage = binding.diskInfo.diskUsageValue
+        val diskName = binding.diskInfo.diskNameText
+        val heaviestApp = binding.HeaviestProcessInfo.heaviestProcessValue
+        val packageNumber = binding.packageNumInfo.packagesNumValue
+
+        outState.apply {
+            if (tempText.text.toString().isNotEmpty()) putString("tempText", tempText.text.toString())
+            if (cpuUsage.text.toString().isNotEmpty()) putString("cpuUsage", cpuUsage.text.toString())
+            if (ramUsage.text.toString().isNotEmpty()) putString("ramUsage", ramUsage.text.toString())
+            if (linuxKernelVersion.text.toString().isNotEmpty()) putString("linuxKernelVersion", linuxKernelVersion.text.toString())
+            if (hostname.text.toString().isNotEmpty()) putString("hostname", hostname.text.toString())
+            if (uptime.text.toString().isNotEmpty()) putString("uptime", uptime.text.toString())
+            if (uptimeSince.text.toString().isNotEmpty()) putString("uptimeSince", uptimeSince.text.toString())
+            if (localIpAddress.text.toString().isNotEmpty()) putString("localIpAddress", localIpAddress.text.toString())
+            if (publicIpAddress.text.toString().isNotEmpty()) putString("publicIpAddress", publicIpAddress.text.toString())
+            if (diskUsage.text.toString().isNotEmpty()) putString("diskUsage", diskUsage.text.toString())
+            if (diskName.text.toString().isNotEmpty()) putString("diskName", diskName.text.toString())
+            if (heaviestApp.text.toString().isNotEmpty()) putString("heaviestApp", heaviestApp.text.toString())
+            if (packageNumber.text.toString().isNotEmpty()) putString("packageNumber", packageNumber.text.toString())
+        }
+
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+
+        val tempText = binding.dashTemperatureTextView
+        val cpuUsage = binding.dashCpuTextView
+        val ramUsage = binding.dashRamTextView
+        val linuxKernelVersion = binding.kernelInfo.linuxKernelVersion
+        val hostname = binding.kernelInfo.hostname
+        val uptime = binding.uptimeInfo.upTimeValue
+        val uptimeSince = binding.uptimeInfo.upTimeInfo
+        val localIpAddress = binding.localIpInfo.localIpAddresValue
+        val publicIpAddress = binding.publicIpInfo.publicAddressValue
+        val diskUsage = binding.diskInfo.diskUsageValue
+        val diskName = binding.diskInfo.diskNameText
+        val heaviestApp = binding.HeaviestProcessInfo.heaviestProcessValue
+        val packageNumber = binding.packageNumInfo.packagesNumValue
+
+        tempText.text =             when(savedInstanceState){ null -> getString(R.string.nothingString) else -> savedInstanceState.getString("tempText", getString(R.string.nothingString))}
+        cpuUsage.text =             when(savedInstanceState){ null -> getString(R.string.nothingString) else -> savedInstanceState.getString("cpuUsage", getString(R.string.nothingString))}
+        ramUsage.text =             when(savedInstanceState){ null -> getString(R.string.nothingString) else -> savedInstanceState.getString("ramUsage", getString(R.string.nothingString))}
+        linuxKernelVersion.text =   when(savedInstanceState){ null -> getString(R.string.nothingString) else -> savedInstanceState.getString("linuxKernelVersion", getString(R.string.nothingString))}
+        hostname.text =             when(savedInstanceState){ null -> getString(R.string.nothingString) else -> savedInstanceState.getString("hostname", getString(R.string.nothingString))}
+        uptime.text =               when(savedInstanceState){ null -> getString(R.string.nothingString) else -> savedInstanceState.getString("uptime", getString(R.string.nothingString))}
+        uptimeSince.text =          when(savedInstanceState){ null -> getString(R.string.nothingString) else -> savedInstanceState.getString("uptimeSince", getString(R.string.nothingString))}
+        localIpAddress.text =       when(savedInstanceState){ null -> getString(R.string.nothingString) else -> savedInstanceState.getString("localIpAddress", getString(R.string.nothingString))}
+        publicIpAddress.text =      when(savedInstanceState){ null -> getString(R.string.nothingString) else -> savedInstanceState.getString("publicIpAddress", getString(R.string.nothingString))}
+        diskUsage.text =            when(savedInstanceState){ null -> getString(R.string.nothingString) else -> savedInstanceState.getString("diskUsage", getString(R.string.nothingString))}
+        diskName.text =             when(savedInstanceState){ null -> getString(R.string.nothingString) else -> savedInstanceState.getString("diskName", getString(R.string.nothingString))}
+        heaviestApp.text =          when(savedInstanceState){ null -> getString(R.string.nothingString) else -> savedInstanceState.getString("heaviestApp", getString(R.string.nothingString))}
+        packageNumber.text =        when(savedInstanceState){ null -> getString(R.string.nothingString) else -> savedInstanceState.getString("packageNumber", getString(R.string.nothingString))}
     }
 }
