@@ -4,6 +4,7 @@ import android.util.Log
 import android.widget.Toast
 import okhttp3.*
 import org.json.JSONArray
+import org.json.JSONException
 import org.json.JSONObject
 import org.json.JSONTokener
 import java.io.IOException
@@ -54,6 +55,8 @@ class YunohostConnection {
             override fun onResponse(call: Call, response: Response) {
                 response.use {
                     val output = response.body!!.string()
+
+
                     val rsp = JSONTokener(output).nextValue() as JSONObject
 
                     println(rsp.getString("users"))
@@ -66,38 +69,38 @@ class YunohostConnection {
 
     }
 
-    fun isAPIInstalled (url: String) : Boolean {
+    fun isAPIInstalled (url: String) {
 
-            val request = Request.Builder()
-                .url(url)
-                .header("accept", "*/*")
-                .build()
+        val request = Request.Builder()
+            .url(url)
+            .header("accept", "*/*")
+            .build()
 
-            client.newCall(request).execute().use { response ->
-
-                val output = response.body!!.string()
-                println(output)
-                if (output.isEmpty()){
-                    return false
-                } else {
-
-                    //TODO: Make If statement when response is not JSON but something different
-                    val resp = JSONTokener(output).nextValue() as JSONObject
-
-                    if (!response.isSuccessful){
-                        return false
-                    }
-
-                    else {
-                        if (resp.getBoolean("installed") ) {
-                            return true
-                        }
-                        return false
-                    }
-                }
-
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
             }
 
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    if (!response.isSuccessful) throw IOException("Unexpected code $response")
+
+                    val output = response.body!!.string()
+                    println(output)
+
+                    if (output.isEmpty()) throw IOException("Unexpected code $response")
+                    else {
+                        try {
+                            val resp = JSONTokener(output).nextValue() as JSONObject
+                            if (!resp.getBoolean("installed")) throw IOException("Unexpected code $response")
+
+                        } catch (e: JSONException) {throw IOException("Unexpected code $response")}
+                        catch (e: java.lang.ClassCastException){throw IOException("Unexpected code $response")}
+                    }
+
+                }
+            }
+        })
     }
 
 }
