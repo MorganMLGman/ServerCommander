@@ -75,7 +75,6 @@ class YunohostConnection {
 
             client.newCall(request).execute().use { response ->
 
-
                 val output = response.body!!.string()
                 println(output)
                 if (output.isEmpty()){
