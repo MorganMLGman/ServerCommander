@@ -14,7 +14,7 @@ Within **ServerCommander** you can check such things as:
 - Number of installed packages
 - And much much more (new features will be released in app updates)
 
-If your server is running Docker in addition you can *start/stop/restart* containers, briefly view containers summary and check statistics about single container.
+If your server is running Docker in addition you can _**start/stop/restart**_ containers, briefly view containers summary and check statistics about single container.
 
 If you are running YunoHost you can ...
 
