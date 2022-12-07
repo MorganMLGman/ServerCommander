@@ -75,14 +75,14 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    fun openLoginActivityForResult() {
+    private fun openLoginActivityForResult() {
         val intent = Intent(this, LoginActivity::class.java)
         resultLauncher.launch(intent)
     }
 
-    var resultLauncher = registerForActivityResult(StartActivityForResult()) { result ->
+    private var resultLauncher = registerForActivityResult(StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            val data: Intent? = result.data
+//            val data: Intent? = result.data
 
             when (sharedPref.getString("server_type", "")) {
                 "docker" -> {
@@ -98,33 +98,5 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-//        if (sharedPref.contains(getString(R.string.server_url)) and
-//            sharedPref.contains(getString(R.string.username)) and
-//            sharedPref.contains(getString(R.string.pubkey)) and
-//            sharedPref.contains("server_type")
-//        ) {
-//            when (sharedPref.getString("server_type", "")) {
-//                "docker" -> {
-//                    viewPager2.adapter = DockerViewPagerAdapter(this)
-//                    tabLayout.getTabAt(2)?.text = "DOCKER"
-//                }
-//                "yunohost" -> {
-//                    viewPager2.adapter = YunohostViewPagerAdapter(this)
-//                    tabLayout.getTabAt(2)?.text = "YUNOHOST"
-//                }
-//                else -> {
-//                    finishAffinity()
-//                }
-//            }
-//        }
-//        else
-//        {
-//            openLoginActivityForResult()
-//        }
     }
 }

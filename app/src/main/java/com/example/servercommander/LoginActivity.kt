@@ -6,7 +6,6 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.RadioButton
@@ -42,8 +41,10 @@ class LoginActivity : AppCompatActivity() {
 
             pubkey.setText(pubKeyPath)
 
+            val idRsaPub = File(pubKeyPath, "id_rsa.pub").readText()
+
             val clipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-            val clip = ClipData.newPlainText("pubKeyPath", pubKeyPath)
+            val clip = ClipData.newPlainText("id_rsa.pub", idRsaPub)
             clipboard.setPrimaryClip(clip)
         }
 
@@ -88,13 +89,16 @@ class LoginActivity : AppCompatActivity() {
                         apply()
                     }
 
-                    Toast.makeText(this, getString(R.string.connectionSaved), Toast.LENGTH_LONG).show()
-
-                    val intent = Intent()
-                    intent.putExtra("server_type", sharedPref.getString("server_type", ""))
-                    setResult(Activity.RESULT_OK, intent)
-                    Log.d("test", "activity result")
-                    finish()
+                    loginButton.animate().apply {
+                        duration = 1000
+                        rotationXBy(360f)
+                    }.withEndAction{
+                        Toast.makeText(this, getString(R.string.connectionSaved), Toast.LENGTH_LONG).show()
+                        val intent = Intent()
+                        intent.putExtra("server_type", sharedPref.getString("server_type", ""))
+                        setResult(Activity.RESULT_OK, intent)
+                        finish()
+                    }.start()
                 }
             }
             else

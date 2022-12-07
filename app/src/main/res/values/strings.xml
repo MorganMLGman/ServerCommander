@@ -134,4 +134,10 @@
     <string name="network_up_down">Network up / down</string>
     <string name="commands">Commands</string>
     <string name="yunohost_password">Yunohost password</string>
+    <string name="shutdown">SHUTDOWN</string>
+    <string name="home">HOME</string>
+    <string name="system">SYSTEM</string>
+    <string name="apps">APPS</string>
+    <string name="terminal">TERMINAL</string>
+    <string name="settings">SETTINGS</string>
 </resources>
