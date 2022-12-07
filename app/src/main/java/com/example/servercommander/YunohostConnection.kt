@@ -3,6 +3,7 @@ package com.example.servercommander
 import android.util.Log
 import android.widget.Toast
 import okhttp3.*
+import org.json.JSONArray
 import org.json.JSONObject
 import org.json.JSONTokener
 import java.io.IOException
@@ -52,7 +53,13 @@ class YunohostConnection {
 
             override fun onResponse(call: Call, response: Response) {
                 response.use {
-                    Log.d("Response from GET",response.body!!.string())
+                    val output = response.body!!.string()
+                    val rsp = JSONTokener(output).nextValue() as JSONObject
+
+                    println(rsp.getString("users"))
+
+                    println()
+
                 }
             }
         })
@@ -69,18 +76,26 @@ class YunohostConnection {
             client.newCall(request).execute().use { response ->
 
                 val output = response.body!!.string()
-                val resp = JSONTokener(output).nextValue() as JSONObject
-
-                if (!response.isSuccessful){
+                println(output)
+                if (output.isEmpty()){
                     return false
-                }
+                } else {
 
-                else {
-                    if (resp.getBoolean("installed") ) {
-                        return true
+                    //TODO: Make If statement when response is not JSON but something different
+                    val resp = JSONTokener(output).nextValue() as JSONObject
+
+                    if (!response.isSuccessful){
+                        return false
                     }
-                    return false
+
+                    else {
+                        if (resp.getBoolean("installed") ) {
+                            return true
+                        }
+                        return false
+                    }
                 }
+
             }
 
     }
