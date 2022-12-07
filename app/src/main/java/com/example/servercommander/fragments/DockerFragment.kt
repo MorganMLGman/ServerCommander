@@ -443,14 +443,21 @@ class DockerFragment : Fragment(), ContainersAdapter.OnViewClickListener {
 
     override fun onRowClickListener(view: View, container: Container) {
         if(::sshConnection.isInitialized and sharedPref.getBoolean(getString(R.string.connectionTested), false)) {
-            Toast.makeText(context, getString(R.string.refreshing), Toast.LENGTH_SHORT).show()
             val username = sharedPref.getString(getString(R.string.username), "")!!
             val password = sharedPref.getString("sudo_password", "")!!
 
-            if(password.isEmpty() or ( password == "" )) {
-                showPasswordModal(username, container, ::callContainerStats)
+            if (container.isRunning){
+                Toast.makeText(context, getString(R.string.refreshing), Toast.LENGTH_SHORT).show()
+                if(password.isEmpty() or ( password == "" )) {
+                    showPasswordModal(username, container, ::callContainerStats)
+                }
+                else callContainerStats(username, password, container)
             }
-            else callContainerStats(username, password, container)
+            else
+            {
+                Toast.makeText(context, "You cannot check stats of stopped container.", Toast.LENGTH_LONG).show()
+            }
+
         }
         else
         {
