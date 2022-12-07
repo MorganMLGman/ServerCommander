@@ -103,26 +103,34 @@ class YunohostFragment : Fragment() {
 
         if(context?.let { isOnline(it) }!!) {
 
-            try {
-                YunohostConnection().isAPIInstalled(isAPIInstalledLink)
-            } catch (e: Exception) {
-                Toast.makeText(context, "Connection aborted", Toast.LENGTH_SHORT).show()
-            }
-            finally {
-                val cookie = YunohostConnection().authenticate(adminLoginPage, password)
-                if (cookie.isEmpty()) {
-                    Toast.makeText(context, "Wrong Password", Toast.LENGTH_SHORT).show()
-                } else {
-                    try {
-                        YunohostConnection().getUserNumber(getUsersLink, cookie[0])
-                    } catch (e: Exception) {
-                        Toast.makeText(context, "Connection aborted", Toast.LENGTH_SHORT).show()
+
+            Log.d("Czy zwraca prawde?", YunohostConnection().isAPIInstalled(isAPIInstalledLink).toString())
+                if(YunohostConnection().isAPIInstalled(isAPIInstalledLink)) {
+
+                    Log.d("Elo", "Elo")
+                    val cookie = YunohostConnection().authenticate(adminLoginPage, password)
+                    if (cookie.isEmpty()) {
+                        Log.d("Elo2", "Elo2")
+                        Toast.makeText(context, "Wrong Password", Toast.LENGTH_SHORT).show()
+                    } else {
+                        try {
+                            YunohostConnection().getUserNumber(getUsersLink, cookie[0])
+                            Log.d("Elo3", "Elo3")
+                        } catch (e: Exception) {
+                            Toast.makeText(context, "Connection aborted", Toast.LENGTH_SHORT).show()
+                            Log.d("Elo4", "Elo4")
+                        }
                     }
+                } else {
+                    Log.d("Elo5", "Elo5")
+                    Toast.makeText(context, "Connection aborted", Toast.LENGTH_SHORT).show()
                 }
-            }
         }
 
-        else {Toast.makeText(context, "Connection aborted", Toast.LENGTH_SHORT).show()}
+        else {
+            Log.d("Elo7", "Elo7")
+            Toast.makeText(context, "Connection aborted", Toast.LENGTH_SHORT).show()
+        }
 
 
 

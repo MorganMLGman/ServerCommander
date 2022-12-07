@@ -13,7 +13,6 @@ class YunohostConnection {
     private val client = OkHttpClient()
 
 
-
     fun authenticate(url: String, password: String): List<String> {
 
 
@@ -69,38 +68,54 @@ class YunohostConnection {
 
     }
 
-    fun isAPIInstalled (url: String) {
+    fun isAPIInstalled (url: String) : Boolean {
 
         val request = Request.Builder()
             .url(url)
             .header("accept", "*/*")
             .build()
 
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                e.printStackTrace()
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                response.use {
-                    if (!response.isSuccessful) throw IOException("Unexpected code $response")
-
-                    val output = response.body!!.string()
-                    println(output)
-
-                    if (output.isEmpty()) throw IOException("Unexpected code $response")
-                    else {
-                        try {
-                            val resp = JSONTokener(output).nextValue() as JSONObject
-                            if (!resp.getBoolean("installed")) throw IOException("Unexpected code $response")
-
-                        } catch (e: JSONException) {throw IOException("Unexpected code $response")}
-                        catch (e: java.lang.ClassCastException){throw IOException("Unexpected code $response")}
-                    }
-
+        try {
+            client.newCall(request).enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    e.printStackTrace()
                 }
-            }
-        })
+
+                override fun onResponse(call: Call, response: Response) {
+                    response.use {
+                        if (!response.isSuccessful) {
+                            throw IOException("Unexpected code $response")
+                        }
+
+                        val output = response.body!!.string()
+                        println(output)
+
+                        if (output.isEmpty()) {
+                        }
+
+                            try {
+                                val resp = JSONTokener(output).nextValue() as JSONObject
+                                Log.d("Czy wchodzi do try w JSON", "Tak")
+                                if (resp.getBoolean("installed")) {
+
+                                    Log.d("Czy wchodzi w ifa w JSON", "Tak")
+                                }
+
+                            } catch (e: JSONException) {
+                                throw IOException("Unexpected code $response")
+                            }
+                            catch (e: java.lang.ClassCastException){
+
+                                throw IOException("Unexpected code $response")
+                            }
+                    }
+                }
+            })
+        } catch (e: IOException) {
+         return false
+        }
+        return false
     }
+
 
 }
