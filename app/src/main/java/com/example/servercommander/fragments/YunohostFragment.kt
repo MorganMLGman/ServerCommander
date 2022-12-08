@@ -44,6 +44,7 @@ class YunohostFragment : Fragment() {
     private lateinit var adminAPI : String
     private lateinit var getUsersLink : String
     private lateinit var isAPIInstalledLink : String
+    private lateinit var getDomainNumberLink : String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,6 +63,7 @@ class YunohostFragment : Fragment() {
         adminAPI = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api"
         getUsersLink = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api/users?fields=username"
         isAPIInstalledLink = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api/installed"
+        getDomainNumberLink = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api/domains?exclude_subdomains=false"
     }
 
     override fun onCreateView(
@@ -101,17 +103,12 @@ class YunohostFragment : Fragment() {
                 refreshButton.isClickable = true
             }.start()
 
-
             var password = sharedPref.getString("yunohost_password", "")!!
 
             if (password.isEmpty() or (password == "")) {
                 password = showPasswordModal(getUsersLink, ::getYunohostConnection)
             } else getYunohostConnection(getUsersLink, password)
-
-
         }
-
-
     }
 
     private fun getYunohostConnection(url: String, password: String){
@@ -124,14 +121,10 @@ class YunohostFragment : Fragment() {
                 val defer = async(Dispatchers.IO) {
                     isYHAvailable(password)
                 }
-
                 val output = defer.await().trim()
-
-                Toast.makeText(context, output, Toast.LENGTH_SHORT).show()
-
+           //     Toast.makeText(context, output, Toast.LENGTH_SHORT).show()
             }
         }
-
         else {
             Log.d("Elo7", "Elo7")
             Toast.makeText(context, "Connection aborted", Toast.LENGTH_SHORT).show()
@@ -219,7 +212,9 @@ class YunohostFragment : Fragment() {
             } else {
                 try {
                     YunohostConnection.getUserNumber(getUsersLink)
+                    YunohostConnection.getDomainNumber(getDomainNumberLink)
                     Log.d("Elo3", "Elo3")
+                    binding.yunohostDomainNumberTextView.text = YunohostConnection.domainNumberValue.toString()
                     binding.yunohostUsersNumberTextView.text = YunohostConnection.usersNumberValue.toString()
                 } catch (e: Exception) {
                     ret += "Connection aborted\n"
