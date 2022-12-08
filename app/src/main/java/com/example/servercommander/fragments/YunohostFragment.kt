@@ -107,6 +107,8 @@ class YunohostFragment : Fragment() {
             if (password.isEmpty() or (password == "")) {
                 password = showPasswordModal(getUsersLink, ::getYunohostConnection)
             } else getYunohostConnection(getUsersLink, password)
+
+
         }
 
 
@@ -218,6 +220,7 @@ class YunohostFragment : Fragment() {
                 try {
                     YunohostConnection.getUserNumber(getUsersLink)
                     Log.d("Elo3", "Elo3")
+                    binding.yunohostUsersNumberTextView.text = YunohostConnection.usersNumberValue.toString()
                 } catch (e: Exception) {
                     ret += "Connection aborted\n"
 //                    Toast.makeText(context, "Connection aborted", Toast.LENGTH_SHORT).show()

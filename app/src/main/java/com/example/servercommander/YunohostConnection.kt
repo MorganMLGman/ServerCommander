@@ -14,6 +14,7 @@ class YunohostConnection {
     {
         var boolIsApiInstalled: Boolean  = false
         lateinit var cookie: List<String>
+        var usersNumberValue = 0
 
         fun authenticate(url: String, password: String) {
 
@@ -55,8 +56,13 @@ class YunohostConnection {
                     val output = response.body!!.string()
 
                     val rsp = JSONTokener(output).nextValue() as JSONObject
+                    println(rsp.toString())
+                    val users = rsp.getJSONObject("users")
+                    println(users.length())
+                    usersNumberValue = users.length()
+//
 
-                    println(rsp.getString("users"))
+//                    val array = rsp.getJSONArray("users")
                 }
             }
 

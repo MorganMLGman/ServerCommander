@@ -206,7 +206,7 @@
                     android:textSize="@dimen/_10ssp"/>
 
                 <TextView
-                    android:id="@+id/dockerStoppedContainersTextView"
+                    android:id="@+id/yunohostUsersNumberTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/nothingString"
