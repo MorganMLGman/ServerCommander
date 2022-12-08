@@ -3,6 +3,7 @@ package com.example.servercommander.fragments
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.content.SearchRecentSuggestionsProvider
 import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -20,7 +21,12 @@ import com.example.servercommander.R
 import com.example.servercommander.SshConnection
 import com.example.servercommander.databinding.FragmentYunohostBinding
 import com.example.servercommander.YunohostConnection
+import com.example.servercommander.YunohostConnection.Companion.cookie
 import com.example.servercommander.databinding.AlertDialogPasswordBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import kotlin.reflect.KFunction2
 
 
@@ -87,6 +93,14 @@ class YunohostFragment : Fragment() {
         }
 
         refreshButton.setOnClickListener {
+            refreshButton.isClickable = false
+            refreshButton.animate().apply {
+                duration = 1000
+                rotationBy(360f)
+            }.withEndAction{
+                refreshButton.isClickable = true
+            }.start()
+
 
             var password = sharedPref.getString("yunohost_password", "")!!
 
@@ -103,28 +117,17 @@ class YunohostFragment : Fragment() {
 
         if(context?.let { isOnline(it) }!!) {
 
-
-            Log.d("Czy zwraca prawde?", YunohostConnection().isAPIInstalled(isAPIInstalledLink).toString())
-                if(YunohostConnection().isAPIInstalled(isAPIInstalledLink)) {
-
-                    Log.d("Elo", "Elo")
-                    val cookie = YunohostConnection().authenticate(adminLoginPage, password)
-                    if (cookie.isEmpty()) {
-                        Log.d("Elo2", "Elo2")
-                        Toast.makeText(context, "Wrong Password", Toast.LENGTH_SHORT).show()
-                    } else {
-                        try {
-                            YunohostConnection().getUserNumber(getUsersLink, cookie[0])
-                            Log.d("Elo3", "Elo3")
-                        } catch (e: Exception) {
-                            Toast.makeText(context, "Connection aborted", Toast.LENGTH_SHORT).show()
-                            Log.d("Elo4", "Elo4")
-                        }
-                    }
-                } else {
-                    Log.d("Elo5", "Elo5")
-                    Toast.makeText(context, "Connection aborted", Toast.LENGTH_SHORT).show()
+            val coroutineScope = MainScope()
+            coroutineScope.launch {
+                val defer = async(Dispatchers.IO) {
+                    isYHAvailable(password)
                 }
+
+                val output = defer.await().trim()
+
+                Toast.makeText(context, output, Toast.LENGTH_SHORT).show()
+
+            }
         }
 
         else {
@@ -192,6 +195,42 @@ class YunohostFragment : Fragment() {
             }
         }
         return false
+    }
+
+    private fun isYHAvailable(password: String): String
+    {
+        var ret: String = ""
+        YunohostConnection.isAPIInstalled(isAPIInstalledLink)
+
+        Log.d("Wartość boola", YunohostConnection.boolIsApiInstalled.toString())
+
+        if(YunohostConnection.boolIsApiInstalled) {
+
+            YunohostConnection.authenticate(adminLoginPage, password)
+
+            Log.d("Elo", "Elo")
+
+            if (cookie.isEmpty()) {
+                Log.d("Elo2", "Elo2")
+                ret += "Wrong Password\n"
+//                Toast.makeText(context, "Wrong Password", Toast.LENGTH_SHORT).show()
+            } else {
+                try {
+                    YunohostConnection.getUserNumber(getUsersLink)
+                    Log.d("Elo3", "Elo3")
+                } catch (e: Exception) {
+                    ret += "Connection aborted\n"
+//                    Toast.makeText(context, "Connection aborted", Toast.LENGTH_SHORT).show()
+                    Log.d("Elo4", "Elo4")
+                }
+            }
+
+        } else {
+            Log.d("Elo5", "Elo5")
+            ret += "Connection aborted\n"
+//            Toast.makeText(context, "Connection aborted", Toast.LENGTH_SHORT).show()
+        }
+        return ret
     }
 
     override fun onResume() {

@@ -1,7 +1,6 @@
 package com.example.servercommander
 
 import android.util.Log
-import android.widget.Toast
 import okhttp3.*
 import org.json.JSONArray
 import org.json.JSONException
@@ -10,118 +9,82 @@ import org.json.JSONTokener
 import java.io.IOException
 
 class YunohostConnection {
-    private val client = OkHttpClient()
 
-    fun authenticate(url: String, password: String): List<String> {
+    companion object
+    {
+        var boolIsApiInstalled: Boolean  = false
+        lateinit var cookie: List<String>
 
+        fun authenticate(url: String, password: String) {
 
-        val formBody = FormBody.Builder()
-            .add("credentials", password)
-            .build()
+            val client = OkHttpClient()
 
-        val request = Request.Builder()
-            .url(url)
-            .header("X-Requested-With", "serverCommander")
-            .post(formBody)
-            .build()
+            val formBody = FormBody.Builder()
+                .add("credentials", password)
+                .build()
 
-        client.newCall(request).execute().use { response ->
+            val request = Request.Builder()
+                .url(url)
+                .header("X-Requested-With", "serverCommander")
+                .post(formBody)
+                .build()
 
-            return response.headers.values("Set-Cookie")
+            client.newCall(request).execute().use { response ->
 
-        }
-    }
+                cookie =  response.headers.values("Set-Cookie")
 
-    fun getUserNumber(url: String, cookie: String) {
-
-        val client = OkHttpClient()
-
-        val request = Request.Builder()
-            .url(url)
-            .header(
-                name = "Cookie",
-                value = cookie.toString()
-            )
-            .header("accept", "*/*")
-            .build()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                e.printStackTrace()
             }
+        }
 
-            override fun onResponse(call: Call, response: Response) {
-                response.use {
+        fun getUserNumber(url: String) {
+
+            val client = OkHttpClient()
+            if(::cookie.isInitialized){
+                val request = Request.Builder()
+                    .url(url)
+                    .header(
+                        name = "Cookie",
+                        value = cookie[0]
+                    )
+                    .header("accept", "*/*")
+                    .build()
+
+
+                client.newCall(request).execute().use { response ->
+
                     val output = response.body!!.string()
-
 
                     val rsp = JSONTokener(output).nextValue() as JSONObject
 
                     println(rsp.getString("users"))
-
-                    println()
-
                 }
             }
-        })
 
-    }
-
-    fun isAPIInstalled (url: String) : Boolean {
-
-
-
-        val request = Request.Builder()
-            .url(url)
-            .header("accept", "*/*")
-            .build()
-
-        try {
-            client.run {
-                newCall(request).enqueue(object : Callback {
-                        override fun onFailure(call: Call, e: IOException) {
-                            e.printStackTrace()
-                            throw IOException()
-                        }
-
-
-                       override fun onResponse(call: Call, response: Response) {
-
-                            response.use {
-                                if (!response.isSuccessful) {
-                                    throw IOException("Unexpected code $response")
-                                }
-
-                                val output = response.body!!.string()
-                                //println(output)
-
-                                if (output.isEmpty()) {
-                                    throw IOException()
-                                }
-
-                                    try {
-                                        val resp = JSONTokener(output).nextValue() as JSONObject
-                                        Log.d("Czy wchodzi do try w JSON", "Tak")
-                                        if (resp.getBoolean("installed")) {
-                                            Log.d("Czy wchodzi w ifa w JSON", "Tak")
-
-                                        } else {throw IOException()}
-
-                                    } catch (e: JSONException) {
-                                        throw IOException("Unexpected code $response")
-                                    } catch (e: java.lang.ClassCastException){
-                                        throw IOException("Unexpected code $response")
-                                    } catch (e: IOException){throw IOException()}
-                            }
-                        }
-                    })
-            }
-
-        } catch (e: IOException) {
-         return false
         }
-        return false
+
+        fun isAPIInstalled (url: String) {
+
+            val client = OkHttpClient()
+            boolIsApiInstalled = false
+
+            val request = Request.Builder()
+                .url(url)
+                .header("accept", "*/*")
+                .build()
+
+            client.newCall(request).execute().use{response ->
+                try {
+
+                    val resp = JSONTokener(response.body!!.string()).nextValue() as JSONObject
+                    Log.d("Czy wchodzi do try w JSON", "Tak")
+                    if (resp.getBoolean("installed")) {
+                        Log.d("Czy wchodzi w ifa w JSON", "Tak")
+                        boolIsApiInstalled = true
+
+                    }
+
+                } catch (_: Exception) {}
+            }
+        }
     }
-
-
 }
