@@ -2,11 +2,8 @@ package com.example.servercommander
 
 import android.util.Log
 import okhttp3.*
-import org.json.JSONArray
-import org.json.JSONException
 import org.json.JSONObject
 import org.json.JSONTokener
-import java.io.IOException
 
 class YunohostConnection {
 
@@ -16,6 +13,7 @@ class YunohostConnection {
         lateinit var cookie: List<String>
         var usersNumberValue = 0
         var domainNumberValue = 0
+        var appToUpdateNumberValue = 0
 
         fun authenticate(url: String, password: String) {
 
@@ -94,6 +92,37 @@ class YunohostConnection {
 //                    val domains = rsp.getJSONObject("domains")
 //                    Log.d("Domeny", domains.length().toString())
 //                    domainNumberValue = domains.length()
+
+
+                }
+            }
+
+        }
+
+        fun getAppToUpdateNumberMethod(url: String) {
+
+            val client = OkHttpClient()
+            if(::cookie.isInitialized){
+                val request = Request.Builder()
+                    .url(url)
+                    .header(
+                        name = "Cookie",
+                        value = cookie[0]
+                    )
+                    .header("accept", "*/*")
+                    .build()
+
+
+                client.newCall(request).execute().use { response ->
+
+                    val output = response.body!!.string()
+
+
+
+                    val rsp = JSONTokener(output).nextValue() as JSONObject
+                    val array = rsp.getJSONArray("apps")
+                    appToUpdateNumberValue = array.length()
+                    Log.d("Apps", appToUpdateNumberValue.toString())
 
 
                 }

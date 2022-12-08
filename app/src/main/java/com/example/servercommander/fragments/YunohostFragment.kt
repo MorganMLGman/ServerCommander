@@ -3,7 +3,6 @@ package com.example.servercommander.fragments
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
-import android.content.SearchRecentSuggestionsProvider
 import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -45,6 +44,7 @@ class YunohostFragment : Fragment() {
     private lateinit var getUsersLink : String
     private lateinit var isAPIInstalledLink : String
     private lateinit var getDomainNumberLink : String
+    private lateinit var getAppNumberLink : String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,6 +64,7 @@ class YunohostFragment : Fragment() {
         getUsersLink = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api/users?fields=username"
         isAPIInstalledLink = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api/installed"
         getDomainNumberLink = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api/domains?exclude_subdomains=false"
+        getAppNumberLink = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api/apps?full=false&upgradable=false"
     }
 
     override fun onCreateView(
@@ -213,7 +214,9 @@ class YunohostFragment : Fragment() {
                 try {
                     YunohostConnection.getUserNumber(getUsersLink)
                     YunohostConnection.getDomainNumber(getDomainNumberLink)
+                    YunohostConnection.getAppToUpdateNumberMethod(getAppNumberLink)
                     Log.d("Elo3", "Elo3")
+                    binding.yunohostAppToUpdateTextView.text = YunohostConnection.appToUpdateNumberValue.toString()
                     binding.yunohostDomainNumberTextView.text = YunohostConnection.domainNumberValue.toString()
                     binding.yunohostUsersNumberTextView.text = YunohostConnection.usersNumberValue.toString()
                 } catch (e: Exception) {
