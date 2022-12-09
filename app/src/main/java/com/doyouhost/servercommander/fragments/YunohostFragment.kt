@@ -1,5 +1,6 @@
 package com.doyouhost.servercommander.fragments
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
@@ -21,6 +22,11 @@ import com.doyouhost.servercommander.SshConnection
 import com.doyouhost.servercommander.databinding.FragmentYunohostBinding
 import com.doyouhost.servercommander.YunohostConnection
 import com.doyouhost.servercommander.databinding.AlertDialogPasswordBinding
+import com.doyouhost.servercommander.YunohostConnection.Companion.cookie
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import kotlin.reflect.KFunction2
 
 
@@ -38,6 +44,8 @@ class YunohostFragment : Fragment() {
     private lateinit var adminAPI : String
     private lateinit var getUsersLink : String
     private lateinit var isAPIInstalledLink : String
+    private lateinit var getDomainNumberLink : String
+    private lateinit var getAppNumberLink : String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +64,8 @@ class YunohostFragment : Fragment() {
         adminAPI = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api"
         getUsersLink = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api/users?fields=username"
         isAPIInstalledLink = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api/installed"
+        getDomainNumberLink = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api/domains?exclude_subdomains=false"
+        getAppNumberLink = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api/apps?full=false&upgradable=false"
     }
 
     override fun onCreateView(
@@ -87,6 +97,13 @@ class YunohostFragment : Fragment() {
         }
 
         refreshButton.setOnClickListener {
+            refreshButton.isClickable = false
+            refreshButton.animate().apply {
+                duration = 1000
+                rotationBy(360f)
+            }.withEndAction{
+                refreshButton.isClickable = true
+            }.start()
 
             var password = sharedPref.getString("yunohost_password", "")!!
 
@@ -94,38 +111,27 @@ class YunohostFragment : Fragment() {
                 password = showPasswordModal(getUsersLink, ::getYunohostConnection)
             } else getYunohostConnection(getUsersLink, password)
         }
-
-
     }
 
     private fun getYunohostConnection(url: String, password: String){
 
         if(context?.let { isOnline(it) }!!) {
 
-            val isYunohostReachable = YunohostConnection().isAPIInstalled(isAPIInstalledLink)
-
-            if (isYunohostReachable) {
-                val cookie = YunohostConnection().authenticate(adminLoginPage, password)
-                if (cookie.isEmpty()) {
-                    Toast.makeText(context, "Wrong Password", Toast.LENGTH_SHORT).show()
+            val coroutineScope = MainScope()
+            coroutineScope.launch {
+                val defer = async(Dispatchers.IO) {
+                    isYHAvailable(password)
                 }
-                else {
-                    try {
-                        YunohostConnection().getUserNumber(getUsersLink, cookie[0])
-                    } catch (e: Exception) {
-                        Toast.makeText(context, "Connection aborted", Toast.LENGTH_SHORT).show()
-                    }
-                }
+                val output = defer.await().trim()
+           //     Toast.makeText(context, output, Toast.LENGTH_SHORT).show()
             }
-
-            else {Toast.makeText(context, "Connection aborted", Toast.LENGTH_SHORT).show()}
-            }
-
+        }
+        else {
+            Log.d("Elo7", "Elo7")
+            Toast.makeText(context, "Connection aborted", Toast.LENGTH_SHORT).show()
+        }
 
     }
-
-
-
 
     private fun showPasswordModal(url: String, func: KFunction2<String, String, Unit>): String {
         var password = ""
@@ -180,6 +186,57 @@ class YunohostFragment : Fragment() {
             }
         }
         return false
+    }
+
+    private fun isYHAvailable(password: String): String
+    {
+        var ret: String = ""
+        YunohostConnection.isAPIInstalled(isAPIInstalledLink)
+
+
+        if(YunohostConnection.boolIsApiInstalled) {
+
+            YunohostConnection.authenticate(adminLoginPage, password)
+
+            if (cookie.isEmpty()) {
+                ret += "Wrong Password\n"
+//                Toast.makeText(context, "Wrong Password", Toast.LENGTH_SHORT).show()
+            } else {
+                try {
+                    YunohostConnection.getUserNumber(getUsersLink)
+                    YunohostConnection.getDomainNumber(getDomainNumberLink)
+                    YunohostConnection.getAppToUpdateNumberMethod(getAppNumberLink)
+                    requireActivity().runOnUiThread {
+                            binding.yunohostAppToUpdateTextView.text = YunohostConnection.appToUpdateNumberValue.toString()
+                            binding.yunohostDomainNumberTextView.text = YunohostConnection.domainNumberValue.toString()
+                            binding.yunohostUsersNumberTextView.text = YunohostConnection.usersNumberValue.toString()
+                    }
+
+                } catch (e: Exception) {
+                    ret += "Connection aborted\n"
+//                    Toast.makeText(context, "Connection aborted", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+        } else {
+            ret += "Connection aborted\n"
+//            Toast.makeText(context, "Connection aborted", Toast.LENGTH_SHORT).show()
+        }
+        return ret
+    }
+
+
+
+    override fun onResume() {
+        super.onResume()
+
+        //TODO: Add "http://" too
+        adminLoginPage = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api/login"
+        ssoWebpage = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/sso/portal.html"
+        adminWebPage = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/admin/"
+        adminAPI = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api"
+        getUsersLink = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api/users?fields=username"
+        isAPIInstalledLink = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api/installed"
     }
 
 }

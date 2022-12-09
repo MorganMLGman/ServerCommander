@@ -1,103 +1,130 @@
 package com.doyouhost.servercommander
 
 import android.util.Log
-import android.widget.Toast
 import okhttp3.*
-import org.json.JSONArray
 import org.json.JSONObject
 import org.json.JSONTokener
-import java.io.IOException
 
 class YunohostConnection {
-    private val client = OkHttpClient()
 
+    companion object
+    {
+        var boolIsApiInstalled: Boolean  = false
+        lateinit var cookie: List<String>
+        var usersNumberValue = 0
+        var domainNumberValue = 0
+        var appToUpdateNumberValue = 0
 
+        fun authenticate(url: String, password: String) {
+            val client = OkHttpClient()
 
-    fun authenticate(url: String, password: String): List<String> {
+            val formBody = FormBody.Builder()
+                .add("credentials", password)
+                .build()
 
+            val request = Request.Builder()
+                .url(url)
+                .header("X-Requested-With", "serverCommander")
+                .post(formBody)
+                .build()
 
-        val formBody = FormBody.Builder()
-            .add("credentials", password)
-            .build()
-
-        val request = Request.Builder()
-            .url(url)
-            .header("X-Requested-With", "serverCommander")
-            .post(formBody)
-            .build()
-
-        client.newCall(request).execute().use { response ->
-
-            return response.headers.values("Set-Cookie")
-
-        }
-    }
-
-    fun getUserNumber(url: String, cookie: String) {
-
-        val client = OkHttpClient()
-
-        val request = Request.Builder()
-            .url(url)
-            .header(
-                name = "Cookie",
-                value = cookie.toString()
-            )
-            .header("accept", "*/*")
-            .build()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                e.printStackTrace()
+            client.newCall(request).execute().use { response ->
+                cookie =  response.headers.values("Set-Cookie")
             }
+        }
 
-            override fun onResponse(call: Call, response: Response) {
-                response.use {
+        fun getUserNumber(url: String) {
+
+            val client = OkHttpClient()
+            if(::cookie.isInitialized){
+                val request = Request.Builder()
+                    .url(url)
+                    .header(
+                        name = "Cookie",
+                        value = cookie[0]
+                    )
+                    .header("accept", "*/*")
+                    .build()
+
+                client.newCall(request).execute().use { response ->
                     val output = response.body!!.string()
+
                     val rsp = JSONTokener(output).nextValue() as JSONObject
-
-                    println(rsp.getString("users"))
-
-                    println()
+                    val users = rsp.getJSONObject("users")
+                    usersNumberValue = users.length()
 
                 }
             }
-        })
 
-    }
+        }
 
-    fun isAPIInstalled (url: String) : Boolean {
+        fun getDomainNumber(url: String) {
+
+            val client = OkHttpClient()
+            if(::cookie.isInitialized){
+                val request = Request.Builder()
+                    .url(url)
+                    .header(
+                        name = "Cookie",
+                        value = cookie[0]
+                    )
+                    .header("accept", "*/*")
+                    .build()
+
+
+                client.newCall(request).execute().use { response ->
+                    val output = response.body!!.string()
+
+                    val rsp = JSONTokener(output).nextValue() as JSONObject
+                    val array = rsp.getJSONArray("domains")
+                    domainNumberValue = array.length()
+                }
+            }
+
+        }
+
+        fun getAppToUpdateNumberMethod(url: String) {
+
+            val client = OkHttpClient()
+            if(::cookie.isInitialized){
+                val request = Request.Builder()
+                    .url(url)
+                    .header(
+                        name = "Cookie",
+                        value = cookie[0]
+                    )
+                    .header("accept", "*/*")
+                    .build()
+
+                client.newCall(request).execute().use { response ->
+                    val output = response.body!!.string()
+
+                    val rsp = JSONTokener(output).nextValue() as JSONObject
+                    val array = rsp.getJSONArray("apps")
+                    appToUpdateNumberValue = array.length()
+                }
+            }
+
+        }
+
+        fun isAPIInstalled (url: String) {
+
+            val client = OkHttpClient()
+            boolIsApiInstalled = false
 
             val request = Request.Builder()
                 .url(url)
                 .header("accept", "*/*")
                 .build()
 
-            client.newCall(request).execute().use { response ->
-
-                val output = response.body!!.string()
-                println(output)
-                if (output.isEmpty()){
-                    return false
-                } else {
-
-                    //TODO: Make If statement when response is not JSON but something different
-                    val resp = JSONTokener(output).nextValue() as JSONObject
-
-                    if (!response.isSuccessful){
-                        return false
+            client.newCall(request).execute().use{response ->
+                try {
+                    val resp = JSONTokener(response.body!!.string()).nextValue() as JSONObject
+                    if (resp.getBoolean("installed")) {
+                        boolIsApiInstalled = true
                     }
-
-                    else {
-                        if (resp.getBoolean("installed") ) {
-                            return true
-                        }
-                        return false
-                    }
-                }
-
+                } catch (_: Exception) {}
             }
-
+        }
     }
-
 }
