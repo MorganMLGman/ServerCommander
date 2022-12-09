@@ -16,7 +16,6 @@ class YunohostConnection {
         var appToUpdateNumberValue = 0
 
         fun authenticate(url: String, password: String) {
-
             val client = OkHttpClient()
 
             val formBody = FormBody.Builder()
@@ -30,9 +29,7 @@ class YunohostConnection {
                 .build()
 
             client.newCall(request).execute().use { response ->
-
                 cookie =  response.headers.values("Set-Cookie")
-
             }
         }
 
@@ -49,19 +46,13 @@ class YunohostConnection {
                     .header("accept", "*/*")
                     .build()
 
-
                 client.newCall(request).execute().use { response ->
-
                     val output = response.body!!.string()
 
                     val rsp = JSONTokener(output).nextValue() as JSONObject
-                    println(rsp.toString())
                     val users = rsp.getJSONObject("users")
-                    println(users.length())
                     usersNumberValue = users.length()
-//
 
-//                    val array = rsp.getJSONArray("users")
                 }
             }
 
@@ -82,18 +73,11 @@ class YunohostConnection {
 
 
                 client.newCall(request).execute().use { response ->
-
                     val output = response.body!!.string()
 
                     val rsp = JSONTokener(output).nextValue() as JSONObject
                     val array = rsp.getJSONArray("domains")
                     domainNumberValue = array.length()
-                    println(domainNumberValue)
-//                    val domains = rsp.getJSONObject("domains")
-//                    Log.d("Domeny", domains.length().toString())
-//                    domainNumberValue = domains.length()
-
-
                 }
             }
 
@@ -112,19 +96,12 @@ class YunohostConnection {
                     .header("accept", "*/*")
                     .build()
 
-
                 client.newCall(request).execute().use { response ->
-
                     val output = response.body!!.string()
-
-
 
                     val rsp = JSONTokener(output).nextValue() as JSONObject
                     val array = rsp.getJSONArray("apps")
                     appToUpdateNumberValue = array.length()
-                    Log.d("Apps", appToUpdateNumberValue.toString())
-
-
                 }
             }
 
@@ -142,15 +119,10 @@ class YunohostConnection {
 
             client.newCall(request).execute().use{response ->
                 try {
-
                     val resp = JSONTokener(response.body!!.string()).nextValue() as JSONObject
-                    Log.d("Czy wchodzi do try w JSON", "Tak")
                     if (resp.getBoolean("installed")) {
-                        Log.d("Czy wchodzi w ifa w JSON", "Tak")
                         boolIsApiInstalled = true
-
                     }
-
                 } catch (_: Exception) {}
             }
         }
