@@ -1,5 +1,6 @@
 package com.example.servercommander.fragments
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
@@ -16,6 +17,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.example.servercommander.MainActivity
 import com.example.servercommander.R
 import com.example.servercommander.SshConnection
 import com.example.servercommander.databinding.FragmentYunohostBinding
@@ -198,16 +200,12 @@ class YunohostFragment : Fragment() {
         var ret: String = ""
         YunohostConnection.isAPIInstalled(isAPIInstalledLink)
 
-        Log.d("Wartość boola", YunohostConnection.boolIsApiInstalled.toString())
 
         if(YunohostConnection.boolIsApiInstalled) {
 
             YunohostConnection.authenticate(adminLoginPage, password)
 
-            Log.d("Elo", "Elo")
-
             if (cookie.isEmpty()) {
-                Log.d("Elo2", "Elo2")
                 ret += "Wrong Password\n"
 //                Toast.makeText(context, "Wrong Password", Toast.LENGTH_SHORT).show()
             } else {
@@ -215,28 +213,29 @@ class YunohostFragment : Fragment() {
                     YunohostConnection.getUserNumber(getUsersLink)
                     YunohostConnection.getDomainNumber(getDomainNumberLink)
                     YunohostConnection.getAppToUpdateNumberMethod(getAppNumberLink)
-                    Log.d("Elo3", "Elo3")
-                    binding.yunohostAppToUpdateTextView.text = YunohostConnection.appToUpdateNumberValue.toString()
-                    binding.yunohostDomainNumberTextView.text = YunohostConnection.domainNumberValue.toString()
-                    binding.yunohostUsersNumberTextView.text = YunohostConnection.usersNumberValue.toString()
+                    requireActivity().runOnUiThread {
+                            binding.yunohostAppToUpdateTextView.text = YunohostConnection.appToUpdateNumberValue.toString()
+                            binding.yunohostDomainNumberTextView.text = YunohostConnection.domainNumberValue.toString()
+                            binding.yunohostUsersNumberTextView.text = YunohostConnection.usersNumberValue.toString()
+                    }
+
                 } catch (e: Exception) {
                     ret += "Connection aborted\n"
 //                    Toast.makeText(context, "Connection aborted", Toast.LENGTH_SHORT).show()
-                    Log.d("Elo4", "Elo4")
                 }
             }
 
         } else {
-            Log.d("Elo5", "Elo5")
             ret += "Connection aborted\n"
 //            Toast.makeText(context, "Connection aborted", Toast.LENGTH_SHORT).show()
         }
         return ret
     }
 
+
+
     override fun onResume() {
         super.onResume()
-
 
         //TODO: Add "http://" too
         adminLoginPage = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api/login"
