@@ -1,9 +1,12 @@
 package com.doyouhost.servercommander
 
 import android.util.Log
+import android.widget.Toast
+import com.doyouhost.servercommander.fragments.YunohostFragment
 import okhttp3.*
 import org.json.JSONObject
 import org.json.JSONTokener
+import java.io.IOException
 
 class YunohostConnection {
 
@@ -14,6 +17,7 @@ class YunohostConnection {
         var usersNumberValue = 0
         var domainNumberValue = 0
         var appToUpdateNumberValue = 0
+        var IsSshKeysPushed : Boolean = true
 
         fun authenticate(url: String, password: String) {
             val client = OkHttpClient()
@@ -32,6 +36,8 @@ class YunohostConnection {
                 cookie =  response.headers.values("Set-Cookie")
             }
         }
+
+        fun isCookieInitalized() = ::cookie.isInitialized
 
         fun getUserNumber(url: String) {
 
@@ -124,6 +130,35 @@ class YunohostConnection {
                         boolIsApiInstalled = true
                     }
                 } catch (_: Exception) {}
+            }
+        }
+
+        fun postNewSshKey(url: String, pubkey: String, username: String) {
+            val client = OkHttpClient()
+
+            val formBody = FormBody.Builder()
+                .add("username", username)
+                .add("key", pubkey)
+                .add("comment", "Added with Server Commander")
+                .build()
+
+            val request = Request.Builder()
+                .url(url)
+                .header("accept", "*/*")
+                .header("Content-type", "multipart/form-data")
+                .header("X-Requested-With", "serverCommander")
+                .header("Cookie", cookie[0])
+                .post(formBody)
+                .build()
+
+            client.newCall(request).execute().use { response ->
+                val request = (response.body!!.string())
+
+                Log.d ("Req", request)
+
+                if (request.contains("error")) {
+                    IsSshKeysPushed = false
+                }
             }
         }
     }
