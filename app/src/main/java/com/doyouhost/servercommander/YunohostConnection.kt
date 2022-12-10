@@ -18,6 +18,7 @@ class YunohostConnection {
         var domainNumberValue = 0
         var appToUpdateNumberValue = 0
         var IsSshKeysPushed : Boolean = true
+        var createdBackupsValue = 0
 
         fun authenticate(url: String, password: String) {
             val client = OkHttpClient()
@@ -63,6 +64,34 @@ class YunohostConnection {
             }
 
         }
+
+        fun getCreatedBackupsNumber(url: String) {
+
+            val client = OkHttpClient()
+            if(::cookie.isInitialized){
+                val request = Request.Builder()
+                    .url(url)
+                    .header(
+                        name = "Cookie",
+                        value = cookie[0]
+                    )
+                    .header("accept", "*/*")
+                    .build()
+
+                client.newCall(request).execute().use { response ->
+                    val output = response.body!!.string()
+
+                    val rsp = JSONTokener(output).nextValue() as JSONObject
+                    val archives = rsp.getJSONObject("archives")
+                    createdBackupsValue = archives.length()
+
+                }
+            }
+
+        }
+
+
+
 
         fun getDomainNumber(url: String) {
 

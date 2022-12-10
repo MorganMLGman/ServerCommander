@@ -140,4 +140,5 @@
     <string name="apps">APPS</string>
     <string name="terminal">TERMINAL</string>
     <string name="settings">SETTINGS</string>
+    <string name="created_backups">Created Backups</string>
 </resources>

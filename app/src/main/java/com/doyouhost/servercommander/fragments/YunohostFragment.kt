@@ -47,6 +47,7 @@ class YunohostFragment : Fragment() {
     private lateinit var getDomainNumberLink : String
     private lateinit var getAppNumberLink : String
     private lateinit var postSshKeysLink : String
+    private lateinit var getBackupNumberLink : String
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,7 +68,7 @@ class YunohostFragment : Fragment() {
         isAPIInstalledLink = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api/installed"
         getDomainNumberLink = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api/domains?exclude_subdomains=false"
         getAppNumberLink = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api/apps?full=false&upgradable=false"
-
+        getBackupNumberLink = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api/backups?with_info=false&human_readable=false'"
         postSshKeysLink = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api/users/ssh/key"
 
 
@@ -243,10 +244,12 @@ class YunohostFragment : Fragment() {
                     YunohostConnection.getUserNumber(getUsersLink)
                     YunohostConnection.getDomainNumber(getDomainNumberLink)
                     YunohostConnection.getAppToUpdateNumberMethod(getAppNumberLink)
+                    YunohostConnection.getCreatedBackupsNumber(getBackupNumberLink)
                     requireActivity().runOnUiThread {
                             binding.yunohostAppToUpdateTextView.text = YunohostConnection.appToUpdateNumberValue.toString()
                             binding.yunohostDomainNumberTextView.text = YunohostConnection.domainNumberValue.toString()
                             binding.yunohostUsersNumberTextView.text = YunohostConnection.usersNumberValue.toString()
+                            binding.backupYunohostCard.yunohostCreatedBackupsTextView.text = YunohostConnection.createdBackupsValue.toString()
                     }
 
                 } catch (e: Exception) {

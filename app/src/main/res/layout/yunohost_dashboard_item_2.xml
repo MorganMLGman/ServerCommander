@@ -34,24 +34,25 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/_8sdp"
-            android:text="Backup"
+            android:text="@string/created_backups"
             android:textColor="@color/primary_text"
             android:textSize="@dimen/_14ssp"
-            app:layout_constraintEnd_toEndOf="@id/buttonCreateBackup"
+            app:layout_constraintEnd_toEndOf="@id/yunohost_created_backups_textView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttonCreateBackup"
-            android:layout_width="@dimen/_150sdp"
+        <TextView
+            android:id="@+id/yunohost_created_backups_textView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:backgroundTint="@color/dashboard_item_2"
             app:layout_constraintTop_toTopOf="parent"
-            android:text="Create new Backup!"
+            android:gravity="center"
+            android:textSize="@dimen/_16sdp"
+            android:text="@string/nothingString"
             android:padding="@dimen/_12sdp"
             app:cornerRadius="@dimen/_4sdp" />
 
