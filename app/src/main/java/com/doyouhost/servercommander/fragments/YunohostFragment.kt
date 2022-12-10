@@ -17,16 +17,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.doyouhost.servercommander.MainActivity
 import com.doyouhost.servercommander.R
 import com.doyouhost.servercommander.SshConnection
 import com.doyouhost.servercommander.databinding.FragmentYunohostBinding
 import com.doyouhost.servercommander.YunohostConnection
 import com.doyouhost.servercommander.databinding.AlertDialogPasswordBinding
 import com.doyouhost.servercommander.YunohostConnection.Companion.cookie
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import java.io.File
 import kotlin.reflect.KFunction2
 
 
@@ -35,7 +34,8 @@ class YunohostFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var sharedPref: SharedPreferences
-    private lateinit var sshConnection: SshConnection
+
+    private lateinit var idRsaPub : String
 
     private lateinit var adminLoginPage: String
 
@@ -46,6 +46,8 @@ class YunohostFragment : Fragment() {
     private lateinit var isAPIInstalledLink : String
     private lateinit var getDomainNumberLink : String
     private lateinit var getAppNumberLink : String
+    private lateinit var postSshKeysLink : String
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,7 +58,6 @@ class YunohostFragment : Fragment() {
             getString(R.string.app_name), Context.MODE_PRIVATE
         )
 
-
         //TODO: Add "http://" too
         adminLoginPage = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api/login"
         ssoWebpage = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/sso/portal.html"
@@ -66,6 +67,11 @@ class YunohostFragment : Fragment() {
         isAPIInstalledLink = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api/installed"
         getDomainNumberLink = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api/domains?exclude_subdomains=false"
         getAppNumberLink = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api/apps?full=false&upgradable=false"
+
+        postSshKeysLink = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api/users/ssh/key"
+
+
+//        idRsaPub = File(keyPath.toString(), "id_rsa.pub").readText()
     }
 
     override fun onCreateView(
@@ -75,8 +81,6 @@ class YunohostFragment : Fragment() {
         _binding = FragmentYunohostBinding.inflate(inflater, container, false)
         return binding.root
 
-
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -85,6 +89,7 @@ class YunohostFragment : Fragment() {
         val openSSOButton = binding.openSSOButton
         val goToAdminPage = binding.moreButton
         val refreshButton = binding.refreshYunohostConnection
+        val pushSshKeysButton = binding.SshYunohostCard.buttonPushNewSshKey
 
         openSSOButton.setOnClickListener{
             var intent = Intent(Intent.ACTION_VIEW, Uri.parse(ssoWebpage))
@@ -111,7 +116,32 @@ class YunohostFragment : Fragment() {
                 password = showPasswordModal(getUsersLink, ::getYunohostConnection)
             } else getYunohostConnection(getUsersLink, password)
         }
+
+        pushSshKeysButton.setOnClickListener {
+
+            pushSshKeysButton.isClickable = false
+            pushSshKeysButton.animate().apply {
+                duration = 1000
+                rotationXBy(360f)
+            }.withEndAction {
+                pushSshKeysButton.isClickable = true
+            }.start()
+
+            val username = binding.SshYunohostCard.usernameEditText.text.toString()
+
+            if(username.isNotEmpty()) {
+                if(YunohostConnection.isCookieInitalized()) {
+                    val keyPath = sharedPref.getString(getString(R.string.pubkey), "").toString()
+                    val idRsaPub = File(keyPath, "id_rsa.pub").readText()
+                    YunohostConnection.postNewSshKey(postSshKeysLink, idRsaPub, username)
+                    Toast.makeText(context, "POST request sent", Toast.LENGTH_SHORT).show()
+                } else {Toast.makeText(context, "Click Refresh first", Toast.LENGTH_SHORT).show()}
+            } else {
+                Toast.makeText(context, "Invalid username", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
+
 
     private fun getYunohostConnection(url: String, password: String){
 
@@ -224,8 +254,6 @@ class YunohostFragment : Fragment() {
         }
         return ret
     }
-
-
 
     override fun onResume() {
         super.onResume()

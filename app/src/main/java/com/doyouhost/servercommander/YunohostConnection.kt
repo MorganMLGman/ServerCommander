@@ -4,6 +4,7 @@ import android.util.Log
 import okhttp3.*
 import org.json.JSONObject
 import org.json.JSONTokener
+import java.io.IOException
 
 class YunohostConnection {
 
@@ -32,6 +33,8 @@ class YunohostConnection {
                 cookie =  response.headers.values("Set-Cookie")
             }
         }
+
+        fun isCookieInitalized() = ::cookie.isInitialized
 
         fun getUserNumber(url: String) {
 
@@ -124,6 +127,29 @@ class YunohostConnection {
                         boolIsApiInstalled = true
                     }
                 } catch (_: Exception) {}
+            }
+        }
+
+        fun postNewSshKey(url: String, pubkey: String, username: String) {
+            val client = OkHttpClient()
+
+            val formBody = FormBody.Builder()
+                .add("username", username)
+                .add("key", pubkey)
+                .add("comment", "Added with Server Commander")
+                .build()
+
+            val request = Request.Builder()
+                .url(url)
+                .header("accept", "*/*")
+                .header("Content-type", "multipart/form-data")
+                .header("X-Requested-With", "serverCommander")
+                .header("Cookie", cookie[0])
+                .post(formBody)
+                .build()
+
+            client.newCall(request).execute().use { response ->
+                println(response.body!!.string())
             }
         }
     }
