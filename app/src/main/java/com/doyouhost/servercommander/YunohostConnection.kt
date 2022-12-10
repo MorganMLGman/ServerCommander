@@ -1,6 +1,8 @@
 package com.doyouhost.servercommander
 
 import android.util.Log
+import android.widget.Toast
+import com.doyouhost.servercommander.fragments.YunohostFragment
 import okhttp3.*
 import org.json.JSONObject
 import org.json.JSONTokener
@@ -15,6 +17,7 @@ class YunohostConnection {
         var usersNumberValue = 0
         var domainNumberValue = 0
         var appToUpdateNumberValue = 0
+        var IsSshKeysPushed : Boolean = true
 
         fun authenticate(url: String, password: String) {
             val client = OkHttpClient()
@@ -149,7 +152,13 @@ class YunohostConnection {
                 .build()
 
             client.newCall(request).execute().use { response ->
-                println(response.body!!.string())
+                val request = (response.body!!.string())
+
+                Log.d ("Req", request)
+
+                if (request.contains("error")) {
+                    IsSshKeysPushed = false
+                }
             }
         }
     }

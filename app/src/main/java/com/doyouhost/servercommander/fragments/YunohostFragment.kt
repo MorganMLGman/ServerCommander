@@ -134,7 +134,14 @@ class YunohostFragment : Fragment() {
                     val keyPath = sharedPref.getString(getString(R.string.pubkey), "").toString()
                     val idRsaPub = File(keyPath, "id_rsa.pub").readText()
                     YunohostConnection.postNewSshKey(postSshKeysLink, idRsaPub, username)
-                    Toast.makeText(context, "POST request sent", Toast.LENGTH_SHORT).show()
+                    if(YunohostConnection.IsSshKeysPushed){
+                        Toast.makeText(context, "POST request sent", Toast.LENGTH_SHORT).show()
+
+                    } else {
+                        Toast.makeText(context, "Wrong username", Toast.LENGTH_SHORT).show()
+
+                    }
+
                 } else {Toast.makeText(context, "Click Refresh first", Toast.LENGTH_SHORT).show()}
             } else {
                 Toast.makeText(context, "Invalid username", Toast.LENGTH_SHORT).show()
