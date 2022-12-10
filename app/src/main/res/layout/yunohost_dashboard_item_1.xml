@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.doyouhost.servercommander.fragments.DockerFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
 
@@ -30,30 +29,41 @@
         android:paddingBottom="@dimen/_10sdp">
 
         <TextView
-            android:id="@+id/dnsDashTextView"
+            android:id="@+id/PushNewSshKeyDashView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/_8sdp"
-            android:text="DNS"
+            android:text="SSH"
             android:textColor="@color/primary_text"
             android:textSize="@dimen/_14ssp"
-            app:layout_constraintEnd_toEndOf="@id/buttonPushNewRecords"
+            app:layout_constraintEnd_toEndOf="@id/buttonPushNewSshKey"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttonPushNewRecords"
-            android:layout_width="wrap_content"
+            android:id="@+id/buttonPushNewSshKey"
+            android:layout_width="@dimen/_130sdp"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:backgroundTint="@color/dashboard_item_1"
             app:layout_constraintTop_toTopOf="parent"
-            android:text="Push new records!"
+            android:text="Push new SSH Key!"
             android:padding="@dimen/_12sdp"
             app:cornerRadius="@dimen/_4sdp" />
+
+        <EditText
+            android:id="@+id/usernameEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/secondary_text"
+            android:hint="Enter username"
+            android:textSize="@dimen/_12ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="@dimen/_20sdp"/>
 
 
 

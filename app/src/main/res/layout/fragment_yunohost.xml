@@ -239,7 +239,7 @@
             android:orientation="vertical">
 
             <include
-                android:id="@+id/dnsYunohostCard"
+                android:id="@+id/SshYunohostCard"
                 layout="@layout/yunohost_dashboard_item_1" />
             <include
                 android:id="@+id/backupYunohostCard"

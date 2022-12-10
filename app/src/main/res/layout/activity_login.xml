@@ -61,14 +61,17 @@
 
     <Button
         android:id="@+id/loginButton"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text="@string/loginButtonLabel"
+        android:backgroundTint="@color/dashboard_item_6"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/systemType" />
+        app:layout_constraintTop_toBottomOf="@+id/systemType"
+        />
 
     <TextView
         android:id="@+id/systemTypeLabel"
@@ -119,9 +122,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
         android:text="@string/generate"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pubkey" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/readPubkeyButton" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -138,12 +143,13 @@
 
     <Button
         android:id="@+id/readPubkeyButton"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
         android:text="@string/read_pubkey"
-        app:layout_constraintEnd_toStartOf="@+id/generatePubKey"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/pubkey"
         app:layout_constraintTop_toBottomOf="@+id/pubkey" />
 
