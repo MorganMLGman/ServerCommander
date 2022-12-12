@@ -22,6 +22,7 @@ import com.doyouhost.servercommander.R
 import com.doyouhost.servercommander.SshConnection
 import com.doyouhost.servercommander.databinding.FragmentYunohostBinding
 import com.doyouhost.servercommander.YunohostConnection
+import com.doyouhost.servercommander.YunohostConnection.Companion.appToUpdateNames
 import com.doyouhost.servercommander.databinding.AlertDialogPasswordBinding
 import com.doyouhost.servercommander.YunohostConnection.Companion.cookie
 import kotlinx.coroutines.*
@@ -91,6 +92,7 @@ class YunohostFragment : Fragment() {
         val goToAdminPage = binding.moreButton
         val refreshButton = binding.refreshYunohostConnection
         val pushSshKeysButton = binding.SshYunohostCard.buttonPushNewSshKey
+        val appsToUpdateWidget = binding.appsToUpdate
 
         openSSOButton.setOnClickListener{
             var intent = Intent(Intent.ACTION_VIEW, Uri.parse(ssoWebpage))
@@ -117,6 +119,18 @@ class YunohostFragment : Fragment() {
                 password = showPasswordModal(getUsersLink, ::getYunohostConnection)
             } else getYunohostConnection(getUsersLink, password)
         }
+
+        appsToUpdateWidget.setOnClickListener {
+            if(YunohostConnection.isCookieInitalized()) {
+                Toast.makeText(context, YunohostConnection.appToUpdateNames, Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(context, "Click refresh first", Toast.LENGTH_SHORT).show()
+            }
+
+
+        }
+
+
 
         pushSshKeysButton.setOnClickListener {
 
