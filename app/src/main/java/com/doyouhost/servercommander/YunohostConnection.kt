@@ -164,6 +164,7 @@ class YunohostConnection {
 
         fun postNewSshKey(url: String, pubkey: String, username: String) {
             val client = OkHttpClient()
+            IsSshKeysPushed = true
 
             val formBody = FormBody.Builder()
                 .add("username", username)
