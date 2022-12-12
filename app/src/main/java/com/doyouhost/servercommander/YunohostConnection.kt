@@ -17,6 +17,7 @@ class YunohostConnection {
         var usersNumberValue = 0
         var domainNumberValue = 0
         var appToUpdateNumberValue = 0
+        var appToUpdateNames = ""
         var IsSshKeysPushed : Boolean = true
         var createdBackupsValue = 0
 
@@ -136,7 +137,18 @@ class YunohostConnection {
 
                     val rsp = JSONTokener(output).nextValue() as JSONObject
                     val array = rsp.getJSONArray("apps")
+
                     appToUpdateNumberValue = array.length()
+
+                    var names = ""
+
+                    for (i in 0 until array.length()) {
+                        names += " " + array.getJSONObject(i).getString("name") + ","
+                    }
+                    Log.d("names", names)
+
+                    appToUpdateNames = names
+
                 }
             }
 

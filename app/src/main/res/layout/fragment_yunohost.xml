@@ -120,6 +120,7 @@
                 app:layout_constraintTop_toBottomOf="@id/textViews">
 
                 <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/apps_to_update"
                     android:layout_width="@dimen/_28sdp"
                     android:layout_height="@dimen/_28sdp"
                     android:src="@drawable/application"
