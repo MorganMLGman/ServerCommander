@@ -3,6 +3,8 @@
 - [ServerCommander compatibility](https://github.com/MorganMLGman/ServerCommander#servercommander-compatibility)
 - [Why YunoHost?](https://github.com/MorganMLGman/ServerCommander#why-yunohost)
 - [Why Docker?](https://github.com/MorganMLGman/ServerCommander#why-docker)
+- [Known bugs](https://github.com/MorganMLGman/ServerCommander#known-bugs)
+- [Changelog](https://github.com/MorganMLGman/ServerCommander#changelog)
 - [Privacy Policy](https://github.com/MorganMLGman/ServerCommander#privacy-policy)
 - [Thanks to](https://github.com/MorganMLGman/ServerCommander#thanks-to)
 
@@ -39,17 +41,33 @@ App is compatible with servers running:
 
 under **Debian** and **Debian-based** operating system. 
 
+Our app has been tested under these systems:
+- Debian 11
+- Ubuntu 22.04, Ubuntu 22.10
+- Raspberry Pi OS
+
 ## Why YunoHost?
 
 YunoHost is a great system that helps run own server without professional IT knowledge. That's why it is a great option for a lot of users that want to have own, private server with services, tools and applications. WebAdmin is a great option to manage server, but it is not that comfortable on mobile devices like it is on PCs. 
 
 ## Why Docker?
 
-Docker is very powerful tool to host many applications on one machine. One of **ServerCommander** developers is using such machine :) Self-hosting with Docker is very flexible, you can choose one of thousands containers with the application you like and deploy it in a breeze.   
+Docker is very powerful tool to host many applications on one machine. One of **ServerCommander** developers is using such machine :) Self-hosting with Docker is very flexible, you can choose one of thousands containers with the application you like and deploy it in a breeze.
+
+## Known bugs :)
+- SwipeRefreshLayout on __SYSTEM__ and __DOCKER__ tabs in not returning to default state when __PasswordAlertDialog__ is dismissed by clicking outside the dialog or pressing back button.
+- App sometimes crashes when __TestConnection__ is ongoing and connection settings in __SETTINGS__ tab are changed.
+
+## Changelog
+
+### [v20221213.202445](https://github.com/MorganMLGman/ServerCommander/releases/tag/v20221213.202445)
+
+This is out first **"production"** ready release. Feel free to check it out and submit issues. 
 
 ## Privacy Policy
 
 **Our app is not collecting any user data.**
+
 We have never collected, do not collect, nor will we collect any user data, usage statistics or any other data about app users, their system or other installed applications.
 
 If you're still not convinced that our app is in a **completely anonymous** state, you're in the perfect place, the app code is **fully open source** and is available at https://github.com/MorganMLGman/ServerCommander
