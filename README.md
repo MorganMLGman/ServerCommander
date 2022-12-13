@@ -1,4 +1,4 @@
-![ServerCommander](https://user-images.githubusercontent.com/33269270/207451287-1a79f5c7-d890-4412-b0d7-75e5a347cb80.png)
+![ServerCommander](https://user-images.githubusercontent.com/33269270/207451491-55d576e8-ad3e-485e-8fb9-508d8dbb8dbb.png)
 # ServerCommander
 
 - [ServerCommander compatibility](https://github.com/MorganMLGman/ServerCommander#servercommander-compatibility)
