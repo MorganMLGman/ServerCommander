@@ -52,7 +52,7 @@ class LoginActivity : AppCompatActivity() {
             val pubKeyPath = getExternalFilesDir(null)?.absolutePath
 
             if (pubKeyPath != null) {
-                if( File(pubKeyPath, "id_rsa").exists() and File(pubKeyPath, "id_rsa.pub").exists() ) {
+                if( File(pubKeyPath, "id_rsaa").exists() and File(pubKeyPath, "id_rsa.pub").exists() ) {
                     pubkey.setText(pubKeyPath)
                 }
                 else
