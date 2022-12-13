@@ -1,5 +1,6 @@
 ![ServerCommander](https://user-images.githubusercontent.com/33269270/207451491-55d576e8-ad3e-485e-8fb9-508d8dbb8dbb.png)
 # ServerCommander
+[![CodeFactor](https://www.codefactor.io/repository/github/morganmlgman/servercommander/badge)](https://www.codefactor.io/repository/github/morganmlgman/servercommander)
 
 - [ServerCommander compatibility](https://github.com/MorganMLGman/ServerCommander#servercommander-compatibility)
 - [Why YunoHost?](https://github.com/MorganMLGman/ServerCommander#why-yunohost)
