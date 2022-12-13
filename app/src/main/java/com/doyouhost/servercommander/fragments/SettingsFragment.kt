@@ -1,6 +1,8 @@
 package com.doyouhost.servercommander.fragments
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -36,6 +38,7 @@ class SettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val bmc_button = binding.bmcButton
         val clearSettingsButton = binding.clearSettingsButton
 
         val serverUrlUpdateText = binding.serverUrlUpdateText
@@ -59,6 +62,11 @@ class SettingsFragment : Fragment() {
 
         serverUrlUpdateText.setText(sharedPref.getString(getString(R.string.server_url), getString(R.string.not_available)))
         usernameUpdateText.setText(sharedPref.getString(getString(R.string.username), getString(R.string.not_available)))
+
+        bmc_button.setOnClickListener {
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.buymeacoffee.com/doyouhost"))
+            startActivity(browserIntent)
+        }
 
         clearSettingsButton.setOnClickListener{
             with(sharedPref.edit()){

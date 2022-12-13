@@ -17,12 +17,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.doyouhost.servercommander.MainActivity
 import com.doyouhost.servercommander.R
-import com.doyouhost.servercommander.SshConnection
 import com.doyouhost.servercommander.databinding.FragmentYunohostBinding
 import com.doyouhost.servercommander.YunohostConnection
-import com.doyouhost.servercommander.YunohostConnection.Companion.appToUpdateNames
 import com.doyouhost.servercommander.databinding.AlertDialogPasswordBinding
 import com.doyouhost.servercommander.YunohostConnection.Companion.cookie
 import kotlinx.coroutines.*
