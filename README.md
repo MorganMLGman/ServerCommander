@@ -1,5 +1,11 @@
 # ServerCommander
 
+- [ServerCommander compatibility](https://github.com/MorganMLGman/ServerCommander#servercommander-compatibility)
+- [Why YunoHost?](https://github.com/MorganMLGman/ServerCommander#why-yunohost)
+- [Why Docker?](https://github.com/MorganMLGman/ServerCommander#why-docker)
+- [Privacy Policy](https://github.com/MorganMLGman/ServerCommander#privacy-policy)
+- [Thanks to](https://github.com/MorganMLGman/ServerCommander#thanks-to)
+
 Mobile application that helps manage self-hosted homelab. The mobile client application is a great tool that allows to manage your server quickly, conveniently and almost anytime. 
 
 Within **ServerCommander** you can check such things as:
@@ -41,7 +47,14 @@ YunoHost is a great system that helps run own server without professional IT kno
 
 Docker is very powerful tool to host many applications on one machine. One of **ServerCommander** developers is using such machine :) Self-hosting with Docker is very flexible, you can choose one of thousands containers with the application you like and deploy it in a breeze.   
 
-## Thanks to:
+## Privacy Policy
+
+**Our app is not collecting any user data.**
+We have never collected, do not collect, nor will we collect any user data, usage statistics or any other data about app users, their system or other installed applications.
+
+If you're still not convinced that our app is in a **completely anonymous** state, you're in the perfect place, the app code is **fully open source** and is available at https://github.com/MorganMLGman/ServerCommander
+
+## Thanks to
 
 - [Docker authors](https://github.com/docker)
 - [YunoHost authors](https://github.com/YunoHost)
