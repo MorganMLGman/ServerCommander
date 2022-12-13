@@ -137,7 +137,7 @@
         android:contentDescription="@string/applogo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/sym_def_app_icon"
+        app:srcCompat="@mipmap/server_commander_round"
         tools:ignore="ImageContrastCheck"
         tools:src="@tools:sample/avatars" />
 
