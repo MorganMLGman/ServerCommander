@@ -55,14 +55,14 @@ YunoHost is a great system that helps run own server without professional IT kno
 Docker is very powerful tool to host many applications on one machine. One of **ServerCommander** developers is using such machine :) Self-hosting with Docker is very flexible, you can choose one of thousands containers with the application you like and deploy it in a breeze.
 
 ## Known bugs :)
-- SwipeRefreshLayout on __SYSTEM__ and __DOCKER__ tabs in not returning to default state when __PasswordAlertDialog__ is dismissed by clicking outside the dialog or pressing back button.
-- App sometimes crashes when __TestConnection__ is ongoing and connection settings in __SETTINGS__ tab are changed.
+- SwipeRefreshLayout on _SYSTEM_ and _DOCKER_ tabs in not returning to default state when _PasswordAlertDialog_ is dismissed by clicking outside the dialog or pressing back button.
+- App sometimes crashes when _TestConnection_ is ongoing and connection settings in _SETTINGS_ tab are changed.
 
 ## Changelog
 
 ### [v20221213.202445](https://github.com/MorganMLGman/ServerCommander/releases/tag/v20221213.202445)
 
-This is out first __**"production"**__ ready release. Feel free to check it out and submit issues. 
+This is out first _**"production"**_ ready release. Feel free to check it out and submit issues. 
 
 ## Privacy Policy
 
