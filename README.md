@@ -16,7 +16,7 @@ Within **ServerCommander** you can check such things as:
 
 If your server is running Docker in addition you can _**start/stop/restart**_ containers, briefly view containers summary and check statistics about single container.
 
-If you are running YunoHost you can ...
+If you are running YunoHost you can see *how many users, backups and domains* you have. Also there is a possibility to see *how many applications are waiting for an update* and *you can list them*. You can *push new ssh keys* for a chosen user.
 
 However no matter what type of server you have, you can always perform actions like:
 - Server shutdown
