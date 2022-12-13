@@ -10,7 +10,9 @@
 - [Privacy Policy](https://github.com/MorganMLGman/ServerCommander#privacy-policy)
 - [Thanks to](https://github.com/MorganMLGman/ServerCommander#thanks-to)
 
+---
 Mobile application that helps manage self-hosted homelab. The mobile client application is a great tool that allows to manage your server quickly, conveniently and almost anytime. 
+---
 
 Within **ServerCommander** you can check such things as:
 - CPU temperature
@@ -26,7 +28,7 @@ Within **ServerCommander** you can check such things as:
 
 If your server is running Docker in addition you can _**start/stop/restart**_ containers, briefly view containers summary and check statistics about single container.
 
-If you are running YunoHost you can see *how many users, backups and domains* you have. Also there is a possibility to see *how many applications are waiting for an update* and *you can list them*. You can *push new ssh keys* for a chosen user.
+If you are running YunoHost you can see ***how many users, backups and domains*** you have. Also there is a possibility to see ***how many applications are waiting for an update*** and ***you can list them***. You can ***push new ssh keys*** for a chosen user.
 
 However no matter what type of server you have, you can always perform actions like:
 - Server shutdown
@@ -59,6 +61,7 @@ Docker is very powerful tool to host many applications on one machine. One of **
 ## Known bugs :)
 - SwipeRefreshLayout on _SYSTEM_ and _DOCKER_ tabs in not returning to default state when _PasswordAlertDialog_ is dismissed by clicking outside the dialog or pressing back button.
 - App sometimes crashes when _TestConnection_ is ongoing and connection settings in _SETTINGS_ tab are changed.
+- App can crash when YunoHost server URL is not valid.
 
 ## Changelog
 
@@ -79,3 +82,4 @@ If you're still not convinced that our app is in a **completely anonymous** stat
 - [Docker authors](https://github.com/docker)
 - [YunoHost authors](https://github.com/YunoHost)
 - [Cedrica from DCU](https://dribbble.com/shots/3896634-Profile-Screens) for dashboard idea and [Chirag Kachhadiya](https://www.youtube.com/watch?v=ZjAxAw0kmrY) for showing how to make it real
+- Intuit developers for providing [sdp](https://github.com/intuit/sdp) library
