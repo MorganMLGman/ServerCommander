@@ -3,7 +3,7 @@
 - [ServerCommander compatibility](https://github.com/MorganMLGman/ServerCommander#servercommander-compatibility)
 - [Why YunoHost?](https://github.com/MorganMLGman/ServerCommander#why-yunohost)
 - [Why Docker?](https://github.com/MorganMLGman/ServerCommander#why-docker)
-- [Known bugs](https://github.com/MorganMLGman/ServerCommander#known-bugs)
+- [Known bugs](https://github.com/MorganMLGman/ServerCommander#known-bugs-)
 - [Changelog](https://github.com/MorganMLGman/ServerCommander#changelog)
 - [Privacy Policy](https://github.com/MorganMLGman/ServerCommander#privacy-policy)
 - [Thanks to](https://github.com/MorganMLGman/ServerCommander#thanks-to)
@@ -62,7 +62,7 @@ Docker is very powerful tool to host many applications on one machine. One of **
 
 ### [v20221213.202445](https://github.com/MorganMLGman/ServerCommander/releases/tag/v20221213.202445)
 
-This is out first **"production"** ready release. Feel free to check it out and submit issues. 
+This is out first __**"production"**__ ready release. Feel free to check it out and submit issues. 
 
 ## Privacy Policy
 
