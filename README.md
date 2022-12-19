@@ -12,9 +12,10 @@
 
 
 ![ServerCommanderAll](https://user-images.githubusercontent.com/33269270/207556035-e45db8a6-45f2-4a95-b8ab-77b6893356d3.png)
----
+
 Mobile application that helps manage self-hosted homelab. The mobile client application is a great tool that allows to manage your server quickly, conveniently and almost anytime. 
----
+
+**ATTENTION:** *Check Connection* button will download [Python script](https://github.com/MorganMLGman/copilot) onto your desktop in `/home/{user}/` directory. 
 
 Within **ServerCommander** you can check such things as:
 - CPU temperature
