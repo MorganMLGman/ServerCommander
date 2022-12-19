@@ -141,4 +141,5 @@
     <string name="terminal">TERMINAL</string>
     <string name="settings">SETTINGS</string>
     <string name="created_backups">Created Backups</string>
+    <string name="ssh_connection_port">SSH Connection PORT</string>
 </resources>
