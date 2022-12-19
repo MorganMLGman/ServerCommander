@@ -15,7 +15,7 @@
 
 Mobile application that helps manage self-hosted homelab. The mobile client application is a great tool that allows to manage your server quickly, conveniently and almost anytime. 
 
-**ATTENTION:** *Check Connection* button will download [Python script](https://github.com/MorganMLGman/copilot) onto your desktop in `/home/{user}/` directory. 
+**ATTENTION:** *Check Connection* button will download [Python script](https://github.com/MorganMLGman/copilot) onto your desktop in `/home/{user}/` directory. YunoHost uses only API and You can use this function without clicking on *Check connection* button.
 
 Within **ServerCommander** you can check such things as:
 - CPU temperature
