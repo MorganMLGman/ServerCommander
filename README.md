@@ -13,7 +13,7 @@
 
 ![ServerCommanderAll](https://user-images.githubusercontent.com/33269270/207556035-e45db8a6-45f2-4a95-b8ab-77b6893356d3.png)
 
-Mobile application that helps manage self-hosted homelab. The mobile client application is a great tool that allows to manage your server quickly, conveniently and almost anytime. 
+Mobile application that helps manage self-hosted homelab. The mobile client application is a great tool that allows you to manage your server quickly, conveniently, and almost anytime. For now, the application is mainly focused on retrieving information from the server. In the app you can see nicely displayed stats about your server kernel version, server uptime, boot disk usage, currently most demanding process, number of installed packages, and much more. If you are running Docker on your system there are some great options available for you. Listing Docker containers, showing statistics like processor and memory usage, disk or network i/o operations. Starting, stopping, and restarting containers is also ready to use. If you are running Yunohost instead, have no fear, there are also plenty of options available for you! You can check if you have any apps updates, and how many domains or users you have. With one click you can write the SSH key for a specific system user or check how many backups are created. Without system restrictions, auto update of the dashboard is available with a minimum period of 10 seconds and a maximum of 1 minute.
 
 **ATTENTION:** *Check Connection* button will download [Python script](https://github.com/MorganMLGman/copilot) onto your desktop in `/home/{user}/` directory. YunoHost uses only API and You can use this function without clicking on *Check connection* button.
 
