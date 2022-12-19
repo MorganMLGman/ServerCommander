@@ -9,6 +9,7 @@ on:
 
 jobs:
   gradle:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
