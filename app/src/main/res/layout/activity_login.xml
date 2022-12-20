@@ -8,7 +8,7 @@
 
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <EditText
         android:id="@+id/serverUrl"
@@ -30,18 +30,21 @@
         android:id="@+id/sshPort"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
+        android:maxWidth="@dimen/_80sdp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
         android:autofillHints=""
+        android:gravity="end"
         android:ems="10"
         android:hint="@string/ssh_connection_port"
         android:inputType="number"
         android:minHeight="48dp"
         android:text="22"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/serverUrl" />
+        app:layout_constraintStart_toEndOf="@+id/username"
+        app:layout_constraintTop_toBottomOf="@+id/serverUrl"
+        tools:ignore="HardcodedText" />
 
     <EditText
         android:id="@+id/username"
@@ -49,15 +52,13 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
-        android:layout_marginEnd="32dp"
         android:autofillHints=""
         android:ems="10"
         android:hint="@string/UsernameLabel"
         android:inputType="textPersonName"
         android:minHeight="48dp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sshPort" />
+        app:layout_constraintTop_toBottomOf="@+id/serverUrl" />
 
     <EditText
         android:id="@+id/pubkey"

@@ -42,7 +42,7 @@ class DockerFragment : Fragment(), ContainersAdapter.OnViewClickListener {
         super.onCreate(savedInstanceState)
 
         sharedPref = requireActivity().getSharedPreferences(
-            getString(R.string.app_name), Context.MODE_PRIVATE
+            "ServerCommander", Context.MODE_PRIVATE
         )
     }
 
@@ -63,23 +63,24 @@ class DockerFragment : Fragment(), ContainersAdapter.OnViewClickListener {
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
-        if( !(::sshConnection.isInitialized or sharedPref.getBoolean(getString(R.string.connectionTested), false)))
+        if( !(::sshConnection.isInitialized or sharedPref.getBoolean("connectionTested", false)))
         {
             // TODO: DISABLE BUTTONS
         }
         else
         {
             // TODO: ENABLE BUTTONS
-            if (sharedPref.contains(getString(R.string.server_url)) and
-                sharedPref.contains(getString(R.string.username)) and
-                sharedPref.contains(getString(R.string.pubkey)) and
-                sharedPref.contains(getString(R.string.connectionTested))) {
+            if(sharedPref.contains("serverUrl") and
+                sharedPref.contains("username") and
+                sharedPref.contains("sshPort") and
+                sharedPref.contains("pubkey") and
+                sharedPref.contains("connectionTested")) {
 
                 sshConnection = SshConnection(
-                    sharedPref.getString(getString(R.string.server_url), "").toString(),
-                    22,
-                    sharedPref.getString(getString(R.string.username), "").toString(),
-                    sharedPref.getString(getString(R.string.pubkey), "").toString()
+                    sharedPref.getString("serverUrl", "").toString(),
+                    sharedPref.getInt("sshPort", 22),
+                    sharedPref.getString("username", "").toString(),
+                    sharedPref.getString("pubkey", "").toString()
                 )
             }
         }
@@ -87,9 +88,9 @@ class DockerFragment : Fragment(), ContainersAdapter.OnViewClickListener {
         val swipeRefreshLayout = binding.swipeRefreshLayout
         swipeRefreshLayout.setOnRefreshListener {
 
-            if(::sshConnection.isInitialized and sharedPref.getBoolean(getString(R.string.connectionTested), false)) {
+            if(::sshConnection.isInitialized and sharedPref.getBoolean("connectionTested", false)) {
                 Toast.makeText(context, getString(R.string.refreshing), Toast.LENGTH_SHORT).show()
-                val username = sharedPref.getString(getString(R.string.username), "")!!
+                val username = sharedPref.getString("username", "")!!
                 val password = sharedPref.getString("sudo_password", "")!!
 
                 if(password.isEmpty() or ( password == "" )) {
@@ -113,9 +114,9 @@ class DockerFragment : Fragment(), ContainersAdapter.OnViewClickListener {
             }.withEndAction{
                 refreshButton.isClickable = true
             }.start()
-            if(::sshConnection.isInitialized and sharedPref.getBoolean(getString(R.string.connectionTested), false)) {
+            if(::sshConnection.isInitialized and sharedPref.getBoolean("connectionTested", false)) {
                 Toast.makeText(context, getString(R.string.refreshing), Toast.LENGTH_SHORT).show()
-                val username = sharedPref.getString(getString(R.string.username), "")!!
+                val username = sharedPref.getString("username", "")!!
                 val password: String = sharedPref.getString("sudo_password", "")!!
 
                 if(password.isEmpty() or ( password == "" )) {
@@ -442,8 +443,8 @@ class DockerFragment : Fragment(), ContainersAdapter.OnViewClickListener {
     }
 
     override fun onRowClickListener(view: View, container: Container) {
-        if(::sshConnection.isInitialized and sharedPref.getBoolean(getString(R.string.connectionTested), false)) {
-            val username = sharedPref.getString(getString(R.string.username), "")!!
+        if(::sshConnection.isInitialized and sharedPref.getBoolean("connectionTested", false)) {
+            val username = sharedPref.getString("username", "")!!
             val password = sharedPref.getString("sudo_password", "")!!
 
             if (container.isRunning){
@@ -473,9 +474,9 @@ class DockerFragment : Fragment(), ContainersAdapter.OnViewClickListener {
         }.withEndAction{
 
         }.start()
-        if(::sshConnection.isInitialized and sharedPref.getBoolean(getString(R.string.connectionTested), false)) {
+        if(::sshConnection.isInitialized and sharedPref.getBoolean("connectionTested", false)) {
             Toast.makeText(context, getString(R.string.refreshing), Toast.LENGTH_SHORT).show()
-            val username = sharedPref.getString(getString(R.string.username), "")!!
+            val username = sharedPref.getString("username", "")!!
             val password = sharedPref.getString("sudo_password", "")!!
 
             if(password.isEmpty() or ( password == "" )) {
@@ -497,9 +498,9 @@ class DockerFragment : Fragment(), ContainersAdapter.OnViewClickListener {
         }.withEndAction{
 
         }.start()
-        if(::sshConnection.isInitialized and sharedPref.getBoolean(getString(R.string.connectionTested), false)) {
+        if(::sshConnection.isInitialized and sharedPref.getBoolean("connectionTested", false)) {
             Toast.makeText(context, getString(R.string.refreshing), Toast.LENGTH_SHORT).show()
-            val username = sharedPref.getString(getString(R.string.username), "")!!
+            val username = sharedPref.getString("username", "")!!
             val password = sharedPref.getString("sudo_password", "")!!
 
             if(password.isEmpty() or ( password == "" )) {
@@ -521,9 +522,9 @@ class DockerFragment : Fragment(), ContainersAdapter.OnViewClickListener {
         }.withEndAction{
 
         }.start()
-        if(::sshConnection.isInitialized and sharedPref.getBoolean(getString(R.string.connectionTested), false)) {
+        if(::sshConnection.isInitialized and sharedPref.getBoolean("connectionTested", false)) {
             Toast.makeText(context, getString(R.string.refreshing), Toast.LENGTH_SHORT).show()
-            val username = sharedPref.getString(getString(R.string.username), "")!!
+            val username = sharedPref.getString("username", "")!!
             val password = sharedPref.getString("sudo_password", "")!!
 
             if(password.isEmpty() or ( password == "" )) {
