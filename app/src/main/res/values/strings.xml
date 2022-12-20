@@ -142,4 +142,7 @@
     <string name="settings">SETTINGS</string>
     <string name="created_backups">Created Backups</string>
     <string name="ssh_connection_port">SSH Connection PORT</string>
+    <string name="push_new_ssh_key">Push new SSH Key!</string>
+    <string name="enter_username">Enter username</string>
+    <string name="ssh">SSH</string>
 </resources>
