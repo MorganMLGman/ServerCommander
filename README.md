@@ -69,7 +69,7 @@ Docker is very powerful tool to host many applications on one machine. One of **
 ## Changelog
 
 ### [v20221220.143412](https://github.com/MorganMLGman/ServerCommander/releases/tag/v20221220.143412)
-Implemented changing SSH port and fixed some issues with too low elements contrast.
+Implemented changing SSH port and fixed some issues with too low contrast.
 
 ### [v20221213.202445](https://github.com/MorganMLGman/ServerCommander/releases/tag/v20221213.202445)
 This is out first _**"production"**_ ready release. Feel free to check it out and submit issues. 
