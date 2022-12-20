@@ -10,7 +10,7 @@ import java.util.*
 
 
 class SshConnection(val serverAddress: String,
-                    private val serverPort: Int = 22,
+                    val serverPort: Int = 22,
                     val username: String,
                     private val keyPath: String ) {
 

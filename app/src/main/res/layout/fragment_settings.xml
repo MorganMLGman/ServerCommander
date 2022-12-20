@@ -12,6 +12,36 @@
         android:layout_height="wrap_content"
         tools:context="com.doyouhost.servercommander.fragments.SettingsFragment" >
 
+        <EditText
+            android:id="@+id/sshPortUpdateText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="16dp"
+            android:autofillHints=""
+            android:ems="10"
+            android:hint="@string/ssh_connection_port"
+            android:inputType="number"
+            android:minHeight="48dp"
+            android:textColorHint="#8D6E63"
+            app:layout_constraintEnd_toStartOf="@+id/serverUrlUpdateButton"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/usernameUpdateText" />
+
+        <Button
+            android:id="@+id/sshPortUpdateButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="32dp"
+            android:text="@string/update"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/usernameUpdateButton"
+            tools:ignore="DuplicateSpeakableTextCheck" />
+
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/bmc_button"
             android:layout_width="0dp"
@@ -109,8 +139,9 @@
             android:text="@string/refresh_interval_label"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/usernameUpdateText" />
+            app:layout_constraintTop_toBottomOf="@+id/sshPortUpdateText" />
 
         <com.google.android.material.slider.Slider
             android:id="@+id/refreshIntervalValue"

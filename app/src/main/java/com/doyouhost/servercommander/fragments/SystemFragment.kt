@@ -36,7 +36,7 @@ class SystemFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         sharedPref = requireActivity().getSharedPreferences(
-            getString(R.string.app_name), Context.MODE_PRIVATE
+            "ServerCommander", Context.MODE_PRIVATE
         )
     }
 
@@ -58,7 +58,7 @@ class SystemFragment : Fragment() {
         val shutdownButton =  binding.buttonShutdown
         val progressBar = binding.progressBar
 
-        if( !(::sshConnection.isInitialized or sharedPref.getBoolean(getString(R.string.connectionTested), false)))
+        if( !(::sshConnection.isInitialized or sharedPref.getBoolean("connectionTested", false)))
         {
             rebootButton.isEnabled = false
             updateButton.isEnabled = false
@@ -70,23 +70,24 @@ class SystemFragment : Fragment() {
             updateButton.isEnabled = true
             upgradeButton.isEnabled = true
 
-            if (sharedPref.contains(getString(R.string.server_url)) and
-                sharedPref.contains(getString(R.string.username)) and
-                sharedPref.contains(getString(R.string.pubkey)) and
-                sharedPref.contains(getString(R.string.connectionTested))) {
+            if(sharedPref.contains("serverUrl") and
+                sharedPref.contains("username") and
+                sharedPref.contains("sshPort") and
+                sharedPref.contains("pubkey") and
+                sharedPref.contains("connectionTested")) {
 
                 sshConnection = SshConnection(
-                    sharedPref.getString(getString(R.string.server_url), "").toString(),
-                    22,
-                    sharedPref.getString(getString(R.string.username), "").toString(),
-                    sharedPref.getString(getString(R.string.pubkey), "").toString()
+                    sharedPref.getString("serverUrl", "").toString(),
+                    sharedPref.getInt("sshPort", 22),
+                    sharedPref.getString("username", "").toString(),
+                    sharedPref.getString("pubkey", "").toString()
                 )
             }
         }
 
         rebootButton.setOnClickListener {
-            if(::sshConnection.isInitialized and sharedPref.getBoolean(getString(R.string.connectionTested), false)) {
-                val username = sharedPref.getString(getString(R.string.username), "")!!
+            if(::sshConnection.isInitialized and sharedPref.getBoolean("connectionTested", false)) {
+                val username = sharedPref.getString("username", "")!!
                 val password = sharedPref.getString("sudo_password", "")!!
 
                 progressBar.visibility = View.VISIBLE
@@ -100,8 +101,8 @@ class SystemFragment : Fragment() {
         }
 
         shutdownButton.setOnClickListener {
-            if(::sshConnection.isInitialized and sharedPref.getBoolean(getString(R.string.connectionTested), false)) {
-                val username = sharedPref.getString(getString(R.string.username), "")!!
+            if(::sshConnection.isInitialized and sharedPref.getBoolean("connectionTested", false)) {
+                val username = sharedPref.getString("username", "")!!
                 val password = sharedPref.getString("sudo_password", "")!!
 
                 progressBar.visibility = View.VISIBLE
@@ -115,8 +116,8 @@ class SystemFragment : Fragment() {
         }
 
         updateButton.setOnClickListener {
-            if(::sshConnection.isInitialized and sharedPref.getBoolean(getString(R.string.connectionTested), false)) {
-                val username = sharedPref.getString(getString(R.string.username), "")!!
+            if(::sshConnection.isInitialized and sharedPref.getBoolean("connectionTested", false)) {
+                val username = sharedPref.getString("username", "")!!
                 val password = sharedPref.getString("sudo_password", "")!!
 
                 progressBar.visibility = View.VISIBLE
@@ -130,8 +131,8 @@ class SystemFragment : Fragment() {
         }
 
         upgradeButton.setOnClickListener {
-            if(::sshConnection.isInitialized and sharedPref.getBoolean(getString(R.string.connectionTested), false)) {
-                val username = sharedPref.getString(getString(R.string.username), "")!!
+            if(::sshConnection.isInitialized and sharedPref.getBoolean("connectionTested", false)) {
+                val username = sharedPref.getString("username", "")!!
                 val password = sharedPref.getString("sudo_password", "")!!
 
                 progressBar.visibility = View.VISIBLE
@@ -152,7 +153,7 @@ class SystemFragment : Fragment() {
         val updateButton = binding.updateButton
         val upgradeButton = binding.upgradeButton
 
-        if( !(::sshConnection.isInitialized or sharedPref.getBoolean(getString(R.string.connectionTested), false)))
+        if( !(::sshConnection.isInitialized or sharedPref.getBoolean("connectionTested", false)))
         {
             rebootButton.isEnabled = false
             updateButton.isEnabled = false
@@ -168,12 +169,14 @@ class SystemFragment : Fragment() {
         if( ::sshConnection.isInitialized )
         {
             if ((sharedPref.getString("serverUrl", "") != sshConnection.serverAddress )
-                or  (sharedPref.getString("username", "") != sshConnection.username ))
+                or (sharedPref.getString("username", "") != sshConnection.username )
+                or (sharedPref.getInt("sshPort", 22) != sshConnection.serverPort))
             {
                 val serverUrl = sharedPref.getString("serverUrl", "")!!
                 val username = sharedPref.getString("username", "")!!
+                val sshPort = sharedPref.getInt("sshPort", 22)
                 val pubkey = sharedPref.getString("pubkey", "")!!
-                sshConnection = SshConnection(serverUrl, 22, username, pubkey)
+                sshConnection = SshConnection(serverUrl, sshPort, username, pubkey)
             }
         }
 
@@ -182,8 +185,9 @@ class SystemFragment : Fragment() {
         {
             val serverUrl = sharedPref.getString("serverUrl", "")!!
             val username = sharedPref.getString("username", "")!!
+            val sshPort = sharedPref.getInt("sshPort", 22)
             val pubkey = sharedPref.getString("pubkey", "")!!
-            sshConnection = SshConnection(serverUrl, 22, username, pubkey)
+            sshConnection = SshConnection(serverUrl, sshPort, username, pubkey)
         }
     }
 
@@ -236,7 +240,7 @@ class SystemFragment : Fragment() {
                 if (output != "False")
                 {
                     with(sharedPref.edit()){
-                        putBoolean(getString(R.string.connectionTested), false)
+                        putBoolean("connectionTested", false)
                         apply()
                     }
                     binding.progressBar.visibility = View.GONE
@@ -268,7 +272,7 @@ class SystemFragment : Fragment() {
                 if (output != "False")
                 {
                     with(sharedPref.edit()){
-                        putBoolean(getString(R.string.connectionTested), false)
+                        putBoolean("connectionTested", false)
                         apply()
                     }
                     binding.progressBar.visibility = View.GONE

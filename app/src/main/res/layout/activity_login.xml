@@ -8,7 +8,7 @@
 
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <EditText
         android:id="@+id/serverUrl"
@@ -27,18 +27,36 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     <EditText
+        android:id="@+id/sshPort"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:maxWidth="@dimen/_80sdp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:autofillHints=""
+        android:gravity="end"
+        android:ems="10"
+        android:hint="@string/ssh_connection_port"
+        android:inputType="number"
+        android:minHeight="48dp"
+        android:text="22"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/username"
+        app:layout_constraintTop_toBottomOf="@+id/serverUrl"
+        tools:ignore="HardcodedText" />
+
+    <EditText
         android:id="@+id/username"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
-        android:layout_marginEnd="32dp"
         android:autofillHints=""
         android:ems="10"
         android:hint="@string/UsernameLabel"
         android:inputType="textPersonName"
         android:minHeight="48dp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/serverUrl" />
 
@@ -63,9 +81,10 @@
         android:id="@+id/loginButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="26dp"
         android:text="@string/loginButtonLabel"
         android:backgroundTint="@color/dashboard_item_6"
+        android:textColor="@color/login_text_primary"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginEnd="32dp"
         android:layout_marginStart="32dp"
@@ -77,7 +96,7 @@
         android:id="@+id/systemTypeLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="16dp"
         android:text="@string/select_system_type"
         android:textSize="18sp"
         android:textStyle="normal"
@@ -124,6 +143,7 @@
         android:layout_marginEnd="32dp"
         android:layout_marginStart="32dp"
         android:text="@string/generate"
+        android:textColor="@color/login_text_primary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/readPubkeyButton" />
@@ -150,6 +170,7 @@
         android:layout_marginStart="32dp"
         android:text="@string/read_pubkey"
         app:layout_constraintEnd_toEndOf="parent"
+        android:textColor="@color/login_text_primary"
         app:layout_constraintStart_toStartOf="@+id/pubkey"
         app:layout_constraintTop_toBottomOf="@+id/pubkey" />
 
