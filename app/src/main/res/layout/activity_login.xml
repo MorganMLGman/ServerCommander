@@ -38,6 +38,7 @@
         android:hint="@string/ssh_connection_port"
         android:inputType="number"
         android:minHeight="48dp"
+        android:text="22"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/serverUrl" />
