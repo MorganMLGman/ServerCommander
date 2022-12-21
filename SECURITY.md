@@ -4,6 +4,7 @@
 
 | Version | Supported          |
 | ------- | ------------------ |
+| v20221220.143412   | ✅ |
 | v20221213.202445   | :white_check_mark: |
 
 ## Reporting a Vulnerability
