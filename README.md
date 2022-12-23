@@ -3,6 +3,7 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/morganmlgman/servercommander/badge)](https://www.codefactor.io/repository/github/morganmlgman/servercommander)
 
 - [ServerCommander compatibility](https://github.com/MorganMLGman/ServerCommander#servercommander-compatibility)
+- [How to install?](https://github.com/MorganMLGman/ServerCommander#installation)
 - [Why YunoHost?](https://github.com/MorganMLGman/ServerCommander#why-yunohost)
 - [Why Docker?](https://github.com/MorganMLGman/ServerCommander#why-docker)
 - [Known bugs](https://github.com/MorganMLGman/ServerCommander#known-bugs-)
@@ -52,6 +53,13 @@ Our app has been tested under these systems:
 - Debian 11
 - Ubuntu 22.04, Ubuntu 22.10
 - Raspberry Pi OS
+
+## Installation
+
+You can install ServerCommander in three ways:
+- by downloading from [Google Play Store](https://play.google.com/store/apps/details?id=com.doyouhost.servercommander)
+- by downloading `.apk` from [GitHub Releases](https://github.com/MorganMLGman/ServerCommander/releases)
+- by building from source with Android Studio
 
 ## Why YunoHost?
 
