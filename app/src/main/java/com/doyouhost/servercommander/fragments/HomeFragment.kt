@@ -263,55 +263,73 @@ class HomeFragment : Fragment() {
 
                     rotation = false
 
-                    val jsonObject = JSONTokener(output).nextValue() as JSONObject
+                    try {
+                        val jsonObject = JSONTokener(output).nextValue() as JSONObject
 
-                    try { tempText.text = jsonObject.getString("cpu_temp") }
-                    catch ( e: JSONException ){ tempText.text = getString(R.string.read_error) }
+                        try { tempText.text = jsonObject.getString("cpu_temp") }
+                        catch ( e: JSONException ){ tempText.text = getString(R.string.read_error) }
 
-                    try { cpuUsage.text = jsonObject.getString("cpu_usage") }
-                    catch ( e: JSONException ) { cpuUsage.text = getString(R.string.read_error) }
+                        try { cpuUsage.text = jsonObject.getString("cpu_usage") }
+                        catch ( e: JSONException ) { cpuUsage.text = getString(R.string.read_error) }
 
-                    try { ramUsage.text = jsonObject.getString("ram_usage") }
-                    catch ( e: JSONException ) { ramUsage.text = getString(R.string.read_error) }
+                        try { ramUsage.text = jsonObject.getString("ram_usage") }
+                        catch ( e: JSONException ) { ramUsage.text = getString(R.string.read_error) }
 
-                    try { linuxKernelVersion.text = jsonObject.getString("kernel") }
-                    catch ( e: JSONException ) { linuxKernelVersion.text = getString(R.string.read_error) }
+                        try { linuxKernelVersion.text = jsonObject.getString("kernel") }
+                        catch ( e: JSONException ) { linuxKernelVersion.text = getString(R.string.read_error) }
 
-                    try { hostname.text = jsonObject.getString("hostname") }
-                    catch ( e: JSONException ) { hostname.text = getString(R.string.read_error) }
+                        try { hostname.text = jsonObject.getString("hostname") }
+                        catch ( e: JSONException ) { hostname.text = getString(R.string.read_error) }
 
-                    try { hostname.text = jsonObject.getString("hostname") }
-                    catch ( e: JSONException ) { hostname.text = getString(R.string.read_error) }
+                        try { hostname.text = jsonObject.getString("hostname") }
+                        catch ( e: JSONException ) { hostname.text = getString(R.string.read_error) }
 
-                    try { hostname.text = jsonObject.getString("hostname") }
-                    catch ( e: JSONException ) { hostname.text = getString(R.string.read_error) }
+                        try { hostname.text = jsonObject.getString("hostname") }
+                        catch ( e: JSONException ) { hostname.text = getString(R.string.read_error) }
 
-                    try { hostname.text = jsonObject.getString("hostname") }
-                    catch ( e: JSONException) { hostname.text = getString(R.string.read_error) }
+                        try { hostname.text = jsonObject.getString("hostname") }
+                        catch ( e: JSONException) { hostname.text = getString(R.string.read_error) }
 
-                    try { uptime.text = jsonObject.getString("uptime") }
-                    catch ( e: JSONException) { uptime.text = getString(R.string.read_error) }
+                        try { uptime.text = jsonObject.getString("uptime") }
+                        catch ( e: JSONException) { uptime.text = getString(R.string.read_error) }
 
-                    try { uptimeSince.text = jsonObject.getString("uptime_since") }
-                    catch ( e: JSONException) { uptimeSince.text = getString(R.string.read_error) }
+                        try { uptimeSince.text = jsonObject.getString("uptime_since") }
+                        catch ( e: JSONException) { uptimeSince.text = getString(R.string.read_error) }
 
-                    try { localIpAddress.text = jsonObject.getString("local_ip") }
-                    catch ( e: JSONException)  { localIpAddress.text = getString(R.string.read_error) }
+                        try { localIpAddress.text = jsonObject.getString("local_ip") }
+                        catch ( e: JSONException)  { localIpAddress.text = getString(R.string.read_error) }
 
-                    try { publicIpAddress.text = jsonObject.getString("public_ip")  }
-                    catch ( e: JSONException)  { publicIpAddress.text = getString(R.string.read_error) }
+                        try { publicIpAddress.text = jsonObject.getString("public_ip")  }
+                        catch ( e: JSONException)  { publicIpAddress.text = getString(R.string.read_error) }
 
-                    try { diskUsage.text = jsonObject.getString("disk_usage")  }
-                    catch ( e: JSONException) { diskUsage.text = getString(R.string.read_error) }
+                        try { diskUsage.text = jsonObject.getString("disk_usage")  }
+                        catch ( e: JSONException) { diskUsage.text = getString(R.string.read_error) }
 
-                    try { diskName.text = jsonObject.getString("disk_name") }
-                    catch ( e: JSONException) { diskName.text = getString(R.string.read_error) }
+                        try { diskName.text = jsonObject.getString("disk_name") }
+                        catch ( e: JSONException) { diskName.text = getString(R.string.read_error) }
 
-                    try { heaviestApp.text = jsonObject.getString("stress_app") }
-                    catch ( e: JSONException ){ heaviestApp.text = getString(R.string.read_error) }
+                        try { heaviestApp.text = jsonObject.getString("stress_app") }
+                        catch ( e: JSONException ){ heaviestApp.text = getString(R.string.read_error) }
 
-                    try {  packageNumber.text = jsonObject.getString("packages") }
-                    catch ( e: JSONException ){ packageNumber.text = getString(R.string.read_error) }
+                        try {  packageNumber.text = jsonObject.getString("packages") }
+                        catch ( e: JSONException ){ packageNumber.text = getString(R.string.read_error) }
+                    }
+                    catch ( e: JSONException){
+                        tempText.text = getString(R.string.read_error)
+                        cpuUsage.text = getString(R.string.read_error)
+                        ramUsage.text = getString(R.string.read_error)
+
+                        linuxKernelVersion.text = getString(R.string.read_error)
+                        hostname.text = getString(R.string.read_error)
+                        uptime.text = getString(R.string.read_error)
+                        uptimeSince.text = getString(R.string.read_error)
+                        localIpAddress.text = getString(R.string.read_error)
+                        publicIpAddress.text = getString(R.string.read_error)
+                        diskUsage.text = getString(R.string.read_error)
+                        diskName.text = getString(R.string.read_error)
+                        heaviestApp.text = getString(R.string.read_error)
+                        packageNumber.text = getString(R.string.read_error)
+                    }
 
                     binding.swipeRefreshLayout.isRefreshing = false
 
