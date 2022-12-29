@@ -38,10 +38,10 @@ jobs:
         run: |
           TAGS=$(git tag -l)
           if echo "$TAGS" | grep -q "${{ env.VERSION_INFORMATION }}"; then
-            echo "New version!"
-          else
             echo "This is not a new version! Exiting..."
             exit 1
+          else            
+            echo "New version!"
           fi
 
       - name: Create tag
