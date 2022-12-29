@@ -1,4 +1,4 @@
-name: Run Gradle on PRs
+name: Build and create release on merged PR to master
 on:
   workflow_dispatch:
 
@@ -22,6 +22,9 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
 
+      - name: Get version name
+        run: echo "VERSION_INFORMATION=$(${{github.workspace}}/gradlew -q --no-configuration-cache printVersionName)" >> $GITHUB_ENV
+
       - name: Execute Gradle build
         run: ./gradlew assembleDebug
 
@@ -31,10 +34,20 @@ jobs:
           name: apk
           path: app/build/outputs/apk/debug/app-debug.apk
 
+      - name: Check for new app version
+        run: |
+          TAGS=$(git tag -l)
+          if echo "$TAGS" | grep -q "${{ env.VERSION_INFORMATION }}"; then
+            echo "New version!"
+          else
+            echo "This is not a new version! Exiting..."
+            exit 1
+          fi
+
       - name: Create tag
         id: create_tag
         run: |
-          tag=v$(date +%Y%m%d.%H%M%S)
+          tag=${{ env.VERSION_INFORMATION }}
           echo "::set-output name=tag::$tag"
 
       - name: Create Draft Release
