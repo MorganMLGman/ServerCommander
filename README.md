@@ -76,6 +76,10 @@ Docker is very powerful tool to host many applications on one machine. One of **
 
 ## Changelog
 
+### [v1.0.3](https://github.com/MorganMLGman/ServerCommander/releases/tag/v1.0.3)
+Fixed app crashing when running on VPS and temperature sensors are not available.
+Fixed app not able to call Python script on systems where `~` in file path is not allowed.
+
 ### [v20221220.143412](https://github.com/MorganMLGman/ServerCommander/releases/tag/v20221220.143412)
 Implemented changing SSH port and fixed some issues with too low contrast.
 
