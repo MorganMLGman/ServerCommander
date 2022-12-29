@@ -253,10 +253,12 @@ class HomeFragment : Fragment() {
 
                 var rotation = true
 
+                val username = sharedPref.getString("username", "")
+
                 val coroutineScope = MainScope()
                 coroutineScope.launch {
                     val defer = async(Dispatchers.IO) {
-                        sshConnection.executeRemoteCommandOneCall("python3 ~/copilot/main.py --dash")
+                        sshConnection.executeRemoteCommandOneCall("python3 /home/${username}/copilot/main.py --dash")
                     }
 
                     val output = defer.await()
