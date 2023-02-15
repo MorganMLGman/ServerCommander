@@ -21,11 +21,11 @@ class YunohostConnection {
         var IsSshKeysPushed : Boolean = true
         var createdBackupsValue = 0
 
-        fun authenticate(url: String, password: String) {
+        fun authenticate(url: String, password: String, username: String) {
             val client = OkHttpClient()
 
             val formBody = FormBody.Builder()
-                .add("credentials", password)
+                .add("credentials", "$username:$password")
                 .build()
 
             val request = Request.Builder()

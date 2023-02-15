@@ -111,10 +111,11 @@ class YunohostFragment : Fragment() {
             }.start()
 
             var password = sharedPref.getString("yunohost_password", "")!!
+            var username = sharedPref.getString(getString(R.string.username), "")!!
 
             if (password.isEmpty() or (password == "")) {
-                password = showPasswordModal(getUsersLink, ::getYunohostConnection)
-            } else getYunohostConnection(getUsersLink, password)
+//                password = showPasswordModal(getUsersLink, ::getYunohostConnection)
+            } else getYunohostConnection(getUsersLink, password, username)
         }
 
         appsToUpdateWidget.setOnClickListener {
@@ -162,14 +163,14 @@ class YunohostFragment : Fragment() {
     }
 
 
-    private fun getYunohostConnection(url: String, password: String){
+    private fun getYunohostConnection(url: String, password: String, username: String){
 
         if(context?.let { isOnline(it) }!!) {
 
             val coroutineScope = MainScope()
             coroutineScope.launch {
                 val defer = async(Dispatchers.IO) {
-                    isYHAvailable(password)
+                    isYHAvailable(password, username)
                 }
                 val output = defer.await().trim()
            //     Toast.makeText(context, output, Toast.LENGTH_SHORT).show()
@@ -237,7 +238,7 @@ class YunohostFragment : Fragment() {
         return false
     }
 
-    private fun isYHAvailable(password: String): String
+    private fun isYHAvailable(password: String, username: String): String
     {
         var ret: String = ""
         YunohostConnection.isAPIInstalled(isAPIInstalledLink)
@@ -245,10 +246,10 @@ class YunohostFragment : Fragment() {
 
         if(YunohostConnection.boolIsApiInstalled) {
 
-            YunohostConnection.authenticate(adminLoginPage, password)
+            YunohostConnection.authenticate(adminLoginPage, password, username)
 
             if (cookie.isEmpty()) {
-                ret += "Wrong Password\n"
+                ret += "Wrong credentials\n"
 //                Toast.makeText(context, "Wrong Password", Toast.LENGTH_SHORT).show()
             } else {
                 try {
