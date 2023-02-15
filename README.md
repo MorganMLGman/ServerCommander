@@ -75,6 +75,8 @@ Docker is very powerful tool to host many applications on one machine. One of **
 - App can crash when YunoHost server URL is not valid.
 
 ## Changelog
+### [v1.1.0](https://github.com/MorganMLGman/ServerCommander/releases/tag/v1.1.0)
+App is now compatible with new YunoHost 11.1 API. Some other small fixes.
 
 ### [v1.0.3](https://github.com/MorganMLGman/ServerCommander/releases/tag/v1.0.3)
 Fixed app crashing when running on VPS and temperature sensors are not available.
