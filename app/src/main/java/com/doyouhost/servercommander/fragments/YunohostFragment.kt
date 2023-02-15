@@ -22,8 +22,10 @@ import com.doyouhost.servercommander.databinding.FragmentYunohostBinding
 import com.doyouhost.servercommander.YunohostConnection
 import com.doyouhost.servercommander.databinding.AlertDialogPasswordBinding
 import com.doyouhost.servercommander.YunohostConnection.Companion.cookie
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.*
 import java.io.File
+import kotlin.concurrent.thread
 import kotlin.reflect.KFunction2
 
 
@@ -57,7 +59,6 @@ class YunohostFragment : Fragment() {
             getString(R.string.app_name), Context.MODE_PRIVATE
         )
 
-        //TODO: Add "http://" too
         adminLoginPage = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api/login"
         ssoWebpage = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/sso/portal.html"
         adminWebPage = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/admin/"
@@ -69,8 +70,6 @@ class YunohostFragment : Fragment() {
         getBackupNumberLink = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api/backups?with_info=false&human_readable=false'"
         postSshKeysLink = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api/users/ssh/key"
 
-
-//        idRsaPub = File(keyPath.toString(), "id_rsa.pub").readText()
     }
 
     override fun onCreateView(
@@ -114,7 +113,7 @@ class YunohostFragment : Fragment() {
             var username = sharedPref.getString(getString(R.string.username), "")!!
 
             if (password.isEmpty() or (password == "")) {
-//                password = showPasswordModal(getUsersLink, ::getYunohostConnection)
+                Toast.makeText(context, "Provide password", Toast.LENGTH_SHORT).show()
             } else getYunohostConnection(getUsersLink, password, username)
         }
 
@@ -127,7 +126,6 @@ class YunohostFragment : Fragment() {
 
 
         }
-
 
 
         pushSshKeysButton.setOnClickListener {
@@ -183,39 +181,6 @@ class YunohostFragment : Fragment() {
 
     }
 
-    private fun showPasswordModal(url: String, func: KFunction2<String, String, Unit>): String {
-        var password = ""
-
-        val inflater = activity?.layoutInflater
-        if (inflater != null) {
-            val passwordLayout = AlertDialogPasswordBinding.inflate(inflater)
-
-            val builder: AlertDialog.Builder = context.let {
-                val builder = AlertDialog.Builder(it)
-                builder.apply {
-                    val input = passwordLayout.passwordText
-                    setPositiveButton(
-                        "Send"
-                    ) { _, _ ->
-                        password = if(input.text.toString() != "") {
-                            input.text.toString()
-                        } else ""
-                        func(url, password)
-                    }
-                    setNegativeButton(
-                        context.getString(R.string.cancelButtonLabel)
-                    ) { _, _ ->
-                        password = ""
-                    }
-                    setView(passwordLayout.root)
-                }
-            }
-            builder.create()?.show()
-            return password
-        }
-        return ""
-    }
-
     fun isOnline(context: Context): Boolean {
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -241,8 +206,13 @@ class YunohostFragment : Fragment() {
     private fun isYHAvailable(password: String, username: String): String
     {
         var ret: String = ""
-        YunohostConnection.isAPIInstalled(isAPIInstalledLink)
 
+        try {
+            YunohostConnection.isAPIInstalled(isAPIInstalledLink)
+        } catch (e: Exception) {
+            ret += "Connection aborted\n"
+
+        }
 
         if(YunohostConnection.boolIsApiInstalled) {
 
@@ -250,7 +220,7 @@ class YunohostFragment : Fragment() {
 
             if (cookie.isEmpty()) {
                 ret += "Wrong credentials\n"
-//                Toast.makeText(context, "Wrong Password", Toast.LENGTH_SHORT).show()
+
             } else {
                 try {
                     YunohostConnection.getUserNumber(getUsersLink)
@@ -266,14 +236,19 @@ class YunohostFragment : Fragment() {
 
                 } catch (e: Exception) {
                     ret += "Connection aborted\n"
-//                    Toast.makeText(context, "Connection aborted", Toast.LENGTH_SHORT).show()
                 }
             }
 
         } else {
             ret += "Connection aborted\n"
-//            Toast.makeText(context, "Connection aborted", Toast.LENGTH_SHORT).show()
         }
+
+        if (ret.isNotEmpty()) {
+            requireActivity().runOnUiThread {
+                Toast.makeText(requireContext(), ret.trimEnd(), Toast.LENGTH_SHORT).show()
+            }
+        }
+
         return ret
     }
 

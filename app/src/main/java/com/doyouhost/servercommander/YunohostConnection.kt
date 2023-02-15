@@ -169,7 +169,7 @@ class YunohostConnection {
                     val resp = JSONTokener(response.body!!.string()).nextValue() as JSONObject
                     if (resp.getBoolean("installed")) {
                         boolIsApiInstalled = true
-                    }
+                    } else boolIsApiInstalled = true
                 } catch (_: Exception) {}
             }
         }
