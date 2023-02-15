@@ -39,7 +39,6 @@ class YunohostFragment : Fragment() {
 
     private lateinit var adminLoginPage: String
 
-    private lateinit var ssoWebpage : String
     private lateinit var adminWebPage : String
     private lateinit var adminAPI : String
     private lateinit var getUsersLink : String
@@ -60,7 +59,6 @@ class YunohostFragment : Fragment() {
         )
 
         adminLoginPage = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api/login"
-        ssoWebpage = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/sso/portal.html"
         adminWebPage = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/admin/"
         adminAPI = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api"
         getUsersLink = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api/users?fields=username"
@@ -84,16 +82,10 @@ class YunohostFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val openSSOButton = binding.openSSOButton
         val goToAdminPage = binding.moreButton
         val refreshButton = binding.refreshYunohostConnection
         val pushSshKeysButton = binding.SshYunohostCard.buttonPushNewSshKey
         val appsToUpdateWidget = binding.appsToUpdate
-
-        openSSOButton.setOnClickListener{
-            var intent = Intent(Intent.ACTION_VIEW, Uri.parse(ssoWebpage))
-            startActivity(intent)
-        }
 
         goToAdminPage.setOnClickListener{
             var intent = Intent(Intent.ACTION_VIEW, Uri.parse(adminWebPage))
@@ -257,7 +249,6 @@ class YunohostFragment : Fragment() {
 
         //TODO: Add "http://" too
         adminLoginPage = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api/login"
-        ssoWebpage = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/sso/portal.html"
         adminWebPage = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/admin/"
         adminAPI = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api"
         getUsersLink = "https://" + sharedPref.getString(getString(R.string.server_url), "").toString() + "/yunohost/api/users?fields=username"
