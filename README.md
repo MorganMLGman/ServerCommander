@@ -72,7 +72,6 @@ Docker is very powerful tool to host many applications on one machine. One of **
 ## Known bugs :)
 - SwipeRefreshLayout on _SYSTEM_ and _DOCKER_ tabs in not returning to default state when _PasswordAlertDialog_ is dismissed by clicking outside the dialog or pressing back button.
 - App sometimes crashes when _TestConnection_ is ongoing and connection settings in _SETTINGS_ tab are changed.
-- App can crash when YunoHost server URL is not valid.
 
 ## Changelog
 ### [v1.1.0](https://github.com/MorganMLGman/ServerCommander/releases/tag/v1.1.0)
