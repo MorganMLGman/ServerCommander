@@ -110,4 +110,5 @@
     <string name="ssh">SSH</string>
     <string name="sshPortError">SSH port must be a number greater than 0 and lesser or equal to 65535</string>
     <string name="sshPortUpdated">SSH port updated</string>
+    <string name="notification_no_connection">No connection with server</string>
 </resources>

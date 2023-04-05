@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import com.doyouhost.servercommander.NotificationHandler
 import com.doyouhost.servercommander.R
 import com.doyouhost.servercommander.SshConnection
 import com.doyouhost.servercommander.databinding.FragmentHomeBinding
@@ -81,6 +82,8 @@ class HomeFragment : Fragment() {
             }
         }
 
+
+
         connectionTest.setOnClickListener {
             if(connectionTest.isClickable)
             {
@@ -122,6 +125,9 @@ class HomeFragment : Fragment() {
 
                             // Refresh dash after successful connection
                             refreshDash(auto = true)
+
+                            //Update notification
+                            context?.let { it1 -> NotificationHandler.updateNotification(it1, sharedPref) }
                         }
                         else
                         {
@@ -206,6 +212,8 @@ class HomeFragment : Fragment() {
             val pubkey = sharedPref.getString("pubkey", "")!!
             sshConnection = SshConnection(serverUrl, sshPort, username, pubkey)
         }
+
+        context?.let { NotificationHandler.updateNotification(it, sharedPref) }
     }
 
     override fun onPause() {

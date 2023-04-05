@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import com.doyouhost.servercommander.NotificationHandler
 import com.doyouhost.servercommander.R
 import com.doyouhost.servercommander.databinding.FragmentSettingsBinding
 import com.doyouhost.servercommander.viewModels.RefreshViewModel
@@ -95,6 +96,7 @@ class SettingsFragment : Fragment() {
                     apply()
                 }
                 Toast.makeText(context, getString(R.string.server_addres_updated), Toast.LENGTH_SHORT).show()
+                context?.let { it1 -> NotificationHandler.updateNotification(it1, sharedPref) }
             }
             else
             {
@@ -111,6 +113,7 @@ class SettingsFragment : Fragment() {
                     apply()
                 }
                 Toast.makeText(context, getString(R.string.username_updated), Toast.LENGTH_SHORT).show()
+                context?.let { it1 -> NotificationHandler.updateNotification(it1, sharedPref) }
             }
             else
             {
@@ -129,6 +132,7 @@ class SettingsFragment : Fragment() {
                     apply()
                 }
                 Toast.makeText(context, getString(R.string.sshPortUpdated), Toast.LENGTH_SHORT).show()
+                context?.let { it1 -> NotificationHandler.updateNotification(it1, sharedPref) }
             }
             else
             {

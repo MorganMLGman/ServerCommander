@@ -1,17 +1,26 @@
 package com.doyouhost.servercommander
 
+import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 
 class MainActivity : AppCompatActivity() {
+    companion object {
+        private const val NOTIFICATION_PERMISSION_CODE = 100
+    }
 
     private lateinit var tabLayout: TabLayout
     private lateinit var viewPager2: ViewPager2
@@ -60,6 +69,8 @@ class MainActivity : AppCompatActivity() {
             openLoginActivityForResult()
         }
 
+        checkPermission(Manifest.permission.POST_NOTIFICATIONS, NOTIFICATION_PERMISSION_CODE)
+
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 viewPager2.currentItem = tab.position
@@ -97,6 +108,40 @@ class MainActivity : AppCompatActivity() {
                 else -> {
                     finishAffinity()
                 }
+            }
+        }
+    }
+
+
+    override fun onDestroy() {
+        with(NotificationManagerCompat.from(this)){
+            cancel(0)
+        }
+        super.onDestroy()
+    }
+
+    private fun checkPermission(permission: String, requestCode: Int) {
+        if (ContextCompat.checkSelfPermission(this@MainActivity, permission) == PackageManager.PERMISSION_DENIED) {
+
+            // Requesting the permission
+            ActivityCompat.requestPermissions(this@MainActivity, arrayOf(permission), requestCode)
+        } else {
+            NotificationHandler.createNotificationChannel(this@MainActivity)
+            NotificationHandler.showNotification(this@MainActivity)
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<String>,
+                                            grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == NOTIFICATION_PERMISSION_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this@MainActivity, "Notification Permission Granted", Toast.LENGTH_SHORT).show()
+                NotificationHandler.createNotificationChannel(this@MainActivity)
+                NotificationHandler.showNotification(this@MainActivity)
+            } else {
+                Toast.makeText(this@MainActivity, "Notification Permission Denied", Toast.LENGTH_SHORT).show()
             }
         }
     }
