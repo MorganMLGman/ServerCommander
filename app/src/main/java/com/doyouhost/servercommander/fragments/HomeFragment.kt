@@ -119,6 +119,9 @@ class HomeFragment : Fragment() {
                             context?.getColor(R.color.brightGreen)
                                 ?.let { it1 -> connectionTest.setColorFilter(it1, android.graphics.PorterDuff.Mode.SRC_IN) }
                             connectionTest.setImageResource(R.drawable.server_network)
+
+                            // Refresh dash after successful connection
+                            refreshDash(auto = true)
                         }
                         else
                         {
