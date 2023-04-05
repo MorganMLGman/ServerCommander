@@ -38,7 +38,7 @@ class HomeFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         sharedPref = requireActivity().getSharedPreferences(
-            getString(R.string.app_name), Context.MODE_PRIVATE
+            "ServerCommander", Context.MODE_PRIVATE
         )
 
         handler = Handler(Looper.getMainLooper())
@@ -71,7 +71,7 @@ class HomeFragment : Fragment() {
         val swipeRefreshLayout = binding.swipeRefreshLayout
         swipeRefreshLayout.setOnRefreshListener {
 
-            if(::sshConnection.isInitialized and sharedPref.getBoolean(getString(R.string.connectionTested), false)) {
+            if(::sshConnection.isInitialized and sharedPref.getBoolean("connectionTested", false)) {
                 refreshDash(false)
             }
             else
@@ -86,16 +86,17 @@ class HomeFragment : Fragment() {
             {
                 connectionTest.isClickable = false
 
-                if(sharedPref.contains(getString(R.string.server_url)) and
-                    sharedPref.contains(getString(R.string.username)) and
-                    sharedPref.contains(getString(R.string.pubkey)) and
-                    sharedPref.contains(getString(R.string.connectionTested))) {
+                if(sharedPref.contains("serverUrl") and
+                    sharedPref.contains("username") and
+                    sharedPref.contains("sshPort") and
+                    sharedPref.contains("pubkey") and
+                    sharedPref.contains("connectionTested")) {
 
                     sshConnection = SshConnection(
-                        sharedPref.getString(getString(R.string.server_url), "").toString(),
-                        22,
-                        sharedPref.getString(getString(R.string.username), "").toString(),
-                        sharedPref.getString(getString(R.string.pubkey), "").toString()
+                        sharedPref.getString("serverUrl", "").toString(),
+                        sharedPref.getInt("sshPort", 22),
+                        sharedPref.getString("username", "").toString(),
+                        sharedPref.getString("pubkey", "").toString()
                     )
 
                     var rotation = true
@@ -111,7 +112,7 @@ class HomeFragment : Fragment() {
 
                         if (output){
                             with(sharedPref.edit()){
-                                putBoolean(getString(R.string.connectionTested), true)
+                                putBoolean("connectionTested", true)
                                 apply()
                             }
 
@@ -161,7 +162,7 @@ class HomeFragment : Fragment() {
 
         val connectionTest = binding.connectionTest
 
-        if (sharedPref.getBoolean(getString(R.string.connectionTested), false))
+        if (sharedPref.getBoolean("connectionTested", false))
         {
             context?.getColor(R.color.brightGreen)
                 ?.let { it1 -> connectionTest.setColorFilter(it1, android.graphics.PorterDuff.Mode.SRC_IN) }
@@ -182,12 +183,14 @@ class HomeFragment : Fragment() {
         if( ::sshConnection.isInitialized )
         {
             if ((sharedPref.getString("serverUrl", "") != sshConnection.serverAddress )
-                or  (sharedPref.getString("username", "") != sshConnection.username ))
+                or (sharedPref.getString("username", "") != sshConnection.username )
+                or (sharedPref.getInt("sshPort", 22) != sshConnection.serverPort))
             {
                 val serverUrl = sharedPref.getString("serverUrl", "")!!
                 val username = sharedPref.getString("username", "")!!
+                val sshPort = sharedPref.getInt("sshPort", 22)
                 val pubkey = sharedPref.getString("pubkey", "")!!
-                sshConnection = SshConnection(serverUrl, 22, username, pubkey)
+                sshConnection = SshConnection(serverUrl, sshPort, username, pubkey)
             }
         }
 
@@ -196,8 +199,9 @@ class HomeFragment : Fragment() {
         {
             val serverUrl = sharedPref.getString("serverUrl", "")!!
             val username = sharedPref.getString("username", "")!!
+            val sshPort = sharedPref.getInt("sshPort", 22)
             val pubkey = sharedPref.getString("pubkey", "")!!
-            sshConnection = SshConnection(serverUrl, 22, username, pubkey)
+            sshConnection = SshConnection(serverUrl, sshPort, username, pubkey)
         }
     }
 
@@ -232,81 +236,102 @@ class HomeFragment : Fragment() {
         val heaviestApp = binding.HeaviestProcessInfo.heaviestProcessValue
         val packageNumber = binding.packageNumInfo.packagesNumValue
 
-        if(sharedPref.contains(getString(R.string.server_url)) and
-            sharedPref.contains(getString(R.string.username)) and
-            sharedPref.contains(getString(R.string.pubkey)) and
-            sharedPref.contains(getString(R.string.connectionTested))) {
+        if(sharedPref.contains("serverUrl") and
+            sharedPref.contains("username") and
+            sharedPref.contains("sshPort") and
+            sharedPref.contains("pubkey") and
+            sharedPref.contains("connectionTested")) {
 
             sshConnection = SshConnection(
-                sharedPref.getString(getString(R.string.server_url), "").toString(),
-                22,
-                sharedPref.getString(getString(R.string.username), "").toString(),
-                sharedPref.getString(getString(R.string.pubkey), "").toString()
+                sharedPref.getString("serverUrl", "").toString(),
+                sharedPref.getInt("sshPort", 22),
+                sharedPref.getString("username", "").toString(),
+                sharedPref.getString("pubkey", "").toString()
             )
 
-            if ( sharedPref.getBoolean(getString(R.string.connectionTested), false) ){
+            if ( sharedPref.getBoolean("connectionTested", false) ){
 
                 var rotation = true
+
+                val username = sharedPref.getString("username", "")
 
                 val coroutineScope = MainScope()
                 coroutineScope.launch {
                     val defer = async(Dispatchers.IO) {
-                        sshConnection.executeRemoteCommandOneCall("python3 ~/copilot/main.py --dash")
+                        sshConnection.executeRemoteCommandOneCall("python3 /home/${username}/copilot/main.py --dash")
                     }
 
                     val output = defer.await()
 
                     rotation = false
 
-                    val jsonObject = JSONTokener(output).nextValue() as JSONObject
+                    try {
+                        val jsonObject = JSONTokener(output).nextValue() as JSONObject
 
-                    try { tempText.text = jsonObject.getString("cpu_temp") }
-                    catch ( e: JSONException ){ tempText.text = getString(R.string.read_error) }
+                        try { tempText.text = jsonObject.getString("cpu_temp") }
+                        catch ( e: JSONException ){ tempText.text = getString(R.string.read_error) }
 
-                    try { cpuUsage.text = jsonObject.getString("cpu_usage") }
-                    catch ( e: JSONException ) { cpuUsage.text = getString(R.string.read_error) }
+                        try { cpuUsage.text = jsonObject.getString("cpu_usage") }
+                        catch ( e: JSONException ) { cpuUsage.text = getString(R.string.read_error) }
 
-                    try { ramUsage.text = jsonObject.getString("ram_usage") }
-                    catch ( e: JSONException ) { ramUsage.text = getString(R.string.read_error) }
+                        try { ramUsage.text = jsonObject.getString("ram_usage") }
+                        catch ( e: JSONException ) { ramUsage.text = getString(R.string.read_error) }
 
-                    try { linuxKernelVersion.text = jsonObject.getString("kernel") }
-                    catch ( e: JSONException ) { linuxKernelVersion.text = getString(R.string.read_error) }
+                        try { linuxKernelVersion.text = jsonObject.getString("kernel") }
+                        catch ( e: JSONException ) { linuxKernelVersion.text = getString(R.string.read_error) }
 
-                    try { hostname.text = jsonObject.getString("hostname") }
-                    catch ( e: JSONException ) { hostname.text = getString(R.string.read_error) }
+                        try { hostname.text = jsonObject.getString("hostname") }
+                        catch ( e: JSONException ) { hostname.text = getString(R.string.read_error) }
 
-                    try { hostname.text = jsonObject.getString("hostname") }
-                    catch ( e: JSONException ) { hostname.text = getString(R.string.read_error) }
+                        try { hostname.text = jsonObject.getString("hostname") }
+                        catch ( e: JSONException ) { hostname.text = getString(R.string.read_error) }
 
-                    try { hostname.text = jsonObject.getString("hostname") }
-                    catch ( e: JSONException ) { hostname.text = getString(R.string.read_error) }
+                        try { hostname.text = jsonObject.getString("hostname") }
+                        catch ( e: JSONException ) { hostname.text = getString(R.string.read_error) }
 
-                    try { hostname.text = jsonObject.getString("hostname") }
-                    catch ( e: JSONException) { hostname.text = getString(R.string.read_error) }
+                        try { hostname.text = jsonObject.getString("hostname") }
+                        catch ( e: JSONException) { hostname.text = getString(R.string.read_error) }
 
-                    try { uptime.text = jsonObject.getString("uptime") }
-                    catch ( e: JSONException) { uptime.text = getString(R.string.read_error) }
+                        try { uptime.text = jsonObject.getString("uptime") }
+                        catch ( e: JSONException) { uptime.text = getString(R.string.read_error) }
 
-                    try { uptimeSince.text = jsonObject.getString("uptime_since") }
-                    catch ( e: JSONException) { uptimeSince.text = getString(R.string.read_error) }
+                        try { uptimeSince.text = jsonObject.getString("uptime_since") }
+                        catch ( e: JSONException) { uptimeSince.text = getString(R.string.read_error) }
 
-                    try { localIpAddress.text = jsonObject.getString("local_ip") }
-                    catch ( e: JSONException)  { localIpAddress.text = getString(R.string.read_error) }
+                        try { localIpAddress.text = jsonObject.getString("local_ip") }
+                        catch ( e: JSONException)  { localIpAddress.text = getString(R.string.read_error) }
 
-                    try { publicIpAddress.text = jsonObject.getString("public_ip")  }
-                    catch ( e: JSONException)  { publicIpAddress.text = getString(R.string.read_error) }
+                        try { publicIpAddress.text = jsonObject.getString("public_ip")  }
+                        catch ( e: JSONException)  { publicIpAddress.text = getString(R.string.read_error) }
 
-                    try { diskUsage.text = jsonObject.getString("disk_usage")  }
-                    catch ( e: JSONException) { diskUsage.text = getString(R.string.read_error) }
+                        try { diskUsage.text = jsonObject.getString("disk_usage")  }
+                        catch ( e: JSONException) { diskUsage.text = getString(R.string.read_error) }
 
-                    try { diskName.text = jsonObject.getString("disk_name") }
-                    catch ( e: JSONException) { diskName.text = getString(R.string.read_error) }
+                        try { diskName.text = jsonObject.getString("disk_name") }
+                        catch ( e: JSONException) { diskName.text = getString(R.string.read_error) }
 
-                    try { heaviestApp.text = jsonObject.getString("stress_app") }
-                    catch ( e: JSONException ){ heaviestApp.text = getString(R.string.read_error) }
+                        try { heaviestApp.text = jsonObject.getString("stress_app") }
+                        catch ( e: JSONException ){ heaviestApp.text = getString(R.string.read_error) }
 
-                    try {  packageNumber.text = jsonObject.getString("packages") }
-                    catch ( e: JSONException ){ packageNumber.text = getString(R.string.read_error) }
+                        try {  packageNumber.text = jsonObject.getString("packages") }
+                        catch ( e: JSONException ){ packageNumber.text = getString(R.string.read_error) }
+                    }
+                    catch ( e: JSONException){
+                        tempText.text = getString(R.string.read_error)
+                        cpuUsage.text = getString(R.string.read_error)
+                        ramUsage.text = getString(R.string.read_error)
+
+                        linuxKernelVersion.text = getString(R.string.read_error)
+                        hostname.text = getString(R.string.read_error)
+                        uptime.text = getString(R.string.read_error)
+                        uptimeSince.text = getString(R.string.read_error)
+                        localIpAddress.text = getString(R.string.read_error)
+                        publicIpAddress.text = getString(R.string.read_error)
+                        diskUsage.text = getString(R.string.read_error)
+                        diskName.text = getString(R.string.read_error)
+                        heaviestApp.text = getString(R.string.read_error)
+                        packageNumber.text = getString(R.string.read_error)
+                    }
 
                     binding.swipeRefreshLayout.isRefreshing = false
 

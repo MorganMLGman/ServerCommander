@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.doyouhost.servercommander.R
 import com.doyouhost.servercommander.SshConnection
 import com.doyouhost.servercommander.databinding.FragmentTerminalBinding
 import kotlinx.coroutines.Dispatchers
@@ -29,15 +28,21 @@ class TerminalFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         sharedPref = requireActivity().getSharedPreferences(
-            getString(R.string.app_name), Context.MODE_PRIVATE
+            "ServerCommander", Context.MODE_PRIVATE
         )
 
-        if (sharedPref.contains("serverUrl") and sharedPref.contains("username") and sharedPref.contains("pubkey"))
-        {
-            val serverUrl = sharedPref.getString("serverUrl", "")!!
-            val username = sharedPref.getString("username", "")!!
-            val pubkey = sharedPref.getString("pubkey", "")!!
-            sshConnection = SshConnection(serverUrl, 22, username, pubkey)
+        if(sharedPref.contains("serverUrl") and
+            sharedPref.contains("username") and
+            sharedPref.contains("sshPort") and
+            sharedPref.contains("pubkey") and
+            sharedPref.contains("connectionTested")) {
+
+            sshConnection = SshConnection(
+                sharedPref.getString("serverUrl", "").toString(),
+                sharedPref.getInt("sshPort", 22),
+                sharedPref.getString("username", "").toString(),
+                sharedPref.getString("pubkey", "").toString()
+            )
         }
 
     }
@@ -91,9 +96,9 @@ class TerminalFragment : Fragment() {
                         val scrollAmount: Int = terminalText.layout.getLineTop(terminalText.lineCount) - terminalText.height
 
                         if (scrollAmount > 0)
-                            terminalText.scrollTo(0, scrollAmount);
+                            terminalText.scrollTo(0, scrollAmount)
                         else
-                            terminalText.scrollTo(0, 0);
+                            terminalText.scrollTo(0, 0)
 
                         commandText.setText("")
                     }
@@ -107,29 +112,28 @@ class TerminalFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        if( (sharedPref.getString("serverUrl", "") != sshConnection.serverAddress )
-            or  (sharedPref.getString("username", "") != sshConnection.username )   )
+        if( ::sshConnection.isInitialized )
+        {
+            if ((sharedPref.getString("serverUrl", "") != sshConnection.serverAddress )
+                or (sharedPref.getString("username", "") != sshConnection.username )
+                or (sharedPref.getInt("sshPort", 22) != sshConnection.serverPort))
+            {
+                val serverUrl = sharedPref.getString("serverUrl", "")!!
+                val username = sharedPref.getString("username", "")!!
+                val sshPort = sharedPref.getInt("sshPort", 22)
+                val pubkey = sharedPref.getString("pubkey", "")!!
+                sshConnection = SshConnection(serverUrl, sshPort, username, pubkey)
+            }
+        }
+
+
+        if(!::sshConnection.isInitialized)
         {
             val serverUrl = sharedPref.getString("serverUrl", "")!!
             val username = sharedPref.getString("username", "")!!
+            val sshPort = sharedPref.getInt("sshPort", 22)
             val pubkey = sharedPref.getString("pubkey", "")!!
-            sshConnection = SshConnection(serverUrl, 22, username, pubkey)
-        }
-
-        if(::sshConnection.isInitialized)
-        {
-            val coroutineScope = MainScope()
-            coroutineScope.launch {
-                val terminalText = binding.terminalText
-
-                val defer = async(Dispatchers.IO) {
-                    if (!sshConnection.isOpen()) {
-                        sshConnection.openConnection()
-                        terminalText.text = ""
-                    }
-                }
-                defer.await()
-            }
+            sshConnection = SshConnection(serverUrl, sshPort, username, pubkey)
         }
     }
 

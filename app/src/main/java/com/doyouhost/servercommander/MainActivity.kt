@@ -27,17 +27,18 @@ class MainActivity : AppCompatActivity() {
         viewPager2 = findViewById(R.id.viewPager)
 
         sharedPref = getSharedPreferences(
-            getString(R.string.app_name), Context.MODE_PRIVATE
+            "ServerCommander", Context.MODE_PRIVATE
         )
 
         with( sharedPref.edit()){
-            putBoolean(getString(R.string.connectionTested), false)
+            putBoolean("connectionTested", false)
             apply()
         }
 
-        if ( sharedPref.contains(getString(R.string.server_url)) and
-             sharedPref.contains(getString(R.string.username)) and
-             sharedPref.contains(getString(R.string.pubkey)) and
+        if ( sharedPref.contains("serverUrl") and
+             sharedPref.contains("username") and
+             sharedPref.contains("sshPort") and
+             sharedPref.contains("pubkey") and
              sharedPref.contains("server_type")
         ) {
             when (sharedPref.getString("server_type", "")) {

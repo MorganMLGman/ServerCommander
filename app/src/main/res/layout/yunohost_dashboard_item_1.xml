@@ -33,7 +33,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/_8sdp"
-            android:text="SSH"
+            android:text="@string/ssh"
             android:textColor="@color/primary_text"
             android:textSize="@dimen/_14ssp"
             app:layout_constraintEnd_toEndOf="@id/buttonPushNewSshKey"
@@ -49,7 +49,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:backgroundTint="@color/dashboard_item_1"
             app:layout_constraintTop_toTopOf="parent"
-            android:text="Push new SSH Key!"
+            android:text="@string/push_new_ssh_key"
             android:padding="@dimen/_12sdp"
             app:cornerRadius="@dimen/_4sdp" />
 
@@ -58,21 +58,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/secondary_text"
-            android:hint="Enter username"
+            android:hint="@string/enter_username"
             android:textSize="@dimen/_12ssp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="@dimen/_20sdp"/>
 
-
-
-
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-
     </com.google.android.material.card.MaterialCardView>
-
-
-
 </LinearLayout >

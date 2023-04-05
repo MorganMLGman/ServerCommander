@@ -38,13 +38,15 @@ class SettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val bmc_button = binding.bmcButton
+        val bmcButton = binding.bmcButton
         val clearSettingsButton = binding.clearSettingsButton
 
         val serverUrlUpdateText = binding.serverUrlUpdateText
         val serverUrlUpdateButton = binding.serverUrlUpdateButton
         val usernameUpdateText = binding.usernameUpdateText
         val usernameUpdateButton = binding.usernameUpdateButton
+        val sshPortUpdateText = binding.sshPortUpdateText
+        val sshPortUpdateButton = binding.sshPortUpdateButton
         val refreshSlider = binding.refreshIntervalValue
         val refreshSwitch = binding.refreshSwitch
 
@@ -57,24 +59,26 @@ class SettingsFragment : Fragment() {
         refreshSwitch.isChecked = refreshViewModel.enabled.value == true
 
         val sharedPref = requireActivity().getSharedPreferences(
-            getString(R.string.app_name), Context.MODE_PRIVATE
+            "ServerCommander", Context.MODE_PRIVATE
         )
 
-        serverUrlUpdateText.setText(sharedPref.getString(getString(R.string.server_url), getString(R.string.not_available)))
-        usernameUpdateText.setText(sharedPref.getString(getString(R.string.username), getString(R.string.not_available)))
+        serverUrlUpdateText.setText(sharedPref.getString("serverUrl", getString(R.string.not_available)))
+        usernameUpdateText.setText(sharedPref.getString("username", getString(R.string.not_available)))
+        sshPortUpdateText.setText(sharedPref.getInt("sshPort", 22).toString())
 
-        bmc_button.setOnClickListener {
+        bmcButton.setOnClickListener {
             val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.buymeacoffee.com/doyouhost"))
             startActivity(browserIntent)
         }
 
         clearSettingsButton.setOnClickListener{
             with(sharedPref.edit()){
-                remove(getString(R.string.server_url))
-                remove(getString(R.string.username))
-                remove(getString(R.string.pubkey))
+                remove("serverUrl")
+                remove("username")
+                remove("pubkey")
+                remove("sshPort")
                 remove("sudo_password")
-                putBoolean(getString(R.string.connectionTested), false)
+                putBoolean("connectionTested", false)
                 apply()
 
                 requireActivity().finish()
@@ -86,8 +90,8 @@ class SettingsFragment : Fragment() {
             if(serverUrlUpdateText.text.toString().matches(Regex("[A-Za-z0-9.]*")))
             {
                 with(sharedPref.edit()){
-                    putString(getString(R.string.server_url), serverUrlUpdateText.text.toString())
-                    putBoolean(getString(R.string.connectionTested), false)
+                    putString("serverUrl", serverUrlUpdateText.text.toString())
+                    putBoolean("connectionTested", false)
                     apply()
                 }
                 Toast.makeText(context, getString(R.string.server_addres_updated), Toast.LENGTH_SHORT).show()
@@ -102,8 +106,8 @@ class SettingsFragment : Fragment() {
             if(usernameUpdateText.text.toString().matches(Regex("[A-Za-z0-9.]*")))
             {
                 with(sharedPref.edit()){
-                    putString(getString(R.string.username), usernameUpdateText.text.toString())
-                    putBoolean(getString(R.string.connectionTested), false)
+                    putString("username", usernameUpdateText.text.toString())
+                    putBoolean("connectionTested", false)
                     apply()
                 }
                 Toast.makeText(context, getString(R.string.username_updated), Toast.LENGTH_SHORT).show()
@@ -111,6 +115,24 @@ class SettingsFragment : Fragment() {
             else
             {
                 usernameUpdateText.error = getString(R.string.usernameError)
+            }
+        }
+
+        sshPortUpdateButton.setOnClickListener {
+            if(sshPortUpdateText.text.toString().matches(Regex("[0-9.]*")) and
+                (sshPortUpdateText.text.toString().toInt() > 0) and
+                (sshPortUpdateText.text.toString().toInt() <= 65535))
+            {
+                with(sharedPref.edit()){
+                    putInt("sshPort", sshPortUpdateText.text.toString().toInt())
+                    putBoolean("connectionTested", false)
+                    apply()
+                }
+                Toast.makeText(context, getString(R.string.sshPortUpdated), Toast.LENGTH_SHORT).show()
+            }
+            else
+            {
+                usernameUpdateText.error = getString(R.string.sshPortError)
             }
         }
 
@@ -137,7 +159,6 @@ class SettingsFragment : Fragment() {
             }
             else Toast.makeText(context, "Password cannot be saved", Toast.LENGTH_SHORT).show()
         }
-
 
         yunohostSave.setOnClickListener{
             val yunohostPasswordText = yunohostPassword.text.toString()

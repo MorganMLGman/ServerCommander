@@ -22,14 +22,15 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         val sharedPref = getSharedPreferences(
-            getString(R.string.app_name), Context.MODE_PRIVATE
+            "ServerCommander", Context.MODE_PRIVATE
         )
 
         val serverUrl = findViewById<EditText>(R.id.serverUrl)
         val username = findViewById<EditText>(R.id.username)
+        val sshPort = findViewById<EditText>(R.id.sshPort)
         val pubkey = findViewById<EditText>(R.id.pubkey)
         val radioYunohost = findViewById<RadioButton>(R.id.radioYH)
-        val radioDocker = findViewById<RadioButton>(R.id.radioDocker)
+//        val radioDocker = findViewById<RadioButton>(R.id.radioDocker)
         val generateButton = findViewById<Button>(R.id.generatePubKey)
         val readButton = findViewById<Button>(R.id.readPubkeyButton)
         val loginButton = findViewById<Button>(R.id.loginButton)
@@ -79,9 +80,10 @@ class LoginActivity : AppCompatActivity() {
                 else
                 {
                     with(sharedPref.edit()) {
-                        putString(getString(R.string.server_url), serverUrl.text.toString())
-                        putString(getString(R.string.username), username.text.toString())
-                        putString(getString(R.string.pubkey), pubkey.text.toString())
+                        putString("serverUrl", serverUrl.text.toString())
+                        putString("username", username.text.toString())
+                        putInt("sshPort", sshPort.text.toString().toInt())
+                        putString("pubkey", pubkey.text.toString())
 
                         if(radioYunohost.isChecked) putString("server_type", "yunohost")
                         else                        putString("server_type", "docker")
@@ -115,6 +117,7 @@ class LoginActivity : AppCompatActivity() {
 
         val serverUrl = findViewById<EditText>(R.id.serverUrl)
         val username = findViewById<EditText>(R.id.username)
+        val sshPort = findViewById<EditText>(R.id.sshPort)
         val pubkey = findViewById<EditText>(R.id.pubkey)
         val radioYunohost = findViewById<RadioButton>(R.id.radioYH)
         val radioDocker = findViewById<RadioButton>(R.id.radioDocker)
@@ -131,6 +134,15 @@ class LoginActivity : AppCompatActivity() {
         {
             wrongData = true
             username.error = getString(R.string.usernameError)
+        }
+
+        if (!sshPort.text.toString().matches(Regex("[0-9]*"))
+            or sshPort.text.toString().isEmpty()
+            or (sshPort.text.toString().toInt() < 1)
+            or (sshPort.text.toString().toInt() > 65535))
+        {
+            wrongData = true
+            sshPort.error = getString(R.string.sshPortError)
         }
 
         if (pubKeyRequired and pubkey.text.toString().isEmpty())

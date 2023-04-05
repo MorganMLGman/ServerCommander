@@ -11,8 +11,8 @@ android {
         applicationId "com.doyouhost.servercommander"
         minSdk 30
         targetSdk 33
-        versionCode 1
-        versionName "0.8.1"
+        versionCode 6
+        versionName "1.1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -33,6 +33,10 @@ android {
     buildFeatures {
         viewBinding true
     }
+}
+
+task printVersionName {
+    println  "v" + android.defaultConfig.versionName
 }
 
 dependencies {
@@ -58,3 +62,4 @@ dependencies {
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
     implementation("com.squareup.okhttp3:okhttp:4.10.0")
 }
+
