@@ -4,7 +4,9 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import androidx.core.app.NotificationCompat
@@ -27,10 +29,17 @@ class NotificationHandler {
 
         @SuppressLint("MissingPermission")
         fun showNotification(context: Context){
+
+            val intent = Intent(context, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+            }
+            val pendingIntent: PendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_MUTABLE)
+
             val notificationBuilder = NotificationCompat.Builder(context, "SC")
                 .setSmallIcon(R.drawable.network_outline)
                 .setContentTitle(context.getString(R.string.notification_no_connection))
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setContentIntent(pendingIntent)
                 .setOngoing(true)
                 .setSilent(true)
 
@@ -40,10 +49,16 @@ class NotificationHandler {
 
         fun updateNotification(context: Context, sharedPref: SharedPreferences){
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)== PackageManager.PERMISSION_GRANTED) {
+                val intent = Intent(context, MainActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                }
+                val pendingIntent: PendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_MUTABLE)
+
                 val notificationBuilder = NotificationCompat.Builder(context, "SC")
                     .setSmallIcon(R.drawable.network_outline)
                     .setContentTitle(when(sharedPref.getBoolean("connectionTested", false)){ false -> context.getString(R.string.notification_no_connection) else -> "Connected to server"})
                     .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setContentIntent(pendingIntent)
                     .setOngoing(true)
                     .setSilent(true)
 
