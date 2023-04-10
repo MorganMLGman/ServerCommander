@@ -30,6 +30,8 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private val refreshViewModel: RefreshViewModel by activityViewModels()
+    private var checkConnectionAnimation = false
+    private var dashRefreshAnimation = false
 
     private lateinit var sharedPref: SharedPreferences
     private lateinit var sshConnection: SshConnection
@@ -77,8 +79,7 @@ class HomeFragment : Fragment() {
             }
             else
             {
-                Toast.makeText(context, "You need to test your connection first. Please click red server icon at the HOME tab", Toast.LENGTH_LONG).show()
-                swipeRefreshLayout.isRefreshing = false
+                connectionTest.callOnClick()
             }
         }
 
@@ -89,79 +90,7 @@ class HomeFragment : Fragment() {
             {
                 connectionTest.isClickable = false
 
-                if(sharedPref.contains("serverUrl") and
-                    sharedPref.contains("username") and
-                    sharedPref.contains("sshPort") and
-                    sharedPref.contains("pubkey") and
-                    sharedPref.contains("connectionTested")) {
-
-                    sshConnection = SshConnection(
-                        sharedPref.getString("serverUrl", "").toString(),
-                        sharedPref.getInt("sshPort", 22),
-                        sharedPref.getString("username", "").toString(),
-                        sharedPref.getString("pubkey", "").toString()
-                    )
-
-                    var rotation = true
-
-                    val coroutineScope = MainScope()
-                    coroutineScope.launch {
-                        val defer = async(Dispatchers.IO) {
-                            sshConnection.checkRequirements()
-                        }
-
-                        val (output, comment) = defer.await()
-                        rotation = false
-
-                        if (output){
-                            with(sharedPref.edit()){
-                                putBoolean("connectionTested", true)
-                                apply()
-                            }
-
-                            context?.getColor(R.color.brightGreen)
-                                ?.let { it1 -> connectionTest.setColorFilter(it1, android.graphics.PorterDuff.Mode.SRC_IN) }
-                            connectionTest.setImageResource(R.drawable.server_network)
-
-                            // Refresh dash after successful connection
-                            refreshDash(auto = true)
-
-                            //Update notification
-                            context?.let { it1 -> NotificationHandler.updateNotification(it1, sharedPref) }
-                        }
-                        else
-                        {
-                            val builder: AlertDialog.Builder = context.let {
-                                val builder = AlertDialog.Builder(it)
-                                builder.apply {
-                                    setCancelable(true)
-                                    setTitle("Something went wrong :(")
-                                    setMessage(comment.trim())
-                                }
-                            }
-                            builder.create()?.show()
-
-                            context?.getColor(R.color.brightRed)
-                                ?.let { it1 -> connectionTest.setColorFilter(it1, android.graphics.PorterDuff.Mode.SRC_IN) }
-                            connectionTest.setImageResource(R.drawable.server_network_off)
-                        }
-                    }
-
-                    fun rotate(){
-                        connectionTest.animate().apply {
-                            duration = 1000
-                            rotationBy(360f)
-                        }.withEndAction{
-                            if (rotation)  rotate()
-                            else connectionTest.isClickable = true
-                        }.start()
-                    }
-                    rotate()
-                }
-                else
-                {
-                    Toast.makeText(context, "Connection to server is not possible with given settings", Toast.LENGTH_SHORT).show()
-                }
+                checkConnection()
             }
         }
     }
@@ -212,13 +141,16 @@ class HomeFragment : Fragment() {
             val pubkey = sharedPref.getString("pubkey", "")!!
             sshConnection = SshConnection(serverUrl, sshPort, username, pubkey)
         }
-
-        context?.let { NotificationHandler.updateNotification(it, sharedPref) }
     }
 
     override fun onPause() {
         super.onPause()
 
+//        handler.removeCallbacks(autoRefreshRunner)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
         handler.removeCallbacks(autoRefreshRunner)
     }
 
@@ -229,9 +161,92 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun refreshDash(auto: Boolean = false){
-        val refreshWidget = binding.refreshWidget
+    private fun checkConnection()
+    {
+        val connectionTest = binding.connectionTest
 
+        if(sharedPref.getBoolean("connectionTested", false)){
+            Toast.makeText(context, "Connection is already tested", Toast.LENGTH_SHORT).show()
+            connectionTest.isClickable = true
+        }
+        else{
+            if(sharedPref.contains("serverUrl") and
+                sharedPref.contains("username") and
+                sharedPref.contains("sshPort") and
+                sharedPref.contains("pubkey") and
+                sharedPref.contains("connectionTested")) {
+
+                sshConnection = SshConnection(
+                    sharedPref.getString("serverUrl", "").toString(),
+                    sharedPref.getInt("sshPort", 22),
+                    sharedPref.getString("username", "").toString(),
+                    sharedPref.getString("pubkey", "").toString()
+                )
+
+                checkConnectionAnimation = true
+
+                val coroutineScope = MainScope()
+                coroutineScope.launch {
+                    val defer = async(Dispatchers.IO) {
+                        sshConnection.checkRequirements()
+                    }
+
+                    val (output, comment) = defer.await()
+                    checkConnectionAnimation = false
+
+                    if (output){
+                        with(sharedPref.edit()){
+                            putBoolean("connectionTested", true)
+                            apply()
+                        }
+
+                        context?.getColor(R.color.brightGreen)
+                            ?.let { it1 -> connectionTest.setColorFilter(it1, android.graphics.PorterDuff.Mode.SRC_IN) }
+                        connectionTest.setImageResource(R.drawable.server_network)
+
+                        // Refresh dash after successful connection
+                        refreshDash(auto = true)
+
+                        //Update notification
+                        context?.let { it1 -> NotificationHandler.updateNotification(it1, sharedPref) }
+                    }else{
+                        val builder: AlertDialog.Builder = context.let {
+                            val builder = AlertDialog.Builder(it)
+                            builder.apply {
+                                setCancelable(true)
+                                setTitle("Something went wrong :(")
+                                setMessage(comment.trim())
+                            }
+                        }
+                        builder.create()?.show()
+
+                        context?.getColor(R.color.brightRed)
+                            ?.let { it1 -> connectionTest.setColorFilter(it1, android.graphics.PorterDuff.Mode.SRC_IN) }
+                        connectionTest.setImageResource(R.drawable.server_network_off)
+                    }
+                }
+
+                animateCheckConnection()
+            }else{
+                Toast.makeText(context, "Connection to server is not possible with given settings", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun animateCheckConnection()
+    {
+        val connectionTest = binding.connectionTest
+
+        connectionTest.animate().apply {
+            duration = 1000
+            rotationBy(360f)
+        }.withEndAction{
+            if (checkConnectionAnimation)  animateCheckConnection()
+            else connectionTest.isClickable = true
+        }.start()
+    }
+
+    private fun refreshDash(auto: Boolean = false){
         val tempText = binding.dashTemperatureTextView
         val cpuUsage = binding.dashCpuTextView
         val ramUsage = binding.dashRamTextView
@@ -262,7 +277,7 @@ class HomeFragment : Fragment() {
 
             if ( sharedPref.getBoolean("connectionTested", false) ){
 
-                var rotation = true
+                dashRefreshAnimation = true
 
                 val username = sharedPref.getString("username", "")
 
@@ -274,7 +289,7 @@ class HomeFragment : Fragment() {
 
                     val output = defer.await()
 
-                    rotation = false
+                    dashRefreshAnimation = false
 
                     try {
                         val jsonObject = JSONTokener(output).nextValue() as JSONObject
@@ -346,34 +361,41 @@ class HomeFragment : Fragment() {
 
                     binding.swipeRefreshLayout.isRefreshing = false
 
+                    val bundle = Bundle().apply {
+                        putString("hostname", hostname.text.toString())
+                        putString("cpuUsage", cpuUsage.text.toString())
+                        putString("uptime", uptime.text.toString())
+                        putString("temp", tempText.text.toString())
+                        putString("ramUsage", ramUsage.text.toString())
+                    }
+
+                    context?.let { NotificationHandler.updateNotification(it, sharedPref, bundle) }
                 }
-                fun rotate(){
-                    refreshWidget.animate().apply {
-                        duration = 1000
-                        rotationBy(360f)
-                    }.withEndAction{
-                        if (rotation) rotate()
-                        else
-                        {
-                            refreshWidget.isClickable = true
-                            Toast.makeText(context, "Refreshed manually", Toast.LENGTH_SHORT).show()
-                        }
-                    }.start()
+                if(!auto){
+                    animateDashRefresh()
                 }
-                if(!auto)
-                {
-                    rotate()
-                }
-            }
-            else
-            {
+            }else{
                 Toast.makeText(context, "You need to test your connection first. Please click red server icon at the top right corner", Toast.LENGTH_LONG).show()
             }
-        }
-        else
-        {
+        }else{
             Toast.makeText(context, "Connection to server is not possible with given settings", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun animateDashRefresh(){
+        val refreshWidget = binding.refreshWidget
+
+        refreshWidget.animate().apply {
+            duration = 1000
+            rotationBy(360f)
+        }.withEndAction{
+            if (dashRefreshAnimation) animateDashRefresh()
+            else
+            {
+                refreshWidget.isClickable = true
+                Toast.makeText(context, "Refreshed manually", Toast.LENGTH_SHORT).show()
+            }
+        }.start()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

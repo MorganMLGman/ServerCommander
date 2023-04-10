@@ -9,6 +9,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.os.Bundle
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
@@ -64,6 +65,36 @@ class NotificationHandler {
 
                 with(NotificationManagerCompat.from(context)){
                     notify(0, notificationBuilder.build())
+                }
+            }
+        }
+
+        fun updateNotification(context: Context, sharedPref: SharedPreferences, bundle: Bundle){
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)== PackageManager.PERMISSION_GRANTED) {
+                if(bundle.isEmpty or !sharedPref.getBoolean("connectionTested", false)) updateNotification(context, sharedPref)
+                else{
+                    val intent = Intent(context, MainActivity::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    }
+                    val pendingIntent: PendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_MUTABLE)
+
+                    val notificationBuilder = NotificationCompat.Builder(context, "SC")
+                        .setSmallIcon(R.drawable.network_outline)
+                        .setContentTitle("Connected to ${bundle.getString("hostname", "server")}")
+                        .setPriority(NotificationCompat.PRIORITY_HIGH)
+                        .setContentIntent(pendingIntent)
+                        .setStyle(NotificationCompat.BigTextStyle().bigText(
+                            "Uptime \t${bundle.getString("uptime", context.getString(R.string.nothingString))}\n" +
+                                "Temperature \t${bundle.getString("temp", context.getString(R.string.nothingString))}\n" +
+                                "CPU Usage \t${bundle.getString("cpuUsage", context.getString(R.string.nothingString))}\n" +
+                                "RAM Usage \t${bundle.getString("ramUsage", context.getString(R.string.nothingString))}\n"
+                        ))
+                        .setOngoing(true)
+                        .setSilent(true)
+
+                    with(NotificationManagerCompat.from(context)){
+                        notify(0, notificationBuilder.build())
+                    }
                 }
             }
         }
